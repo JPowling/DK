@@ -1,6 +1,6 @@
 <?php
 
-$xml = new DOMDocument();
+#$xml = new DOMDocument();
 #$xml->load("test.xml");
 #$doc = $xml->documentElement;
 
