@@ -13,7 +13,8 @@
 
 
 
-$html->file_get_contents("htmltest.html");
+echo file_get_contents("htmltest.html");
 
 
-echo $html;
+#echo $html;
+?>
