@@ -17,4 +17,3 @@ echo file_get_contents("htmltest.html");
 
 
 #echo $html;
-?>
