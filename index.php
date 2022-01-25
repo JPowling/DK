@@ -7,9 +7,9 @@ $doc = $xml->documentElement;
 $xsl = new DOMDocument();
 $xsl->load("test.xsl");
 
-$xslt = new XSLTProcessor();
-$xslt->importStylesheet($xsl);
-$html = $xslt->transformToXml($xml);
+#$xslt = new XSLTProcessor();
+#$xslt->importStylesheet($xsl);
+#$html = $xslt->transformToXml($xml);
 
 
 
