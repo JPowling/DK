@@ -16,7 +16,7 @@
                 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
                 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-                <link rel="stylesheet" href="../css/base.css" />
+                <link rel="stylesheet" href="css/base.css" />
 
                 <title>#Jens</title>
             </head>
@@ -24,7 +24,7 @@
 
                 <header>
                     <div class="grid-container">
-                        <img class="logo" src="../res/logo.svg" alt="Deutsche Bahn Logo" />
+                        <img class="logo" src="res/logo.svg" alt="Deutsche Bahn Logo" />
 
                         <button class="header-button" value="Hauptmenü">Startseite</button>
                         <button class="header-button" action="" value="Login">Login</button>
