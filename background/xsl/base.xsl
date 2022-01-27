@@ -16,7 +16,7 @@
                 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
                 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-                <link rel="stylesheet" href="css/base.css" />
+                <link rel="stylesheet" href="background/css/base.css" />
 
                 <title>#Jens</title>
             </head>
@@ -24,10 +24,11 @@
 
                 <header>
                     <div class="grid-container">
-                        <img class="logo" src="res/logo.svg" alt="Deutsche Bahn Logo" />
-
-                        <button class="header-button" value="Hauptmenü">Startseite</button>
-                        <button class="header-button" action="" value="Login">Login</button>
+                        <form action="index.php" method="post">
+                            <button class="logo-button" type="submit" name="site" value="mainpage">
+                                <img class="logo" src="background/res/logo.svg" alt="Deutsche Bahn Logo"/>
+                            </button>
+                        </form>
                     </div>
                 </header>
 
@@ -48,6 +49,9 @@
         <xsl:choose>
             <xsl:when test="$ContentXSL = 'mainpage'">
                 <xsl:apply-templates select="/" mode="mainpage" />
+            </xsl:when>
+            <xsl:when test="$ContentXSL = 'loginpage'">
+                <xsl:apply-templates select="/" mode="loginpage" />
             </xsl:when>
             <xsl:otherwise>
                 <p>Error: No ContentXSL found!</p>

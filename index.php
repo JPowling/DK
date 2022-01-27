@@ -1,11 +1,11 @@
 <?php
 
 $xml = new DOMDocument();
-$xml->load("xml/base.xml");
+$xml->load("background/xml/base.xml");
 $doc = $xml->documentElement;
 
 $xsl = new DOMDocument();
-$xsl->load("xsl/base.xsl");
+$xsl->load("background/xsl/base.xsl");
 
 $xslt = new XSLTProcessor();
 $xslt->importStylesheet($xsl);
