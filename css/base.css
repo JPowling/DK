@@ -9,6 +9,10 @@ body {
     background-color: var(--background);
 }
 
+.content {
+    margin-left: 5px;
+}
+
 footer {
     font-size: 9px;
     font-family: monospace;

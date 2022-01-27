@@ -3,7 +3,9 @@
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
     <xsl:output method="html" encoding="utf-8" indent="no" />
 
-    <xsl:include href="jens.xsl" />
+    <xsl:variable name="ContentXSL" select="block/xslcontent" />
+
+    <xsl:include href="mainpage.xsl" />
 
     <xsl:template match="/">
         <xsl:text disable-output-escaping="yes">&lt;!DOCTYPE html&gt;</xsl:text>
@@ -29,7 +31,9 @@
                     </div>
                 </header>
 
-                <xsl:apply-templates select="/" mode="mainpage" />
+                <div class="content">
+                    <xsl:call-template name="getcontent" />
+                </div>
 
                 <footer>
                     <h1>(C) Jens Rosenbauer und Paul Joachim</h1>
@@ -38,6 +42,17 @@
             </body>
         </html>
 
+    </xsl:template>
+
+    <xsl:template name="getcontent">
+        <xsl:choose>
+            <xsl:when test="$ContentXSL = 'mainpage'">
+                <xsl:apply-templates select="/" mode="mainpage" />
+            </xsl:when>
+            <xsl:otherwise>
+                <p>Error: No ContentXSL found!</p>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
 
 </xsl:stylesheet>
