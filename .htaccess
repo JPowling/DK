@@ -4,5 +4,6 @@ RewriteEngine On
 RewriteCond %{DOCUMENT_ROOT}/$1 -f
 RewriteRule (.+) $1 [L]
 
+dad
 RewriteRule (.*) index.php?route=$1 [L,QSA]
 </IfModule>
