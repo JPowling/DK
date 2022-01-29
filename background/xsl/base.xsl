@@ -16,7 +16,7 @@
                 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
                 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-                <link rel="stylesheet" href="background/css/base.css" />
+                <link rel="stylesheet" href="/background/css/base.css" />
 
                 <title>#Jens</title>
             </head>
@@ -26,7 +26,7 @@
                     <div class="grid-container">
                         <form action="index.php" method="post">
                             <button class="logo-button" type="submit" name="site" value="mainpage">
-                                <img class="logo" src="background/res/logo.svg" alt="Deutsche Bahn Logo"/>
+                                <img class="logo" src="/background/res/logo.svg" alt="Deutsche Bahn Logo"/>
                             </button>
                         </form>
                     </div>
