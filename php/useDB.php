@@ -1,10 +1,5 @@
 <?php
 
-
-require_once("php/DB.php");
-
-$pdo = DB::connect();
-
 $sql = 'SELECT a.Name AS BahnhofA, b.Name, v.Dauer 
 FROM Verbindungen as v 
 Inner Join Bahnhofe as a on v.BahnhofA = a.Kennzeichnung

@@ -27,6 +27,7 @@
                         <img class="logo" src="res/logo.svg" alt="Deutsche Bahn Logo" />
 
                         <button class="header-button" value="Hauptmenü">Startseite</button>
+                        <button class="header-button" action="" value="Timetable">Timetable</button>
                         <button class="header-button" action="" value="Login">Login</button>
                     </div>
                 </header>

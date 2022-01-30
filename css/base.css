@@ -26,7 +26,7 @@ footer {
 
 .grid-container {
     display: grid;
-    grid-template-columns: repeat(3, 3cm);
+    grid-template-columns: repeat(4, 3.5cm);
 
     background-color: var(--main-color);
     padding-top: 10px;
@@ -49,6 +49,7 @@ footer {
 
 .header-button:hover {
     background-color: var(--main-color-darker);
+    cursor: pointer;
 }
 
 .logo {

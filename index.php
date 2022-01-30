@@ -16,6 +16,6 @@ $xslt = new XSLTProcessor();
 $xslt->importStylesheet($xsl);
 $html = $xslt->transformToXml($xml);
 
-#echo $html;
+echo $html;
 
-require("php/useDB.php");
+// require("php/useDB.php");
