@@ -1,5 +1,10 @@
 <?php
 
+require_once("php/DB.php");
+
+$pdo = DB::connect();
+
+
 $xml = new DOMDocument();
 $xml->load("xml/base.xml");
 $doc = $xml->documentElement;
@@ -13,4 +18,4 @@ $html = $xslt->transformToXml($xml);
 
 #echo $html;
 
-require("php/connectToDB.php");
+require("php/useDB.php");
