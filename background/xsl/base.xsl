@@ -17,7 +17,7 @@
 
                 <link rel="stylesheet" href="/background/css/base.css" />
 
-                <title>#Jens</title>
+                <title>Deutscher Karnevallsverein</title>
             </head>
             <body>
 
