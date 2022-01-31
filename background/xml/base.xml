@@ -3,5 +3,5 @@
 
 <block>
     <xslcontent>mainpage</xslcontent>
-    <lustig>Dies hier ist die Main Page!</lustig>
+    <lustig></lustig>
 </block>

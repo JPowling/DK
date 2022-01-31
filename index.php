@@ -12,7 +12,3 @@ $xslt->importStylesheet($xsl);
 $html = $xslt->transformToXml($xml);
 
 echo $html;
-
-foreach($_GET as $a) {
-    echo $a;
-}
