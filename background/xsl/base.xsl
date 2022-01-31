@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="1.0"
-    xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
     <xsl:output method="html" encoding="utf-8" indent="yes" />
 
     <xsl:variable name="ContentXSL" select="block/xslcontent" />
@@ -24,11 +23,9 @@
 
                 <header>
                     <div class="grid-container">
-                        <form action="index.php" method="post">
-                            <button class="logo-button" type="submit" name="site" value="mainpage">
-                                <img class="logo" src="/background/res/logo.svg" alt="Deutsche Bahn Logo"/>
-                            </button>
-                        </form>
+                        <a class="logo-button" href="/">
+                            <img class="logo" src="/background/res/logo.svg" alt="Deutsche Bahn Logo" />
+                        </a>
                     </div>
                 </header>
 
