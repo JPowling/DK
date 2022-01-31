@@ -24,11 +24,17 @@
 
                 <header>
                     <div class="grid-container">
-                        <img class="logo" src="res/logo.svg" alt="Deutsche Bahn Logo" />
+                        <form action="index.php" method="post">
+                            <button class="logo-button" type="submit" name="site" value="mainpage">
+                                <img class="logo" src="/background/res/logo.svg" alt="Deutsche Bahn Logo"/>
+                            </button>
+                            <button class="header-button" type="submit" name="site" value="timetable">Timetable</button>
+                            <button class="header-button" type="submit" name="site" value="login">Login</button>
+                        </form>
 
-                        <button class="header-button" value="Hauptmenü">Startseite</button>
-                        <button class="header-button" action="" value="Timetable">Timetable</button>
-                        <button class="header-button" action="" value="Login">Login</button>
+
+
+
                     </div>
                 </header>
 
