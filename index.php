@@ -1,8 +1,9 @@
 <?php
 
-$xml = new DOMDocument();
-$xml->load("background/xml/base.xml");
-$doc = $xml->documentElement;
+$xml = new SimpleXMLElement("<xml/>");
+
+$xml->addChild('xslcontent', 'mainpage');
+$xml->addChild('lustig', rand());
 
 $xsl = new DOMDocument();
 $xsl->load("background/xsl/base.xsl");

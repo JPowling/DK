@@ -2,9 +2,10 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
     <xsl:output method="html" encoding="utf-8" indent="yes" />
 
-    <xsl:variable name="ContentXSL" select="block/xslcontent" />
+    <xsl:variable name="ContentXSL" select="xml/xslcontent" />
 
     <xsl:include href="mainpage.xsl" />
+    <xsl:include href="loginpage.xsl" />
 
     <xsl:template match="/">
         <xsl:text disable-output-escaping="yes">&lt;!DOCTYPE html&gt;</xsl:text>
@@ -23,7 +24,7 @@
 
                 <header>
                     <div class="grid-container">
-                        <a class="logo-button" href="/">
+                        <a class="logo" href="/">
                             <img class="logo" src="/background/res/logo.svg" alt="Deutsche Bahn Logo" />
                         </a>
                     </div>
