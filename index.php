@@ -5,16 +5,16 @@ session_start();
 require "disallowed/authenticate.php";
 
 if (is_loggedin()) {
-    echo logout();
+    logout();
 } else {
-    echo login("email", "12345");
-    echo $_SESSION['user']->email;
+    login("jens.rosenbauer@ohgw.de", "12345");
 }
 
 $xml = new SimpleXMLElement("<xml/>");
 
 $xml->addChild('xslcontent', 'mainpage');
-$xml->addChild('lustig', rand());
+$xml->addChild('content', 'Email: '.(isset($_SESSION['user']) ? $_SESSION['user']->email : "not logged in"));
+$xml->addChild('loggedin', is_loggedin());
 
 $xsl = new DOMDocument();
 $xsl->load("background/xsl/base.xsl");
@@ -24,7 +24,3 @@ $xslt->importStylesheet($xsl);
 $html = $xslt->transformToXml($xml);
 
 echo $html;
-
-foreach($_GET as $a) {
-    echo $a;
-}

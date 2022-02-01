@@ -27,6 +27,19 @@
                         <a class="logo" href="/">
                             <img class="logo" src="/background/res/logo.svg" alt="Deutsche Bahn Logo" />
                         </a>
+
+                        <xsl:choose>
+                            <xsl:when test="xml/loggedin = '1'">
+                                <a class="header-button" href="/profile">Profil</a>
+                                <a class="header-button" href="/account/logout">Ausloggen</a>
+                            </xsl:when>
+
+                            <xsl:otherwise>
+                                <a class="header-button" href="/account/login">Login</a>
+                                <a class="header-button" href="/account/register">Registrieren</a>
+                            </xsl:otherwise>
+                        </xsl:choose>
+
                     </div>
                 </header>
 
