@@ -17,7 +17,7 @@ $xml->addChild('content', 'Email: '.(isset($_SESSION['user']) ? $_SESSION['user'
 $xml->addChild('loggedin', is_loggedin());
 
 $xsl = new DOMDocument();
-$xsl->load("background/xsl/base.xsl");
+$xsl->load("disallowed/xsl/base.xsl");
 
 $xslt = new XSLTProcessor();
 $xslt->importStylesheet($xsl);
