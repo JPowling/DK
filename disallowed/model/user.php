@@ -2,15 +2,15 @@
 
 class User {
 
-    public $userid;
-    public $forename;
-    public $surname;
-    public $email;
-    public $phone;
-    public $residence;
-    public $postal;
-    public $street;
-    public $house;
+    public string $userid;
+    public string $forename;
+    public string $surname;
+    public string $email;
+    public string $phone;
+    public string $residence;
+    public string $postal;
+    public string $street;
+    public string $house;
 
     public function __construct(string $email, bool $autofetch = true) {
         $this->email = $email;
@@ -37,6 +37,4 @@ class User {
         return password_verify($clearpassword, $hash);
     }
 
-}  
-
-?>
+}
