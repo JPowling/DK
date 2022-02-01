@@ -1,5 +1,16 @@
 <?php
 
+session_start();
+
+require "disallowed/authenticate.php";
+
+if (is_loggedin()) {
+    echo logout();
+} else {
+    echo login("email", "12345");
+    echo $_SESSION['user']->email;
+}
+
 $xml = new SimpleXMLElement("<xml/>");
 
 $xml->addChild('xslcontent', 'mainpage');

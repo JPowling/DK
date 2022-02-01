@@ -1,8 +1,9 @@
 <IfModule mod_rewrite.c>
 RewriteEngine On
 
-RewriteCond %{DOCUMENT_ROOT}/$1 -f
-RewriteRule (.+) $1 [L]
+RewriteRule (^disallowed.*$) - [F,L]
 
-RewriteRule (.*) index.php?route=$1 [L,QSA]
+RewriteCond %{DOCUMENT_ROOT}/$1 !-f
+RewriteRule (^((?!\/disallowed).)*$) index.php?route=$1 [L,QSA]
+
 </IfModule>
