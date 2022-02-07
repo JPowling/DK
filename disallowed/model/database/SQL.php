@@ -1,6 +1,6 @@
 <?php
 
-require_once("DB.php");
+require_once("disallowed/model/database/DB.php");
 
 
 class SQL
@@ -10,14 +10,24 @@ class SQL
 
     public function __construct(bool $is_w = true)
     {
-        $pdo = DB::connect($is_w);
+        echo "hallo";
+        $this->pdo = DB::connect($is_w);
+        if (isset($this->pdo)){
+            echo "!is set";
+        };
     }
 
 
     public function sql_request(String $command = ";")
     {
-        $cmd = $this::$pdo->prepare($command);
+        
+        $cmd = $this->pdo->prepare($command);
         $cmd->execute();
-        echo $cmd->fetchAll();
+        $result = $cmd->fetchAll();
+        foreach($result as $key => $row){
+            foreach($row as $key2 => $value){
+                echo $value;
+            }
+        }
     }
 }

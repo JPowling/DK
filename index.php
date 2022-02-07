@@ -1,7 +1,7 @@
 <?php
 
 
-require_once "/disallowed/model/database/SQL.php";
+require_once "disallowed/model/database/SQL.php";
 
 $sql = new SQL(true);
 
