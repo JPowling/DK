@@ -1,51 +1,13 @@
 <?php
 
-session_start();
-require_once("php/DB.php");
 
-$pdo = DB::connect();
-require "disallowed/authenticate.php";
+require_once "/disallowed/model/database/SQL.php";
 
-if (is_loggedin()) {
-    logout();
-} else {
-    login("jens.rosenbauer@ohgw.de", "12345");
-}
+$sql = new SQL(true);
 
-$xml = new SimpleXMLElement("<xml/>");
-
-$xml->addChild('xslcontent', 'mainpage');
-$xml->addChild('content', 'Email: '.(isset($_SESSION['user']) ? $_SESSION['user']->email : "not logged in"));
-$xml->addChild('loggedin', is_loggedin());
-
-$xsl = new DOMDocument();
-$xsl->load("disallowed/xsl/base.xsl");
+$sql->sql_request("SELECT a.Name AS BahnhofA, b.Name, v.Dauer 
+FROM Verbindungen as v 
+Inner Join Bahnhofe as a on v.BahnhofA = a.Kennzeichnung
+Inner Join Bahnhofe as b on v.BahnhofB = b.Kennzeichnung;");
 
 
-
-loadPage("base");
-
-foreach ($_POST as $a) {
-    loadPage($a);
-}
-
-
-function loadPage(String $var)
-{
-    // echo "---" . $var . "---" . ;
-    $xml = new DOMDocument();
-    $xml->load("xml/base.xml");
-    $doc = $xml->documentElement;
-
-    $xsl = new DOMDocument();
-    $xsl->load("xsl/" . $var . ".xsl");
-
-    $xslt = new XSLTProcessor();
-    $xslt->importStylesheet($xsl);
-    $html = $xslt->transformToXml($xml);
-
-    echo $html;
-
-}
-
-// require("php/useDB.php");
