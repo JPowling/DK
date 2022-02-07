@@ -1,0 +1,10 @@
+<IfModule mod_rewrite.c>
+RewriteEngine On
+
+RewriteRule (^disallowed.*$) - [F,L]
+RewriteRule (^\.git.*$) - [F,L]
+
+RewriteCond %{DOCUMENT_ROOT}/$1 !-f
+RewriteRule (.*) index.php?route=$1 [L,QSA]
+
+</IfModule>

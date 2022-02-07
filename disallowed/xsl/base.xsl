@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="1.0"
-    xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
     <xsl:output method="html" encoding="utf-8" indent="yes" />
 
-    <xsl:variable name="ContentXSL" select="block/xslcontent" />
+    <xsl:variable name="ContentXSL" select="xml/xslcontent" />
 
     <xsl:include href="mainpage.xsl" />
+    <xsl:include href="loginpage.xsl" />
 
     <xsl:template match="/">
         <xsl:text disable-output-escaping="yes">&lt;!DOCTYPE html&gt;</xsl:text>
@@ -16,7 +16,7 @@
                 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
                 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-                <link rel="stylesheet" href="css/base.css" />
+                <link rel="stylesheet" href="/background/css/base.css" />
 
                 <title>#Jens</title>
             </head>
@@ -24,16 +24,21 @@
 
                 <header>
                     <div class="grid-container">
-                        <form action="index.php" method="post">
-                            <button class="logo-button" type="submit" name="site" value="mainpage">
-                                <img class="logo" src="/background/res/logo.svg" alt="Deutsche Bahn Logo"/>
-                            </button>
-                            <button class="header-button" type="submit" name="site" value="timetable">Timetable</button>
-                            <button class="header-button" type="submit" name="site" value="login">Login</button>
-                        </form>
+                        <a class="logo" href="/">
+                            <img class="logo" src="/background/res/logo.svg" alt="Deutsche Bahn Logo" />
+                        </a>
 
+                        <xsl:choose>
+                            <xsl:when test="xml/loggedin = '1'">
+                                <a class="header-button" href="/profile">Profil</a>
+                                <a class="header-button" href="/account/logout">Ausloggen</a>
+                            </xsl:when>
 
-
+                            <xsl:otherwise>
+                                <a class="header-button" href="/account/login">Login</a>
+                                <a class="header-button" href="/account/register">Registrieren</a>
+                            </xsl:otherwise>
+                        </xsl:choose>
 
                     </div>
                 </header>
@@ -55,6 +60,9 @@
         <xsl:choose>
             <xsl:when test="$ContentXSL = 'mainpage'">
                 <xsl:apply-templates select="/" mode="mainpage" />
+            </xsl:when>
+            <xsl:when test="$ContentXSL = 'loginpage'">
+                <xsl:apply-templates select="/" mode="loginpage" />
             </xsl:when>
             <xsl:otherwise>
                 <p>Error: No ContentXSL found!</p>
