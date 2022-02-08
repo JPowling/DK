@@ -3,6 +3,7 @@
 session_start();
 
 require "disallowed/authenticate.php";
+require_once "disallowed/model/database/SQL.php";
 
 if (is_loggedin()) {
     logout();
