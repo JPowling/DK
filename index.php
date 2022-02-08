@@ -1,4 +1,4 @@
-d<?php
+<?php
 
 
 require_once "disallowed/model/database/SQL.php";
