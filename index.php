@@ -1,27 +1,34 @@
 <?php
+# Owner: Paul
+declare(strict_types = 1);
 
 session_start();
 
-require "disallowed/authenticate.php";
-require_once "disallowed/model/database/SQL.php";
+require_once "disallowed/authenticate.php";
+require_once "disallowed/backend/database/SQL.php";
 
-if (is_loggedin()) {
-    logout();
-} else {
-    login("jens.rosenbauer@ohgw.de", "12345");
-}
+#------------- Actual start -------------#
 
 $xml = new SimpleXMLElement("<xml/>");
 
-$xml->addChild('xslcontent', 'mainpage');
-$xml->addChild('content', 'Email: '.(isset($_SESSION['user']) ? $_SESSION['user']->email : "not logged in"));
-$xml->addChild('loggedin', is_loggedin());
+if (isset($_GET["route"]) && $_GET["route"] !== "") {
+    $filename_php = "disallowed/scripts/".$_GET["route"].".php";
+    $filename_xsl = "disallowed/xsl/".$_GET["route"].".xsl";
 
-$xsl = new DOMDocument();
-$xsl->load("disallowed/xsl/base.xsl");
+    if (file_exists($filename_xsl) && $_GET["route"] !== "base") {
+        $xslcontent = $_GET["route"];
+        
+        // If the php file exists, run it
+        if (file_exists($filename_php)) {
+            require $filename_php;
+        }
+    } else {
+        // Site not found!
+        $xslcontent = 'notfound';
+    }
+} else {
+    // Main page
+    $xslcontent = 'mainpage';
+}
 
-$xslt = new XSLTProcessor();
-$xslt->importStylesheet($xsl);
-$html = $xslt->transformToXml($xml);
-
-echo $html;
+require "disallowed/xsl_loader.php";

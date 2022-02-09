@@ -1,6 +1,7 @@
 <?php
+# Owner: Paul
 
-require "model/user.php";
+require_once "disallowed/backend/user.php";
 
 function login(string $email, string $clearpassword) {
     if (is_loggedin()) {
@@ -10,7 +11,6 @@ function login(string $email, string $clearpassword) {
     if (User::verify_password($email, $clearpassword)) {
         $user = new User($email);
 
-        $_SESSION['loggedin'] = TRUE;
         $_SESSION['user'] = $user;
 
         return "logged in";
@@ -25,7 +25,7 @@ function logout(bool $force = false) {
     }
 
     setcookie(session_name(), '');
-    $_SESSION = array();
+    session_reset();
     session_unset();
 
     session_destroy();
@@ -34,21 +34,6 @@ function logout(bool $force = false) {
     return "logged out";
 }
 
-function create_account($forename, $surname, $email, $phone, $clearpassword, $residence, $postal, $street, $house) {
-    $user = new User($email, false);
-
-    $user->forename = $forename;
-    $user->surname = $surname;
-    $user->phone = $phone;
-    $user->forename = $forename;
-    $user->residence = $residence;
-    $user->postal = $postal;
-    $user->street = $street;
-    $user->house = $house;
-
-    $user->store_data(password_hash($clearpassword, PASSWORD_DEFAULT));
-}
-
 function is_loggedin() {
-    return isset($_SESSION['loggedin'], $_SESSION['user']);
+    return isset($_SESSION['user']);
 }
