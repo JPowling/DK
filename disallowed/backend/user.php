@@ -42,7 +42,7 @@ class User {
     }
 
     public static function create_account(string $email, string $clearpassword) {
-        $sql = new SQL();
+        $sql = new SQL(true);
         if ($sql->sql_request("SELECT * FROM Benutzer WHERE EMail='$email'")->get_num_rows() !== 1) {
             return false;
         }
@@ -53,7 +53,7 @@ class User {
     }
 
     public static function verify_password(string $email, string $clearpassword) {
-        $sql = new SQL(false);
+        $sql = new SQL();
         $result = $sql->sql_request("SELECT PasswordHash FROM Benutzer WHERE EMail='$email'");
         
         if ($result->get_num_rows() !== 1) {

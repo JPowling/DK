@@ -8,7 +8,7 @@ class SQL
 {
     private PDO $pdo;
 
-    public function __construct(bool $is_w = true)
+    public function __construct(bool $is_w = false)
     {
         $this->pdo = DB::connect($is_w);
     }
