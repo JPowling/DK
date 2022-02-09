@@ -12,7 +12,7 @@
                 <div class="box-body">
                     <div class="box-content">
                         <p>Diesen Pfad scheint es nicht zu geben.</p>
-                        <p>durch einen Klick auf das Logo oben links landen sie wieder auf der Homepage!</p>
+                        <p>Durch einen Klick auf das Logo oben links landen sie wieder auf der Homepage!</p>
                     </div>
                 </div>
             </div>
