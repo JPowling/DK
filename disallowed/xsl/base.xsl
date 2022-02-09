@@ -13,16 +13,16 @@
                 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
                 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-                <link rel="stylesheet" href="/backend/css/base.css" />
-
                 <title>#Jens</title>
+
+                <link rel="stylesheet" href="/frontend/css/base.css" />
             </head>
             <body>
 
                 <header>
                     <div class="grid-container">
                         <a class="logo" href="/">
-                            <img class="logo" src="/backend/res/logo.svg" alt="Deutsche Bahn Logo" />
+                            <img class="logo" src="/frontend/res/logo.svg" alt="Deutsche Bahn Logo" />
                         </a>
 
                         <xsl:choose>

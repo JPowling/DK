@@ -1,4 +1,5 @@
 <?php
+# Owner: Paul
 
 $xsl_ns = "http://www.w3.org/1999/XSL/Transform";
 
@@ -9,18 +10,28 @@ $xsl = new DOMDocument();
 $xsl->load("disallowed/xsl/base.xsl");
 
 # Load needed subxsl file into base.xsl
+{
+    $stylesheet = $xsl->getElementsByTagName("stylesheet")->item(0);
 
-$stylesheet = $xsl->getElementsByTagName("stylesheet")->item(0);
+    $include = $stylesheet->appendChild(new DOMElement("xsl:include", null, $xsl_ns));
+    $include->setAttribute("href", "$xslcontent.xsl");
 
-$include = $stylesheet->appendChild(new DOMElement("xsl:include", null, $xsl_ns));
-$include->setAttribute("href", $xslcontent.".xsl");
+    $template = $stylesheet->appendChild(new DOMElement("xsl:template", null, $xsl_ns));
+    $template->setAttribute("name", "getcontent");
 
-$template = $stylesheet->appendChild(new DOMElement("xsl:template", null, $xsl_ns));
-$template->setAttribute("name", "getcontent");
+    $apply_templates = $template->appendChild(new DOMElement("xsl:apply-templates", null, $xsl_ns));
+    $apply_templates->setAttribute("select", "/");
+    $apply_templates->setAttribute("mode", "mode");
+}
+{
+    $head = $xsl->getElementsByTagName("head")->item(0);
 
-$apply_templates = $template->appendChild(new DOMElement("xsl:apply-templates", null, $xsl_ns));
-$apply_templates->setAttribute("select", "/");
-$apply_templates->setAttribute("mode", "mode");
+    if (file_exists("frontend/css/$xslcontent.css")) {
+        $link = $head->appendChild(new DOMElement("link"));
+        $link->setAttribute("rel", "stylesheet");
+        $link->setAttribute("href", "/frontend/css/$xslcontent.css");
+    }
+}
 
 $xslt = new XSLTProcessor();
 $xslt->importStylesheet($xsl);
