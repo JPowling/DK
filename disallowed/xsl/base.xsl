@@ -3,8 +3,6 @@
     <xsl:output method="html" encoding="utf-8" indent="yes" />
 
     <xsl:variable name="ContentXSL" select="xml/include_xsl" />
-    
-    <xsl:include href="account/login.xsl" />
 
     <xsl:template match="/">
         <xsl:text disable-output-escaping="yes">&lt;!DOCTYPE html&gt;</xsl:text>
