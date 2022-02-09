@@ -3,37 +3,41 @@
 
     <xsl:template match="/" mode="mode">
 
-    <form id="regsister" action="/register" method="post">
-        <fieldset>
-          <legend>Neues Benutzerkonto</legend>
-          <div class="field">
-            <input name="LoginName" id="LoginName" type="text" maxlength="32" required="" />
-            <label for="LoginName">Benutzername</label>
-          </div>
-          <div class="field">
-            <input name="Password1" id="Password1" type="password" maxlength="256" required="" />
-            <label for="Password1">Passwort</label>
-          </div>
-          <div class="field">
-            <input name="Password2" id="Password2" type="password" maxlength="256" required="" />
-            <label for="Password2">Passwort (Wdh.)</label>
-          </div>
-          <div class="field">
-            <input name="EMailAddr" id="EMailAddr" type="email" required="" />
-            <label for="EMailAddr">E-Mail-Adresse</label>
-          </div>
-          <div class="field">
-            <input name="LastName" id="LastName" type="text" maxlength="128" />
-            <label for="LastName">Nachname</label>
-          </div>
-          <div class="field">
-            <input name="FirstName" id="FirstName" type="text" maxlength="128" />
-            <label for="FirstName">Vorname</label>
-          </div>
-        </fieldset>
-        <button id="Submit" name="Submit">Registrieren</button>
-      </form>
+        <div class="register-container-outer">
+            <div class="register-container-inner">
+                <h1 class="register-title">Neuen Benutzer Anlegen</h1>
+                <div class="register-body">
+                    <form class="register-form" action="/index.php" method="post" id="login">
+                        <div class="register-form-group">
+                            <input type="text" name="forename" class="register-input" placeholder="Vorname" required="" />
+                            <input type="text" name="surname" class="register-input" placeholder="Nachname" required="" />
+                        </div>
+                        <div class="register-form-group">
+                            <input type="email" name="email" class="register-input" placeholder="E-Mail Addresse" required="" />
+                            <input type="email" name="email" class="register-input" placeholder="E-Mail Addresse (Wdh.)" required="" />
+                        </div>
+                        <div class="register-form-group">
+                            <input type="password" name="password" class="register-input" placeholder="Kennwort" required="" />
+                            <input type="password" name="password" class="register-input" placeholder="Kennwort (Wdh.)" required="" />
+                        </div>
+                        <div class="register-form-group">
+                            <input type="number" name="phone" class="register-input" placeholder="Telefonnummer" required="" />
+                        </div>
+                        <div class="register-form-group">
+                            <input type="number" name="postal" class="register-input" placeholder="PLZ" required="" />
+                            <input type="text" name="residence" class="register-input" placeholder="Wohnort" required="" />
+                        </div>
+                        <div class="register-form-group">
+                            <input type="number" name="housenumber" class="register-input" placeholder="Hausnummer" required="" />
+                        </div>
 
+                        <div class="register-form-group">
+                            <button type="submit" class="register-button register-input">Registrieren</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
 
     </xsl:template>
 

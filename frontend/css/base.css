@@ -24,6 +24,16 @@ footer {
     margin-top: 30px;
 }
 
+.center-x {
+    display: flex;
+    justify-content: center;
+}
+
+.center-y {
+    display: flex;
+    align-items: center;
+}
+
 .grid-container {
     display: grid;
     grid-template-columns: repeat(7, min-content);

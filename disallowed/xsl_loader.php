@@ -23,6 +23,8 @@ $xsl->load("disallowed/xsl/base.xsl");
     $apply_templates->setAttribute("select", "/");
     $apply_templates->setAttribute("mode", "mode");
 }
+
+# Load css file into xsl file when css exists
 {
     $head = $xsl->getElementsByTagName("head")->item(0);
 
