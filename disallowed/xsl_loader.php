@@ -9,6 +9,8 @@ $xml->addChild('loggedin', strval(is_loggedin()));
 $xsl = new DOMDocument();
 $xsl->load("disallowed/xsl/base.xsl");
 
+# Load needed subxsl file into base.xsl
+
 $stylesheet = $xsl->getElementsByTagName("stylesheet")->item(0);
 
 $template = $stylesheet->appendChild(new DOMElement("xsl:template", null, $xsl_ns));
