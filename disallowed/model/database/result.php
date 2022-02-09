@@ -32,8 +32,8 @@ class Result
         return (new Result(array_key_last($result)));
     }
 
-    public function echo_all()
+    public function __toString()
     {
-        echo print_r($this->result, true);
+        return print_r($this->result, true);
     }
 }

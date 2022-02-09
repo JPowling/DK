@@ -13,4 +13,4 @@ Inner Join Bahnhofe as a on v.BahnhofA = a.Kennzeichnung
 Inner Join Bahnhofe as b on v.BahnhofB = b.Kennzeichnung;");
 
 
-$result1->get_rows()->echo_all();
+echo $result1->get_rows()->__toString();
