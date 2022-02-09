@@ -1,5 +1,7 @@
 <?php
 
+$xsl_ns = "http://www.w3.org/1999/XSL/Transform";
+
 $xml = new SimpleXMLElement("<xml/>");
 
 $xml->addChild('include_xsl', $xslcontent);
