@@ -27,9 +27,9 @@ class Result
         return (new Result(array_column($this->result, $column)))->get_rows($first_row, $num_rows);
     }
 
-    public function get_num_rows($result)
+    public function get_num_rows()
     {
-        return (new Result(array_key_last($result)));
+        return array_key_last($this->result) + 1;
     }
 
     public function __toString()

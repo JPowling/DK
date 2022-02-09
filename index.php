@@ -1,16 +1,33 @@
 <?php
+declare(strict_types = 1);
 
+session_start();
 
-require_once "disallowed/model/database/sql.php";
-require_once "disallowed/model/database/result.php";
+require_once "disallowed/authenticate.php";
+require_once "disallowed/backend/database/SQL.php";
 
+#------------- Actual start -------------#
 
-$sql = new SQL(true);
+$xml = new SimpleXMLElement("<xml/>");
 
-$result1 = $sql->sql_request("SELECT a.Name AS BahnhofA, b.Name AS BahnhofB, v.Dauer 
-FROM Verbindungen as v 
-Inner Join Bahnhofe as a on v.BahnhofA = a.Kennzeichnung
-Inner Join Bahnhofe as b on v.BahnhofB = b.Kennzeichnung;");
+if (isset($_GET["route"]) && $_GET["route"] !== "") {
+    $filename_php = "disallowed/scripts/".$_GET["route"].".php";
+    $filename_xsl = "disallowed/xsl/".$_GET["route"].".xsl";
 
+    if (file_exists($filename_xsl) && $_GET["route"] !== "base") {
+        $xslcontent = $_GET["route"];
+        
+        // If the php file exists, run it
+        if (file_exists($filename_php)) {
+            require $filename_php;
+        }
+    } else {
+        // Site not found!
+        $xslcontent = 'notfound';
+    }
+} else {
+    // Main page
+    $xslcontent = 'mainpage';
+}
 
-echo $result1->get_rows()->__toString();
+require "disallowed/xsl_loader.php";
