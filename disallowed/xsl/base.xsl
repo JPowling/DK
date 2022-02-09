@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" id="start">
     <xsl:output method="html" encoding="utf-8" indent="yes" />
 
-    <xsl:variable name="ContentXSL" select="xml/xslcontent" />
-
-    <xsl:include href="mainpage.xsl" />
-    <xsl:include href="loginpage.xsl" />
+    <xsl:variable name="ContentXSL" select="xml/include_xsl" />
+    
+    <xsl:include href="account/login.xsl" />
 
     <xsl:template match="/">
         <xsl:text disable-output-escaping="yes">&lt;!DOCTYPE html&gt;</xsl:text>
@@ -54,20 +53,6 @@
             </body>
         </html>
 
-    </xsl:template>
-
-    <xsl:template name="getcontent">
-        <xsl:choose>
-            <xsl:when test="$ContentXSL = 'mainpage'">
-                <xsl:apply-templates select="/" mode="mainpage" />
-            </xsl:when>
-            <xsl:when test="$ContentXSL = 'loginpage'">
-                <xsl:apply-templates select="/" mode="loginpage" />
-            </xsl:when>
-            <xsl:otherwise>
-                <p>Error: No ContentXSL found!</p>
-            </xsl:otherwise>
-        </xsl:choose>
     </xsl:template>
 
 </xsl:stylesheet>
