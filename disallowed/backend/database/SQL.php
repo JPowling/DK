@@ -1,7 +1,7 @@
 <?php
 
-require_once("disallowed/model/database/db.php");
-require_once("disallowed/model/database/result.php");
+require_once("disallowed/backend/database/db.php");
+require_once("disallowed/backend/database/result.php");
 
 
 class SQL
