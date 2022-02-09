@@ -1,6 +1,6 @@
 <?php
 
-require "model/user.php";
+require_once "disallowed/backend/user.php";
 
 function login(string $email, string $clearpassword) {
     if (is_loggedin()) {
