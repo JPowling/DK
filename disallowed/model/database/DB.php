@@ -1,6 +1,6 @@
 <?php
 
-require_once("disallowed/model/database/DB_config.php");
+require_once("disallowed/model/database/db_config.php");
 
 class DB
 {
