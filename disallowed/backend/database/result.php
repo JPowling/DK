@@ -29,6 +29,9 @@ class Result
 
     public function get_num_rows()
     {
+        if (empty($this->result)) {
+            return 0;
+        }
         return array_key_last($this->result) + 1;
     }
 

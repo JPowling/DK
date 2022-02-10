@@ -39,12 +39,24 @@ class User {
 
     // Store data in database
     public function store_data() {
+        $sql = new SQL(true);
 
+        $sql->sql_request("UPDATE Benutzer SET Name='$this->surname', "
+                            ."Vorname='$this->forename', Telefon='$this->phone', "
+                            ."Ort='$this->residence', PLZ='$this->postal', "
+                            ."Strasse='$this->street', Hausnummer='$this->house' "
+                            ."WHERE EMail='$this->email'");
+    }
+
+    public static function email_exists(string $email) {
+        $sql = new SQL();
+        echo $sql->sql_request("SELECT * FROM Benutzer WHERE EMail='$email'")->get_num_rows();
+        return $sql->sql_request("SELECT * FROM Benutzer WHERE EMail='$email'")->get_num_rows() == 1;
     }
 
     public static function create_account(string $email, string $clearpassword) {
         $sql = new SQL(true);
-        if ($sql->sql_request("SELECT * FROM Benutzer WHERE EMail='$email'")->get_num_rows() !== 1) {
+        if ($sql->sql_request("SELECT * FROM Benutzer WHERE EMail='$email'")->get_num_rows() == 1) {
             return false;
         }
 
@@ -54,7 +66,7 @@ class User {
     }
 
     public static function verify_password(string $email, string $clearpassword) {
-        $sql = new SQL();
+        $sql = new SQL(false);
         $result = $sql->sql_request("SELECT PasswordHash FROM Benutzer WHERE EMail='$email'");
         
         if ($result->get_num_rows() !== 1) {
