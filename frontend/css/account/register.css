@@ -54,9 +54,19 @@
     padding-bottom: 2px;
 }
 
+.register-message {
+    color: red;
+    font-family: 'Source Sans Pro', Arial, sans-serif;
+    text-align: center;
+
+    margin-bottom: 0;
+}
+
 .register-button {
     background-color: rgb(247, 247, 247);
     width: calc((250px + 5px*2 + 1px + 15px)*2);
+
+    font-size: 22px;
 
     height: 40px;
     margin-top: 40px;
