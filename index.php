@@ -5,7 +5,7 @@ declare(strict_types=1);
 session_start();
 
 require_once "disallowed/authenticate.php";
-require_once "disallowed/backend/database/SQL.php";
+require_once "disallowed/backend/database/sql.php";
 
 #------------- Actual start -------------#
 
