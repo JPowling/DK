@@ -1,5 +1,5 @@
 <?php
-# Owner: Paul
+# Paul
 
 require_once "disallowed/backend/user.php";
 

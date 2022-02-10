@@ -1,8 +1,8 @@
 <?php
+# Jens
 
 require_once("disallowed/backend/database/db.php");
 require_once("disallowed/backend/database/result.php");
-
 
 class SQL
 {

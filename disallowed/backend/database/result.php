@@ -1,5 +1,5 @@
 <?php
-
+# Jens
 
 class Result
 {
@@ -10,7 +10,6 @@ class Result
     {
         $this->result = $result;
     }
-
 
     public function get_rows(int $first_row = 0, int $num_rows = PHP_INT_MAX)
     {
