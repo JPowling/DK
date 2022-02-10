@@ -5,7 +5,14 @@ if ($_POST) {
     $reload = false;
     $register = $xml->addChild("register");
 
-    if ($_POST["email"] !== $_POST["email2"]) {
+    foreach ($_POST as $key => $value) {
+        if (strlen($value) == 0) {
+            $reload = true;
+        }
+    }
+    if ($reload) {
+        $register->addChild("message", "Es sind nicht alle Felder ausgefüllt!");
+    } else if ($_POST["email"] !== $_POST["email2"]) {
         $reload = true;
         $register->addChild("message", "E-Mail Adressen stimmen nicht überein!");
     } else if (User::email_exists($_POST["email"])) {
