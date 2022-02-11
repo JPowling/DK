@@ -28,7 +28,7 @@
 
                         <xsl:choose>
                             <xsl:when test="xml/loggedin = '1'">
-                                <a class="header-button" href="/profile">Profil</a>
+                                <a class="header-button" href="/account/profile">Profil</a>
                                 <a class="header-button" href="/account/logout">Ausloggen</a>
                                 <a class="welcome">Willkommen, <xsl:value-of select="//xml/forename"></xsl:value-of></a>
                             </xsl:when>

@@ -48,6 +48,13 @@ class User {
                             ."WHERE EMail='$this->email'");
     }
 
+    public function set_password(string $clearpassword) {
+        $sql = new SQL(true);
+        $hash = password_hash($clearpassword, PASSWORD_DEFAULT);
+
+        $sql->sql_request("UPDATE Benutzer SET PasswordHash='$hash' WHERE EMail='$this->email'");
+    }
+
     public static function email_exists(string $email) {
         $sql = new SQL();
         echo $sql->sql_request("SELECT * FROM Benutzer WHERE EMail='$email'")->get_num_rows();
