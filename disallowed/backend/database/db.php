@@ -3,10 +3,8 @@
 
 require_once("disallowed/backend/database/db_config.php");
 
-class DB
-{
-  public static function connect(bool $is_w = false)
-  {
+class DB {
+  public static function connect(bool $is_w = false) {
     $dsn  =              DBConfig::DRIVER . ':';
     $dsn .= 'host='    . DBConfig::HOST   . ';';
     $dsn .= 'port='    . DBConfig::PORT   . ';';
@@ -34,8 +32,7 @@ class DB
     }
   }
 
-  public static function convertStr($str)
-  {
+  public static function convertStr($str) {
     return null; //TODO
   }
 }

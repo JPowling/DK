@@ -35,6 +35,15 @@ $xsl->load("disallowed/xsl/base.xsl");
     }
 }
 
+# Load user Privileges
+{
+    if (is_loggedin()) {
+        $user = new User($_SESSION["email"]);
+
+        $xml->addChild("privileges", $user->get_priviliges());
+    }
+}
+
 $xslt = new XSLTProcessor();
 $xslt->importStylesheet($xsl);
 $html = $xslt->transformToXml($xml);

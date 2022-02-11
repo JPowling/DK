@@ -21,6 +21,18 @@ class User {
         }
     }
 
+    public function get_priviliges() {
+        $sql = new SQL();
+
+        $result = $sql->sql_request("SELECT Ber.Bezeichnung FROM Benutzer as Ben "
+            . "INNER JOIN Berechtigungen as Ber ON Ben.BerechtigungsID = Ber.BerechtigungsID "
+            . "WHERE EMail='$this->email'");
+
+        $result = $result->get_from_column("Bezeichnung");
+
+        return $result;
+    }
+
     // fet data from database using email since its unique
     public function fetch() {
         $sql = new SQL();
@@ -42,10 +54,10 @@ class User {
         $sql = new SQL(true);
 
         $sql->sql_request("UPDATE Benutzer SET Name='$this->surname', "
-                            ."Vorname='$this->forename', Telefon='$this->phone', "
-                            ."Ort='$this->residence', PLZ='$this->postal', "
-                            ."Strasse='$this->street', Hausnummer='$this->house' "
-                            ."WHERE EMail='$this->email'");
+            . "Vorname='$this->forename', Telefon='$this->phone', "
+            . "Ort='$this->residence', PLZ='$this->postal', "
+            . "Strasse='$this->street', Hausnummer='$this->house' "
+            . "WHERE EMail='$this->email'");
     }
 
     public function set_password(string $clearpassword) {
@@ -75,7 +87,7 @@ class User {
     public static function verify_password(string $email, string $clearpassword) {
         $sql = new SQL();
         $result = $sql->sql_request("SELECT PasswordHash FROM Benutzer WHERE EMail='$email'");
-        
+
         if ($result->get_num_rows() !== 1) {
             return false;
         }
@@ -87,8 +99,5 @@ class User {
     public static function delete_account(string $email) {
         $sql = new SQL(true);
         $sql->sql_request("DELETE FROM Benutzer WHERE EMail='$email'");
-
-
     }
-
 }
