@@ -4,45 +4,45 @@
 
     <xsl:template match="/" mode="mode">
 
-        <div class="register-container-outer">
-            <div class="register-container-inner">
-                <h1 class="register-title">Neuen Benutzer Anlegen</h1>
-                <div class="register-body">
-                    <form class="register-form" action="/account/register" method="post">
+        <div class="container-outer">
+            <div class="container-inner">
+                <h1 class="title">Neuen Benutzer Anlegen</h1>
+                <div class="body">
+                    <form class="form" action="/account/register" method="post">
 
-                        <div class="register-form-group">
-                            <input type="text" name="forename" class="register-input {//xml/register/forename_red}" value="{//xml/register/forename}" placeholder="Vorname" required="" />
-                            <input type="text" name="surname" class="register-input {//xml/register/surname_red}" value="{//xml/register/surname}" placeholder="Nachname" required="" />
+                        <div class="form-group">
+                            <input type="text" name="forename" class="input {//xml/forename_red}" value="{//xml/forename}" placeholder="Vorname" required="" />
+                            <input type="text" name="surname" class="input {//xml/surname_red}" value="{//xml/surname}" placeholder="Nachname" required="" />
                         </div>
-                        <div class="register-form-group">
-                            <input type="text" name="email" class="register-input {//xml/register/email_red}" value="{//xml/register/email}" placeholder="E-Mail Addresse" required="" />
-                            <input type="text" name="email2" class="register-input {//xml/register/email_red}" value="{//xml/register/email2}" placeholder="E-Mail Addresse (Wdh.)" required="" />
+                        <div class="form-group">
+                            <input type="text" name="email" class="input {//xml/email_red}" value="{//xml/email}" placeholder="E-Mail Addresse" required="" />
+                            <input type="text" name="email2" class="input {//xml/email_red}" value="{//xml/email2}" placeholder="E-Mail Addresse (Wdh.)" required="" />
                         </div>
-                        <div class="register-form-group">
-                            <input type="password" name="password" class="register-input {//xml/register/password_red}" value="{//xml/register/password}" placeholder="Kennwort" required="" />
-                            <input type="password" name="password2" class="register-input {//xml/register/password_red}" value="{//xml/register/password2}" placeholder="Kennwort (Wdh.)" required="" />
+                        <div class="form-group">
+                            <input type="password" name="password" class="input {//xml/password_red}" value="{//xml/password}" placeholder="Kennwort" required="" />
+                            <input type="password" name="password2" class="input {//xml/password_red}" value="{//xml/password2}" placeholder="Kennwort (Wdh.)" required="" />
                         </div>
-                        <div class="register-form-group">
-                            <input type="number" name="phone" class="register-input {//xml/register/phone_red}" value="{//xml/register/phone}" placeholder="Telefonnummer" required="" />
+                        <div class="form-group">
+                            <input type="number" name="phone" class="input {//xml/phone_red}" value="{//xml/phone}" placeholder="Telefonnummer" required="" />
                         </div>
-                        <div class="register-form-group">
-                            <input type="text" name="street" class="register-input" value="{//xml/register/street}" placeholder="Straße" required="" />
-                            <input type="text" name="house" class="register-input" value="{//xml/register/house}" placeholder="Hausnummer" required="" />
+                        <div class="form-group">
+                            <input type="text" name="street" class="input" value="{//xml/street}" placeholder="Straße" required="" />
+                            <input type="text" name="house" class="input" value="{//xml/house}" placeholder="Hausnummer" required="" />
                         </div>
-                        <div class="register-form-group">
-                            <input type="number" name="postal" class="register-input {//xml/register/postal_red}" value="{//xml/register/postal}" placeholder="PLZ" required="" />
-                            <input type="text" name="residence" class="register-input" value="{//xml/register/residence}" placeholder="Wohnort" required="" />
+                        <div class="form-group">
+                            <input type="number" name="postal" class="input {//xml/postal_red}" value="{//xml/postal}" placeholder="PLZ" required="" />
+                            <input type="text" name="residence" class="input" value="{//xml/residence}" placeholder="Wohnort" required="" />
                         </div>
 
-                        <xsl:for-each select="xml/register/message">
-                            <p class="register-message">
+                        <xsl:for-each select="xml/message">
+                            <p class="message">
                                 <xsl:value-of select="." />
                             </p>
                         </xsl:for-each>
 
 
-                        <div class="register-form-group">
-                            <button type="submit" class="register-button register-input">Registrieren</button>
+                        <div class="form-group">
+                            <button type="submit" class="button input">Registrieren</button>
                         </div>
                     </form>
                 </div>

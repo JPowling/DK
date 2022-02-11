@@ -4,31 +4,30 @@ ensure_loggedin();
 
 if ($_POST) {
     $reload = false;
-    $changepassword = $xml->addChild("changepassword");
 
     if ($_POST["password"] !== $_POST["password2"]) {
         $reload = true;
-        $changepassword->addChild("message", "Die Passwörter stimmen nicht überein!");
+        $xml->addChild("message", "Die Passwörter stimmen nicht überein!");
 
     } else if (!is_loggedin()) { // double check
         $reload = true;
-        $changepassword->addChild("message", "Aus irgendeinem Grund bist du nicht angemeldet!");
+        $xml->addChild("message", "Aus irgendeinem Grund bist du nicht angemeldet!");
 
     } else if (!User::verify_password($_SESSION["email"], $_POST["password_old"])) {
         $reload = true;
-        $changepassword->addChild("message", "Das alte Passwort ist falsch!");
+        $xml->addChild("message", "Das alte Passwort ist falsch!");
 
     } else if (strlen($_POST["password"]) < 6 
             || !preg_match("/[\d]/", $_POST["password"]) // contains numbers
             || !preg_match("/[\w]/", $_POST["password"]))// contains letters 
             {
         $reload = true;
-        $changepassword->addChild("message", "Das neue Passwort ist zu schlecht!");
+        $xml->addChild("message", "Das neue Passwort ist zu schlecht!");
     }
 
     if ($reload) {
         foreach ($_POST as $key => $value) {
-            $changepassword->addChild($key, $value);
+            $xml->addChild($key, $value);
         }
         return;
     } else {

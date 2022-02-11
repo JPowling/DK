@@ -4,21 +4,20 @@ ensure_loggedin();
 
 if ($_POST) {
     $reload = false;
-    $deleteaccount = $xml->addChild("deleteaccount");
 
     if (!is_loggedin()) { // double check
         $reload = true;
-        $deleteaccount->addChild("message", "Aus irgendeinem Grund bist du nicht angemeldet!");
+        $xml->addChild("message", "Aus irgendeinem Grund bist du nicht angemeldet!");
 
     } else if (!User::verify_password($_SESSION["email"], $_POST["password"])) {
         $reload = true;
-        $deleteaccount->addChild("message", "Das Passwort ist falsch!");
+        $xml->addChild("message", "Das Passwort ist falsch!");
 
     }
 
     if ($reload) {
         foreach ($_POST as $key => $value) {
-            $changepassword->addChild($key, $value);
+            $xml->addChild($key, $value);
         }
         return;
     } else {
