@@ -32,7 +32,6 @@ if ($_GET && isset($_GET["route"]) && $_GET["route"] !== "") {
         require $filename_php;
         header("Location: /");
         return;
-
     } else {
         # If the php file exists, run it
         if ($php) {

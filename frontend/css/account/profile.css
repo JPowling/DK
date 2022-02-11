@@ -3,14 +3,12 @@
 .container-inner {
     display: table;
     margin: 0 auto;
-
     width: 50%;
     height: fit-content;
-
     border-radius: 10px;
     border-width: 20px;
-
     background-color: ghostwhite;
+    box-shadow: 0 .1875rem .375rem rgba(0, 0, 0, .25);
 }
 
 .container-outer {
@@ -28,14 +26,10 @@
     margin-top: 0;
     padding-top: 10px;
     padding-bottom: 10px;
-
     color: whitesmoke;
-
     font-family: 'Source Sans Pro', Arial, sans-serif;
     font-weight: 500;
-
     text-decoration: none;
-
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
 }
@@ -43,10 +37,7 @@
 .form-group {
     margin-bottom: 20px;
 }
-th {
-    height: 100px;
-    margin-bottom: 40px;
-}
+
 .form-subgroup {
     width: 50%;
     height: 40px;
@@ -55,16 +46,13 @@ th {
 .button {
     background-color: rgb(247, 247, 247);
     width: calc((250px + 5px*2 + 1px + 15px)*2);
-
     font-size: 22px;
     font-family: 'Source Sans Pro', Arial, sans-serif;
-
     height: 40px;
     margin-top: 40px;
     margin-right: 20px;
     padding: 3px 5px 3px;
     border-radius: 10px;
-
     background-color: rgb(223, 223, 223);
     text-decoration: none;
     color: black;
@@ -82,14 +70,12 @@ th {
     margin-bottom: 3px;
     margin-left: 30px;
     text-align: left;
-
     font-weight: lighter;
 }
 
 .hr {
     background-color: gray;
     height: 1px;
-
     margin-bottom: 15px;
 }
 
