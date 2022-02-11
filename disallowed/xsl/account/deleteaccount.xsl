@@ -4,23 +4,21 @@
 
     <xsl:template match="/" mode="mode">
 
-        <div class="register-container-outer">
-            <div class="register-container-inner">
-                <h1 class="register-title">Account Löschen?</h1>
-                <div class="register-body">
-                    <form class="register-form" action="/account/deleteaccount" method="post">
-                        <input type="password" name="password" class="register-input onlyone" value="{//xml/deleteaccount/password}" placeholder="Passwort" required="" />
+        <div class="container-outer">
+            <div class="container-inner">
+                <h1 class="title">Account Löschen?</h1>
+                <div class="body">
+                    <form class="form" action="/account/deleteaccount" method="post">
+                        <input type="password" name="password" class="input onlyone" value="{//xml/password}" placeholder="Passwort" required="" />
 
-                        <p class="register-message"><xsl:value-of select="xml/login/message"/></p>
-
-                        <xsl:for-each select="xml/deleteaccount/message">
-                            <p class="register-message">
+                        <xsl:for-each select="xml/message">
+                            <p class="message">
                                 <xsl:value-of select="." />
                             </p>
                         </xsl:for-each>
 
-                        <div class="register-form-group">
-                            <button type="submit" class="register-button register-input red redtext">Account Löschen</button>
+                        <div class="form-group">
+                            <button type="submit" class="button input red redtext">Account Löschen</button>
                         </div>
                     </form>
                 </div>

@@ -1,6 +1,6 @@
 /* Paul */
 
-.profile-container-inner {
+.container-inner {
     display: table;
     margin: 0 auto;
 
@@ -13,16 +13,16 @@
     background-color: ghostwhite;
 }
 
-.profile-container-outer {
+.container-outer {
     margin-top: 1cm;
     width: 100%;
 }
 
-.profile-body {
+.body {
     padding: 0 2cm 1cm;
 }
 
-.profile-title {
+.title {
     text-align: center;
     background-color: var(--main-color);
     margin-top: 0;
@@ -40,19 +40,19 @@
     border-top-right-radius: 10px;
 }
 
-.profile-form-group {
+.form-group {
     margin-bottom: 20px;
 }
 th {
     height: 100px;
     margin-bottom: 40px;
 }
-.profile-form-subgroup {
+.form-subgroup {
     width: 50%;
     height: 40px;
 }
 
-.profile-button {
+.button {
     background-color: rgb(247, 247, 247);
     width: calc((250px + 5px*2 + 1px + 15px)*2);
 
@@ -70,13 +70,13 @@ th {
     color: black;
 }
 
-.profile-text {
+.text {
     font-size: 22px;
     font-family: 'Source Sans Pro', Arial, sans-serif;
     margin-bottom: 5px;
 }
 
-.profile-value {
+.value {
     font-size: 15px;
     margin-top: 0;
     margin-bottom: 3px;
@@ -93,7 +93,7 @@ th {
     margin-bottom: 15px;
 }
 
-.profile-button:hover {
+.button:hover {
     background-color: rgb(209, 209, 209);
     cursor: pointer;
 }
