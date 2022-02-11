@@ -78,3 +78,7 @@
     background-color: rgb(209, 209, 209);
     cursor: pointer;
 }
+
+.red {
+    border: 1px solid red;
+}
