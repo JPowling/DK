@@ -6,7 +6,7 @@
 
         <div class="register-container-outer">
             <div class="register-container-inner">
-                <h1 class="register-title">Anmelden</h1>
+                <h1 class="register-title">Passwört ändern</h1>
                 <div class="register-body">
                     <form class="register-form" action="/account/changepassword" method="post">
                         <input type="password" name="password_old" class="register-input" value="{//xml/changepassword/password_old}" placeholder="Altes Passwort" required="" />
