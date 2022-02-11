@@ -30,6 +30,14 @@
                             <xsl:when test="xml/loggedin = '1'">
                                 <a class="header-button" href="/account/profile">Profil</a>
                                 <a class="header-button" href="/account/logout">Ausloggen</a>
+
+                                <xsl:if test="(xml/privileges = 'Moderator') or (xml/privileges = 'Admin')">
+                                    <a class="header-button" href="/moderation">Moderation</a>
+                                </xsl:if>
+                                <xsl:if test="xml/privileges = 'Admin'">
+                                    <a class="header-button" href="/administration">Administration</a>
+                                </xsl:if>
+
                                 <a class="welcome">Willkommen, <xsl:value-of select="//xml/forename"></xsl:value-of></a>
                             </xsl:when>
 
