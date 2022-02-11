@@ -4,7 +4,7 @@
     display: table;
     margin: 0 auto;
 
-    width: fit-content;
+    width: 50%;
     height: fit-content;
 
     border-radius: 10px;
@@ -43,6 +43,14 @@
 .profile-form-group {
     margin-bottom: 20px;
 }
+th {
+    height: 100px;
+    margin-bottom: 40px;
+}
+.profile-form-subgroup {
+    width: 50%;
+    height: 40px;
+}
 
 .profile-button {
     background-color: rgb(247, 247, 247);
@@ -53,12 +61,36 @@
 
     height: 40px;
     margin-top: 40px;
+    margin-right: 20px;
     padding: 3px 5px 3px;
     border-radius: 10px;
 
     background-color: rgb(223, 223, 223);
     text-decoration: none;
     color: black;
+}
+
+.profile-text {
+    font-size: 22px;
+    font-family: 'Source Sans Pro', Arial, sans-serif;
+    margin-bottom: 5px;
+}
+
+.profile-value {
+    font-size: 15px;
+    margin-top: 0;
+    margin-bottom: 3px;
+    margin-left: 30px;
+    text-align: left;
+
+    font-weight: lighter;
+}
+
+.hr {
+    background-color: gray;
+    height: 1px;
+
+    margin-bottom: 15px;
 }
 
 .profile-button:hover {

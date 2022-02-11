@@ -1,5 +1,6 @@
 <?php
 # Paul
+ensure_loggedin();
 
 if ($_POST) {
     $reload = false;
@@ -9,7 +10,7 @@ if ($_POST) {
         $reload = true;
         $changepassword->addChild("message", "Die Passwörter stimmen nicht überein!");
 
-    } else if (!is_loggedin()) {
+    } else if (!is_loggedin()) { // double check
         $reload = true;
         $changepassword->addChild("message", "Aus irgendeinem Grund bist du nicht angemeldet!");
 

@@ -35,3 +35,9 @@ function logout() {
 function is_loggedin() {
     return $_SESSION && isset($_SESSION['email']);
 }
+
+function ensure_loggedin() {
+    if (!is_loggedin()) {
+        header("Location: /notloggedin");
+    }
+}

@@ -1,11 +1,12 @@
 <?php
 # Paul
+ensure_loggedin();
 
 if ($_POST) {
     $reload = false;
     $deleteaccount = $xml->addChild("deleteaccount");
 
-    if (!is_loggedin()) {
+    if (!is_loggedin()) { // double check
         $reload = true;
         $deleteaccount->addChild("message", "Aus irgendeinem Grund bist du nicht angemeldet!");
 
