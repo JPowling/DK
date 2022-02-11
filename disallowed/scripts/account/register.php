@@ -86,12 +86,6 @@ if ($_POST) {
     } else {
         // Valid data, create accound and login
 
-        // replace all " to \" and ' to \' to achieve a little more sql injection safety
-        foreach ($columns as $key => $value){
-            $value = str_replace("'", "\\'", $value);
-            $columns[$key]  = str_replace("\"", "\\\"", $value);
-        }
-
         if (is_loggedin()) {
             logout();
         }
@@ -100,7 +94,7 @@ if ($_POST) {
         login($_POST["email"], $_POST["password"]);
 
         if (is_loggedin()) {
-            $user = new User($_SESSION["email"], false);
+            $user = new User($_SESSION["email"]);
 
             $user->forename = strval($_POST["forename"]);
             $user->surname = strval($_POST["surname"]);

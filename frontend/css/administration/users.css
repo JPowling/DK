@@ -1,0 +1,56 @@
+@import "../account/profile.css";
+
+.container-inner {
+    display: table;
+    margin: 0 auto;
+    width: 40%;
+    height: fit-content;
+    border-radius: 10px;
+    border-width: 20px;
+    background-color: ghostwhite;
+    box-shadow: 0 .1875rem .375rem rgba(0, 0, 0, .25);
+}
+
+.user {
+    text-decoration: none;
+    color: black;
+
+    margin-bottom: 5px;
+
+    border: 1px solid gray;
+    border-radius: 10px;
+    font-family: 'Source Sans Pro', Arial, sans-serif;
+}
+
+.user:hover {
+    background-color: rgb(219, 219, 219);
+}
+
+.user-link {
+    display: flex;
+
+    padding: 5px 3px 5px;
+
+    text-decoration: none;
+    color: black;
+}
+
+.empty-left {
+    flex: 5;
+    font-weight: 600;
+}
+
+.user-name {
+    flex: 40;
+    font-weight: 600;
+}
+
+.user-rank {
+    flex: 50;
+    font-weight: 600;
+}
+
+.user-creation_date {
+    flex: 40;
+    font-weight: 600;
+}

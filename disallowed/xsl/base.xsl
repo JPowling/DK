@@ -35,7 +35,7 @@
                                     <a class="header-button" href="/moderation">Moderation</a>
                                 </xsl:if>
                                 <xsl:if test="xml/privileges = 'Admin'">
-                                    <a class="header-button" href="/administration">Administration</a>
+                                    <a class="header-button" href="/administration/users">Administration</a>
                                 </xsl:if>
 
                                 <a class="welcome">Willkommen, <xsl:value-of select="//xml/forename"></xsl:value-of></a>

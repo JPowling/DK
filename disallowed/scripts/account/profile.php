@@ -16,3 +16,4 @@ $xml->addChild("residence", "$user->residence");
 $xml->addChild("postal", "$user->postal");
 $xml->addChild("street", "$user->street");
 $xml->addChild("house", "$user->house");
+$xml->addChild("creation_date", "$user->creation_date");

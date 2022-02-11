@@ -41,3 +41,27 @@ function ensure_loggedin() {
         header("Location: /notloggedin");
     }
 }
+
+function ensure_moderator() {
+    if (is_loggedin()) {
+        $user = new User($_SESSION["email"]);
+
+        $rank = $user->get_privileges();
+
+        if ($rank !== "Moderator" or $rank !== "Admin") {
+            header("Location: /");
+        }
+    }
+}
+
+function ensure_admin() {
+    if (is_loggedin()) {
+        $user = new User($_SESSION["email"]);
+
+        $rank = $user->get_privileges();
+
+        if ($rank != "Admin") {
+            header("Location: /");
+        }
+    }
+}
