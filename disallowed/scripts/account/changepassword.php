@@ -31,6 +31,12 @@ if ($_POST) {
         }
         return;
     } else {
+        // SQL injection protection
+        foreach ($columns as $key => $value){
+            $value = str_replace("'", "\\'", $value);
+            $columns[$key]  = str_replace("\"", "\\\"", $value);
+        }
+
         $user = new User($_SESSION["email"]);
         $user->set_password($_POST["password"]);
 

@@ -26,12 +26,12 @@
                             <input type="number" name="phone" class="register-input {//xml/register/phone_red}" value="{//xml/register/phone}" placeholder="Telefonnummer" required="" />
                         </div>
                         <div class="register-form-group">
-                            <input type="number" name="postal" class="register-input {//xml/register/postal_red}" value="{//xml/register/postal}" placeholder="PLZ" required="" />
-                            <input type="text" name="residence" class="register-input" value="{//xml/register/residence}" placeholder="Wohnort" required="" />
-                        </div>
-                        <div class="register-form-group">
                             <input type="text" name="street" class="register-input" value="{//xml/register/street}" placeholder="Straße" required="" />
                             <input type="text" name="house" class="register-input" value="{//xml/register/house}" placeholder="Hausnummer" required="" />
+                        </div>
+                        <div class="register-form-group">
+                            <input type="number" name="postal" class="register-input {//xml/register/postal_red}" value="{//xml/register/postal}" placeholder="PLZ" required="" />
+                            <input type="text" name="residence" class="register-input" value="{//xml/register/residence}" placeholder="Wohnort" required="" />
                         </div>
 
                         <xsl:for-each select="xml/register/message">

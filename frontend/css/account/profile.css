@@ -40,6 +40,10 @@
     border-top-right-radius: 10px;
 }
 
+.profile-form-group {
+    margin-bottom: 20px;
+}
+
 .profile-button {
     background-color: rgb(247, 247, 247);
     width: calc((250px + 5px*2 + 1px + 15px)*2);
@@ -60,4 +64,8 @@
 .profile-button:hover {
     background-color: rgb(209, 209, 209);
     cursor: pointer;
+}
+
+.red {
+    color: red;
 }

@@ -59,7 +59,7 @@ if ($_POST) {
         $register->addChild("message", "Die Telefonnummer ist ungültig!");
         $register->addChild("phone_red", "red");
     }
-    if (strlen($_POST["postal"]) !== 6 || !is_numeric($_POST["postal"])) {
+    if (strlen($_POST["postal"]) !== 5 || !is_numeric($_POST["postal"])) {
         $reload = true;
         $register->addChild("message", "Die Postleitzahl hat einen ungültigen Wert!");
         $register->addChild("postal_red", "red");

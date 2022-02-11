@@ -9,7 +9,11 @@
                 <h1 class="profile-title">Profil</h1>
                 <div class="profile-body">
                     
-                    <a href="/account/changepassword" class="profile-button profile-input">Passwort ändern</a>
+                    <div class="profile-form-group">
+                        <a href="/account/changepassword" class="profile-button profile-input">Passwort ändern</a>
+                    </div>
+
+                    <a href="/account/deleteaccount" class="profile-button profile-input red">Profil löschen</a>
 
                 </div>
             </div>

@@ -73,7 +73,7 @@ class User {
     }
 
     public static function verify_password(string $email, string $clearpassword) {
-        $sql = new SQL(false);
+        $sql = new SQL();
         $result = $sql->sql_request("SELECT PasswordHash FROM Benutzer WHERE EMail='$email'");
         
         if ($result->get_num_rows() !== 1) {
@@ -82,6 +82,13 @@ class User {
 
         $hash = $result->get_from_column("PasswordHash");
         return password_verify($clearpassword, $hash);
+    }
+
+    public static function delete_account(string $email) {
+        $sql = new SQL(true);
+        $sql->sql_request("DELETE FROM Benutzer WHERE EMail='$email'");
+
+
     }
 
 }
