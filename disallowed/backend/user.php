@@ -39,12 +39,31 @@ class User {
 
     // Store data in database
     public function store_data() {
+        $sql = new SQL(true);
 
+        $sql->sql_request("UPDATE Benutzer SET Name='$this->surname', "
+                            ."Vorname='$this->forename', Telefon='$this->phone', "
+                            ."Ort='$this->residence', PLZ='$this->postal', "
+                            ."Strasse='$this->street', Hausnummer='$this->house' "
+                            ."WHERE EMail='$this->email'");
+    }
+
+    public function set_password(string $clearpassword) {
+        $sql = new SQL(true);
+        $hash = password_hash($clearpassword, PASSWORD_DEFAULT);
+
+        $sql->sql_request("UPDATE Benutzer SET PasswordHash='$hash' WHERE EMail='$this->email'");
+    }
+
+    public static function email_exists(string $email) {
+        $sql = new SQL();
+        echo $sql->sql_request("SELECT * FROM Benutzer WHERE EMail='$email'")->get_num_rows();
+        return $sql->sql_request("SELECT * FROM Benutzer WHERE EMail='$email'")->get_num_rows() == 1;
     }
 
     public static function create_account(string $email, string $clearpassword) {
         $sql = new SQL(true);
-        if ($sql->sql_request("SELECT * FROM Benutzer WHERE EMail='$email'")->get_num_rows() !== 1) {
+        if ($sql->sql_request("SELECT * FROM Benutzer WHERE EMail='$email'")->get_num_rows() == 1) {
             return false;
         }
 
@@ -63,6 +82,13 @@ class User {
 
         $hash = $result->get_from_column("PasswordHash");
         return password_verify($clearpassword, $hash);
+    }
+
+    public static function delete_account(string $email) {
+        $sql = new SQL(true);
+        $sql->sql_request("DELETE FROM Benutzer WHERE EMail='$email'");
+
+
     }
 
 }

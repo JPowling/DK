@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Jens -->
+<!-- Paul -->
 <xsl:stylesheet version="1.0"
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
@@ -12,8 +12,7 @@
                 </div>
                 <div class="box-body">
                     <div class="box-content">
-                        <p>Diesen Pfad scheint es nicht zu geben.</p>
-                        <p>Durch einen Klick auf das Logo oben links landen Sie wieder auf der Homepage!</p>
+                        <p>Es ist notwendig, eingeloggt zu sein, bevor diese Seite zugreifbar ist!</p>
                     </div>
                 </div>
             </div>

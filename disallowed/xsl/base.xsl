@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Paul -->
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" id="start">
     <xsl:output method="html" encoding="utf-8" indent="yes" />
 
@@ -27,8 +28,9 @@
 
                         <xsl:choose>
                             <xsl:when test="xml/loggedin = '1'">
-                                <a class="header-button" href="/profile">Profil</a>
+                                <a class="header-button" href="/account/profile">Profil</a>
                                 <a class="header-button" href="/account/logout">Ausloggen</a>
+                                <a class="welcome">Willkommen, <xsl:value-of select="//xml/forename"></xsl:value-of></a>
                             </xsl:when>
 
                             <xsl:otherwise>

@@ -1,31 +1,29 @@
 <?php
-# Owner: Paul
+# Paul
 
 require_once "disallowed/backend/user.php";
 
 function login(string $email, string $clearpassword) {
     if (is_loggedin()) {
-        return "already logged in";
+        return false;
     }
 
     if (User::verify_password($email, $clearpassword)) {
         $user = new User($email);
 
-        $_SESSION['user'] = $user;
+        $user->fetch();
 
-        return "logged in";
+        $_SESSION['email'] = $email;
+
+        return true;
     }
 
-    return "invalid credentials";
+    return false;
 }
 
-function logout(bool $force = false) {
-    if (!is_loggedin() || $force) {
-        return "not logged in";
-    }
-
+function logout() {
     setcookie(session_name(), '');
-    session_reset();
+    $_SESSION = array();
     session_unset();
 
     session_destroy();
@@ -35,5 +33,11 @@ function logout(bool $force = false) {
 }
 
 function is_loggedin() {
-    return isset($_SESSION['user']);
+    return $_SESSION && isset($_SESSION['email']);
+}
+
+function ensure_loggedin() {
+    if (!is_loggedin()) {
+        header("Location: /notloggedin");
+    }
 }

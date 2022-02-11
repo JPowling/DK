@@ -1,3 +1,4 @@
+/* Paul */
 :root {
     --background: #afdae9;
     --main-color: #2C738A;
@@ -75,4 +76,23 @@ footer {
 .logo {
     height: 42px;
     width: 60px;
+}
+
+.welcome {
+    display: flex;
+    align-items: center;
+
+    border-radius: 10px;
+    color: whitesmoke;
+    font-size: 26px;
+    font-family: sans-serif;
+    text-decoration: none;
+
+    width: 20cm;
+
+    margin-left: 20px;
+    margin-right: 20px;
+
+    padding-left: 10px;
+    padding-right: 10px;
 }
