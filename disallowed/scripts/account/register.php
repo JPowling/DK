@@ -28,7 +28,7 @@ if ($_POST) {
     if (strlen($_POST["email"]) > 50) {
         $reload = true;
         $xml->addChild("message", "Die E-Mail Adresse ist zu lang!");
-        $xml->addChild("surname_red", "red");
+        $xml->addChild("email_red", "red");
     }
     if ($_POST["email"] !== $_POST["email2"]) {
         $reload = true;
@@ -51,7 +51,7 @@ if ($_POST) {
             
         $reload = true;
         $xml->addChild("message", "Das Passwort muss mindestens einen Buchstaben, eine Zahl und 6 Zeichen Lang sein!");
-        $xml->addChild("surname_red", "red");
+        $xml->addChild("password_red", "red");
     }
     if (strlen($_POST["phone"]) > 30 || !is_numeric($_POST["phone"])) {
         $reload = true;
@@ -109,5 +109,3 @@ if ($_POST) {
         }
     }
 }
-
-#echo "This is php";

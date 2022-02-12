@@ -72,7 +72,6 @@ class User {
 
     public static function email_exists(string $email) {
         $sql = new SQL();
-        echo $sql->sql_request("SELECT * FROM Benutzer WHERE EMail='$email'")->get_num_rows();
         return $sql->sql_request("SELECT * FROM Benutzer WHERE EMail='$email'")->get_num_rows() == 1;
     }
 

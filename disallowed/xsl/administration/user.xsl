@@ -71,9 +71,7 @@
                             Administrator
                         </a>
 
-                        
                     </div>
-
 
                 </div>
             </div>
