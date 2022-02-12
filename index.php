@@ -46,6 +46,7 @@ if ($_GET && isset($_GET["route"]) && $_GET["route"] !== "") {
     }
 } else {
     # Main page
+    require "disallowed/scripts/mainpage.php";
     $xslcontent = 'mainpage';
 }
 

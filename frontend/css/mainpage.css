@@ -1,0 +1,60 @@
+/* Jens */
+
+.outer-box {
+    margin-top: 10px;
+    width: 100%;
+}
+
+.inner-box {
+    display: flex;
+}
+
+.menu-box {
+    /* width: 10%; */
+    flex: 10;
+    min-width: fit-content;
+    background-color: ghostwhite;
+    box-shadow: 0 .1875rem .375rem rgba(0, 0, 0, .25);
+}
+
+.content-box {
+    /* width: 75%; */
+    flex: 75;
+    margin-left: 7.5%;
+    margin-right: 7.5%;
+    background-color: ghostwhite;
+    box-shadow: 0 .1875rem .375rem rgba(0, 0, 0, .25);
+}
+
+.menu-header {
+    padding: 5px;
+    background-color: var(--main-color-darker);
+}
+
+.menu-button {
+    padding-left: 10px;
+    padding-top: 15px;
+    padding-right: 15px;
+    padding-bottom: 15px;
+    background-color: ghostwhite;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.menu-button:hover {
+    background-color: rgb(176, 176, 185);
+    cursor: pointer;
+}
+
+.icon {
+    height: 25px;
+}
+
+h2 {
+    padding-left: 10px;
+    text-align: left;
+}
+
+a {
+    text-decoration: none;
+    color: black;
+}
