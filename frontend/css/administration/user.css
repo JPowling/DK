@@ -17,3 +17,11 @@
 .green {
     color: green;
 }
+
+.ALARM {
+    position: absolute;
+    margin-top: 50cm;
+
+    border: 1cm outset red;
+    color: black;
+}

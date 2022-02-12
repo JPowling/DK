@@ -70,6 +70,8 @@
                             </xsl:attribute>
                             Administrator
                         </a>
+
+                        
                     </div>
 
 
@@ -77,6 +79,9 @@
             </div>
         </div>
 
+        <a href="/administration/user?id={//xml/id}&amp;delete=yes" class="button input ALARM">
+            !Profil Löschen!
+        </a>
     </xsl:template>
 
 </xsl:stylesheet>

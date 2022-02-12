@@ -56,4 +56,10 @@ if (isset($_GET["id"])) {
     $xml->addChild("creation_date", "$user->creation_date");
     $xml->addChild("id", $_GET["id"]);
     $xml->addChild("rank", $user->get_privileges());
+
+    
+    if (isset($_GET["delete"]) && $email != $_SESSION["email"] && $user->get_privileges() != "Admin") {
+        User::delete_account($email);
+        header("Location: /administration/users");
+    }
 }
