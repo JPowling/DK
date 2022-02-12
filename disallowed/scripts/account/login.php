@@ -1,5 +1,6 @@
 <?php
 # Paul
+$xml->addChild("title", "Einloggen | BD");
 
 if ($_POST) {
     if (login($_POST["email"], $_POST["password"])) {

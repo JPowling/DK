@@ -1,6 +1,7 @@
 <?php
 # Paul
 ensure_loggedin();
+$xml->addChild("title", "Passwort ändern | BD");
 
 if ($_POST) {
     $reload = false;

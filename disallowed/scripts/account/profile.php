@@ -1,7 +1,10 @@
 <?php
 ensure_loggedin();
 
+
 $user = new User($_SESSION["email"]);
+
+$xml->addChild("title", "Dein Profil: $user->forename | BD");
 
 $xml->addChild("fullname", "$user->forename $user->surname");
 $xml->addChild("fulladdress", "$user->street $user->house");

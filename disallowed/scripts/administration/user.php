@@ -2,6 +2,7 @@
 # Paul
 ensure_admin();
 
+
 $ownuser = new User($_SESSION["email"]);
 $xml->addChild("forename", "$ownuser->forename");
 
@@ -39,6 +40,8 @@ if (isset($_GET["id"])) {
     }
 
     $user = new User($email);
+    
+    $xml->addChild("title", "Benutzer einsehen: $user->forename | BD");
 
     $xml->addChild("fullname", "$user->forename $user->surname");
     $xml->addChild("fulladdress", "$user->street $user->house");

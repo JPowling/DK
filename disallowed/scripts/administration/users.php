@@ -13,6 +13,8 @@ $info->addChild("name", "Name");
 $info->addChild("rank", "Rang");
 $info->addChild("creation_date", "Erstelldatum");
 
+$xml->addChild("title", "Liste aller Benutzer | BD");
+
 foreach ($result as $index => $row) {
     $user = $xml->addChild("user");
 

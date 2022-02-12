@@ -1,6 +1,8 @@
 <?php
 # Paul
 
+$xml->addChild("title", "Neuen Account anlegen | BD");
+
 if ($_POST) {
     $reload = false;
 

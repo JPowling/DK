@@ -14,7 +14,7 @@
                 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
                 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-                <title>#Jens</title>
+                <title><xsl:value-of select="xml/title"></xsl:value-of></title>
 
                 <link rel="stylesheet" href="/frontend/css/base.css" />
             </head>
