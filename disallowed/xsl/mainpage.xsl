@@ -27,7 +27,6 @@
                                 <img class="icon" src="frontend/res/icon-linien.png" />
                                 Bahnhöfe
                             </a>
-
                         </div>
 
                     </div>
