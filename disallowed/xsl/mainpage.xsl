@@ -14,20 +14,28 @@
                         <h2>Menü</h2>
                     </div>
                     <div class="menu-content">
-                        <div class="menu-button">
 
-                            <a href="/?site=linien">
-                                <img class="icon" src="frontend/res/icon-linien.png" />
-                                Linien
-                            </a>
-                        </div>
+                        <a style="display:block" href="/?site=linien">
+                            <div class="menu-button">
+                                <img class="menu-button-icon" src="frontend/res/icon-linien.png" />
+                                <div class="menu-button-text">
+                                    <p>
+                                        Linien
+                                    </p>
+                                </div>
+                            </div>
+                        </a>
 
-                        <div class="menu-button">
-                            <a href="/?site=bahnofe">
-                                <img class="icon" src="frontend/res/icon-linien.png" />
-                                Bahnhöfe
-                            </a>
-                        </div>
+                        <a style="display:block" href="/?site=bahnofe">
+                            <div class="menu-button">
+                                <img class="menu-button-icon" src="frontend/res/icon-bahnhof.png" />
+                                <div class="menu-button-text">
+                                    <p>
+                                        Bahnhöfe
+                                    </p>
+                                </div>
+                            </div>
+                        </a>
 
                     </div>
 
