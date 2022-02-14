@@ -114,6 +114,10 @@
 
                 <xsl:choose>
                     <xsl:when test="xml/selection">
+                        <p class="bold">
+                            Du betrachtest: Zug mit Fahrzeugnummer <xsl:value-of select="xml/id" />
+                        </p>
+
                         <form action="/moderation/overview?view=f&amp;id={xml/id}" method="post">
                             <p>Sitzplätze:</p>
                             <input type="number" name="seats" value="{xml/selection/seats}"/>

@@ -30,6 +30,9 @@ function load_f($xml) {
 
     if (isset($_GET["create"])) {
         $_GET["id"] = Train::create(1);
+
+        header("Location: /moderation/overview?view=f&id=".$_GET["id"]);
+        return;
     }
 
     $trains = Train::get_trains();
