@@ -95,7 +95,7 @@
                     <br />
                     (Fokus auf Textbox verlieren)
                 </p>
-                <input list="trains" id="trains_select" onfocusout="trainsFocusOut()" value="{xml/id}" />
+                <input list="trains" id="trains_select" onfocusout="trainsFocusOut()" onfocusin="trainsFocusIn()" value="{xml/id}" />
                 <datalist id="trains">
                     <xsl:for-each select="xml/train">
                         <option value="{./id}" />
