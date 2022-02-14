@@ -3,7 +3,7 @@
 
 class Result {
 
-    public $result;
+    public array $result;
 
     public function __construct($result) {
         $this->result = $result;
@@ -13,8 +13,12 @@ class Result {
         return (new Result(array_slice($this->result, $first_row, $num_rows)));
     }
 
+    public function get_row(int $row) {
+        return array_slice($this->result, $row, 1);
+    }
+
     public function get_from_column(string $column, int $index = 0) {
-        return (new Result(array_column($this->result, $column)[$index]));
+        return array_column($this->result, $column)[$index];
     }
 
     public function get_column(string $column, int $first_row = 0, int $num_rows = PHP_INT_MAX) {

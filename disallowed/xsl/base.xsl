@@ -32,7 +32,7 @@
                                 <a class="header-button" href="/account/logout">Ausloggen</a>
 
                                 <xsl:if test="(xml/privileges = 'Moderator') or (xml/privileges = 'Admin')">
-                                    <a class="header-button" href="/moderation">Moderation</a>
+                                    <a class="header-button" href="/moderation/overview?view=f">Moderation</a>
                                 </xsl:if>
                                 <xsl:if test="xml/privileges = 'Admin'">
                                     <a class="header-button" href="/administration/users">Administration</a>

@@ -1,14 +1,7 @@
 @import "../account/profile.css";
 
 .container-inner {
-    display: table;
-    margin: 0 auto;
     width: 40%;
-    height: fit-content;
-    border-radius: 10px;
-    border-width: 20px;
-    background-color: ghostwhite;
-    box-shadow: 0 .1875rem .375rem rgba(0, 0, 0, .25);
 }
 
 .user {
