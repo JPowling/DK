@@ -7,7 +7,7 @@ class Station {
     public int $name;
     public int $platforms;
 
-    public function __construct(int $short, int $name, $platforms) {
+    public function __construct(int $short, int $name, int $platforms) {
         $this->short = $short;
         $this->name = $name;
         $this->platforms = $platforms;
@@ -33,7 +33,7 @@ class Station {
         $stations = array();
 
         foreach ($result as $index => $row) {
-            array_push($trains, new Station($row["Kennzeichnung"], $row["Name"], $row["Gleise"]));
+            array_push($stations, new Station($row["Kennzeichnung"], $row["Name"], $row["Gleise"]));
         }
 
         return $stations;

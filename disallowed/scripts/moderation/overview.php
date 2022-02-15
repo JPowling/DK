@@ -1,7 +1,11 @@
 <?php
 # Paul
 
-require_once "disallowed/backend/train.php";
+require_once "disallowed/backend/database_wrappers/train.php";
+require_once "disallowed/backend/database_wrappers/station.php";
+require_once "disallowed/backend/database_wrappers/route.php";
+require_once "disallowed/backend/database_wrappers/line.php";
+require_once "disallowed/backend/database_wrappers/connection.php";
 
 if (isset($_GET["view"])) {
     $xml->addChild("view", $_GET["view"]);
