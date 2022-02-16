@@ -32,6 +32,10 @@ class Result {
         return array_key_last($this->result) + 1;
     }
 
+    public function get_result(){
+        return $this->result;
+    }
+
     public function __toString() {
         return print_r($this->result, true);
     }
