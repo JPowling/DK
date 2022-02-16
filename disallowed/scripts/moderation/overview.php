@@ -71,6 +71,53 @@ function load_f($xml) {
 }
 function load_b($xml) {
     $xml->addChild("title", "Bahnhöfe bearbeiten | BD");
+
+    if (isset($_POST["newshort"]) and !empty($_POST["newshort"])) {
+        $_POST["newshort"] = strtoupper($_POST["newshort"]);
+
+        $tocheck = Station::by_id($_POST["newshort"]);
+        if (isset($tocheck)) {
+            // Bahnhofkürzel existiert schon
+            header("Location: /moderation/overview?view=b");
+        }
+
+        Station::create($_POST["newshort"], "Bitte sofort ändern");
+
+        header("Location: /moderation/overview?view=b&id=".$_POST["newshort"]);
+        return;
+    }
+
+    $stations = Station::get_stations();
+
+    foreach ($stations as $station) {
+        $xmlstation = $xml->addChild("station");
+        $xmlstation->addChild("id", $station->short);
+        $xmlstation->addChild("name", $station->name);
+        $xmlstation->addChild("platforms", $station->platforms);
+    }
+
+    if (isset($_GET["id"])) {
+        $station = Station::by_id($_GET["id"]);
+
+        if (isset($station)) {
+            if (isset($_POST["name"], $_POST["platforms"]) && is_numeric($_POST["platforms"])) {
+                $station->name = $_POST["name"];
+                $station->platforms = $_POST["platforms"];
+                $station->save();
+            }
+
+            if (isset($_GET["delete"])) {
+                $station->delete();
+                header("Location: /moderation/overview?view=b");
+            }
+
+            $xml->addChild("id", $_GET["id"]);
+            $selection = $xml->addChild("selection");
+            $selection->addChild("id", $station->short);
+            $selection->addChild("name", $station->name);
+            $selection->addChild("platforms", $station->platforms);
+        }
+    }
 }
 function load_r($xml) {
     $xml->addChild("title", "Routen bearbeiten | BD");

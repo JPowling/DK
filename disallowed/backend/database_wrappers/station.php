@@ -3,11 +3,11 @@
 
 class Station {
 
-    public int $short;
-    public int $name;
+    public string $short;
+    public string $name;
     public int $platforms;
 
-    public function __construct(int $short, int $name, int $platforms) {
+    public function __construct(string $short, string $name, int $platforms) {
         $this->short = $short;
         $this->name = $name;
         $this->platforms = $platforms;
@@ -16,13 +16,13 @@ class Station {
     public function save() {
         $sql = new SQL(true);
 
-        $sql->sql_request("UPDATE Bahnhofe SET Name=$this->name, Gleise=$this->platforms WHERE Kennzeichnung=$this->short");
+        $sql->sql_request("UPDATE Bahnhofe SET Name='$this->name', Gleise=$this->platforms WHERE Kennzeichnung=$this->short");
     }
 
     public function delete() {
         $sql = new SQL(true);
 
-        $sql->sql_request("DELETE FROM Bahnhofe WHERE Kennzeichnung=$this->short");
+        $sql->sql_request("DELETE FROM Bahnhofe WHERE Kennzeichnung='$this->short'");
     }
 
     public static function get_stations() {

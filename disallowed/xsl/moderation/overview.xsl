@@ -105,7 +105,7 @@
                 <p>
                     Oder:
                 </p>
-                <br/>
+                <br />
 
                 <a class="navigator-button" href="/moderation/overview?view=f&amp;create=1">Neues Fahrzeug anlegen</a>
             </div>
@@ -115,16 +115,17 @@
                 <xsl:choose>
                     <xsl:when test="xml/selection">
                         <p class="bold">
-                            Du betrachtest: Zug mit Fahrzeugnummer <xsl:value-of select="xml/id" />
+                            Du betrachtest: Zug mit Fahrzeugnummer
+                            <xsl:value-of select="xml/id" />
                         </p>
 
                         <form action="/moderation/overview?view=f&amp;id={xml/id}" method="post">
                             <p>Sitzplätze:</p>
-                            <input type="number" name="seats" value="{xml/selection/seats}"/>
+                            <input type="number" name="seats" value="{xml/selection/seats}" />
                             <button type="submit" class="button input">Speichern</button>
 
-                            <br/>
-                            <br/>
+                            <br />
+                            <br />
                             <a href="/moderation/overview?view=f&amp;id={xml/id}&amp;delete=1" class="navigator-button delete">Löschen</a>
                         </form>
                     </xsl:when>
@@ -136,7 +137,61 @@
             </div>
         </div>
     </xsl:template>
-    <xsl:template match="/" mode="bahnhofe"></xsl:template>
+    <xsl:template match="/" mode="bahnhofe">
+        <div class="content-parent">
+            <div class="content-search">
+
+                <p>
+                    Bahnhofkürzel eingeben:
+                    <br />
+                    (Fokus auf Textbox verlieren)
+                </p>
+                <input list="stations" id="stations_select" onfocusout="stationsFocusOut()" onfocusin="stationsFocusIn()" value="{xml/id}" />
+                <datalist id="stations">
+                    <xsl:for-each select="xml/stations">
+                        <option value="{./id}" />
+                    </xsl:for-each>
+                </datalist>
+
+                <p>
+                Oder:
+            </p>
+                <br />
+
+                <form action="/moderation/overview?view=b" method="post">
+                    <input type="text" name="newshort" placeholder="Neuer Kürzel" />
+                    <button type="submit">Bahnhof bauen</button>
+                </form>
+            </div>
+            <div class="content-splitter" />
+            <div class="content-result">
+
+                <xsl:choose>
+                    <xsl:when test="xml/selection">
+                        <p class="bold">
+                            Du betrachtest: Bahnhof mit Kürzel
+                            <xsl:value-of select="xml/id" />
+                        </p>
+
+                        <form action="/moderation/overview?view=b&amp;id={xml/id}" method="post">
+                            <!-- TODO -->
+                            <p>Sitzplätze:</p>
+                            <input type="number" name="seats" value="{xml/selection/seats}" />
+                            <button type="submit" class="button input">Speichern</button>
+
+                            <br />
+                            <br />
+                            <a href="/moderation/overview?view=f&amp;id={xml/id}&amp;delete=1" class="navigator-button delete">Löschen</a>
+                        </form>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <p>Es wurde kein Bahnhof ausgewählt</p>
+                    </xsl:otherwise>
+                </xsl:choose>
+
+            </div>
+        </div>
+    </xsl:template>
     <xsl:template match="/" mode="routen"></xsl:template>
     <xsl:template match="/" mode="linien"></xsl:template>
 
