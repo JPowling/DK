@@ -16,13 +16,30 @@ class Station {
     public function save() {
         $sql = new SQL(true);
 
-        $sql->sql_request("UPDATE Bahnhofe SET Name='$this->name', Gleise=$this->platforms WHERE Kennzeichnung=$this->short");
+        $sql->sql_request("UPDATE Bahnhofe SET Name='$this->name', Gleise=$this->platforms WHERE Kennzeichnung='$this->short'");
     }
 
     public function delete() {
         $sql = new SQL(true);
 
         $sql->sql_request("DELETE FROM Bahnhofe WHERE Kennzeichnung='$this->short'");
+    }
+
+    public function get_connections() {
+        $sql = new SQL();
+
+        $result = $sql->sql_request("SELECT BahnhofB, Dauer FROM Verbindungen WHERE BahnhofA='$this->short'")->result;
+
+        $return = array();
+        foreach ($result as $index => $row) {
+            $other = $row["BahnhofB"];
+            $duration = $row["Dauer"];
+            $duration_rev = $sql->sql_request("SELECT Dauer FROM Verbindungen WHERE BahnhofA='$other' AND BahnhofB='$this->short'")->get_from_column("Dauer");
+
+            array_push($return, new Connection($this->short, $other, $duration, $duration_rev));
+        }
+
+        return $return;
     }
 
     public static function get_stations() {
@@ -42,7 +59,7 @@ class Station {
     public static function by_id(string $short) {
         $stations = Station::get_stations();
 
-        $stations = array_filter($stations, function($s) use ($short) {
+        $stations = array_filter($stations, function ($s) use ($short) {
             return $s->short == $short;
         });
 

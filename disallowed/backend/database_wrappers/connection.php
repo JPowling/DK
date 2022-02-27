@@ -4,13 +4,13 @@
 class Connection {
 
     public array $connections;
-    public string $station_a;
-    public string $station_b;
     public int $duration;
+    public int $duration_rev;
 
-    public function __construct(string $station_a, string $station_b, int $duration) {
+    public function __construct(string $station_a, string $station_b, int $duration, int $duration_rev = -1) {
         $this->connections = ["a" => $station_a, "b" => $station_b];
         $this->duration = $duration;
+        $this->duration_rev = $duration_rev;
     }
 
     public function save() {

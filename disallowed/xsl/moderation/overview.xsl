@@ -148,7 +148,7 @@
                 </p>
                 <input list="stations" id="stations_select" onfocusout="stationsFocusOut()" onfocusin="stationsFocusIn()" value="{xml/id}" />
                 <datalist id="stations">
-                    <xsl:for-each select="xml/stations">
+                    <xsl:for-each select="xml/station">
                         <option value="{./id}" />
                     </xsl:for-each>
                 </datalist>
@@ -175,13 +175,63 @@
 
                         <form action="/moderation/overview?view=b&amp;id={xml/id}" method="post">
                             <!-- TODO -->
-                            <p>Sitzplätze:</p>
-                            <input type="number" name="seats" value="{xml/selection/seats}" />
+                            <p>Voller Name:</p>
+                            <input type="text" name="fullname" value="{xml/selection/fullname}" />
+                            <p>Gleise:</p>
+                            <input type="number" name="platforms" value="{xml/selection/platforms}" />
+
+                            <table>
+                                <tr>
+                                    <th>
+                                        <p>Verbunden mit:</p>
+                                    </th>
+                                    <th>
+                                        <p>Dauer (min)</p>
+                                    </th>
+                                    <th>
+                                        <p>Dauer Rückweg (min)</p>
+                                    </th>
+                                    <th>
+                                        <p>Verbindung löschen?</p>
+                                    </th>
+                                </tr>
+                                <xsl:for-each select="xml/selection/connection">
+                                    <tr>
+                                        <th>
+                                            <p><xsl:value-of select="./other"></xsl:value-of></p>
+                                            <!-- So that PHP knows what this is connected to (is bad i guess)-->
+                                            <input type="hidden" name="connection-{position()}" value="{./other}" />
+                                        </th>
+                                        <th>
+                                            <input type="number" name="duration-{position()}" value="{./duration}" />
+                                        </th>
+                                        <th>
+                                            <input type="number" name="duration_rev-{position()}" value="{./duration_rev}" />
+                                        </th>
+                                        <th>
+                                            <input type="checkbox" name="delete-{position()}" />
+                                        </th>
+                                    </tr>
+                                </xsl:for-each>
+
+                                <tr>
+                                    <th>
+                                        <p>Neu verbinden: (Kürzel)</p>
+                                    </th>
+                                </tr>
+                                
+                                <tr>
+                                    <th>
+                                        <input type="text" name="new-connection" list="stations" />
+                                    </th>
+                                </tr>
+                            </table>
+
                             <button type="submit" class="button input">Speichern</button>
 
                             <br />
                             <br />
-                            <a href="/moderation/overview?view=f&amp;id={xml/id}&amp;delete=1" class="navigator-button delete">Löschen</a>
+                            <a href="/moderation/overview?view=b&amp;id={xml/id}&amp;delete=1" class="navigator-button delete">Löschen</a>
                         </form>
                     </xsl:when>
                     <xsl:otherwise>

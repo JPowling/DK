@@ -100,10 +100,40 @@ function load_b($xml) {
         $station = Station::by_id($_GET["id"]);
 
         if (isset($station)) {
-            if (isset($_POST["name"], $_POST["platforms"]) && is_numeric($_POST["platforms"])) {
-                $station->name = $_POST["name"];
+            if (isset($_POST["fullname"], $_POST["platforms"]) && is_numeric($_POST["platforms"])) {
+                $station->name = $_POST["fullname"];
                 $station->platforms = $_POST["platforms"];
                 $station->save();
+            }
+
+            $count = 1;
+            while (isset($_POST["connection-$count"], $_POST["duration-$count"], $_POST["duration_rev-$count"])) {
+                $connected = $_POST["connection-$count"];
+                $duration = $_POST["duration-$count"];
+                $duration_rev = $_POST["duration_rev-$count"];
+                $delete = isset($_POST["delete-$count"]);
+
+                $sql = new SQL(true);
+
+                if ($delete) {
+                    $sql->sql_request("DELETE FROM Verbindungen WHERE BahnhofA='".$_GET["id"]."' AND BahnhofB='$connected'");
+                    $sql->sql_request("DELETE FROM Verbindungen WHERE BahnhofB='".$_GET["id"]."' AND BahnhofA='$connected'");
+                } else {
+                    $sql->sql_request("UPDATE Verbindungen SET Dauer=$duration WHERE BahnhofA='".$_GET["id"]."' AND BahnhofB='$connected'");
+                    $sql->sql_request("UPDATE Verbindungen SET Dauer=$duration_rev WHERE BahnhofB='".$_GET["id"]."' AND BahnhofA='$connected'");
+                }
+
+                $count++;
+            }
+
+            if (isset($_POST["new-connection"]) && !empty($_POST["new-connection"])) {
+                $new_connectionstation = Station::by_id($_POST["new-connection"]);
+
+                if (isset($new_connectionstation)) {
+                    $sql = new SQL(true);
+                    $sql->sql_request("INSERT INTO Verbindungen VALUES ('$station->short', '$new_connectionstation->short', 1)");
+                    $sql->sql_request("INSERT INTO Verbindungen VALUES ('$new_connectionstation->short', '$station->short', 1)");
+                }
             }
 
             if (isset($_GET["delete"])) {
@@ -114,8 +144,18 @@ function load_b($xml) {
             $xml->addChild("id", $_GET["id"]);
             $selection = $xml->addChild("selection");
             $selection->addChild("id", $station->short);
-            $selection->addChild("name", $station->name);
+            $selection->addChild("fullname", $station->name);
             $selection->addChild("platforms", $station->platforms);
+
+            $connections = $station->get_connections();
+
+            foreach($connections as $connection) {
+                $connectionxml = $selection->addChild("connection");
+                $connected_station = Station::by_id($connection->connections["b"]);
+                $connectionxml->addChild("other", $connected_station->name);
+                $connectionxml->addChild("duration", $connection->duration);
+                $connectionxml->addChild("duration_rev", $connection->duration_rev);
+            }
         }
     }
 }
