@@ -153,6 +153,7 @@ function load_b($xml) {
                 $connectionxml = $selection->addChild("connection");
                 $connected_station = Station::by_id($connection->connections["b"]);
                 $connectionxml->addChild("other", $connected_station->name);
+                $connectionxml->addChild("other_short", $connected_station->short);
                 $connectionxml->addChild("duration", $connection->duration);
                 $connectionxml->addChild("duration_rev", $connection->duration_rev);
             }

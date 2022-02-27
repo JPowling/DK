@@ -62,3 +62,7 @@
 .bold {
     font-weight: 600;
 }
+
+.row-with-button {
+    height: 30px;
+}

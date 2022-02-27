@@ -196,9 +196,11 @@
                                     </th>
                                 </tr>
                                 <xsl:for-each select="xml/selection/connection">
-                                    <tr>
+                                    <tr class="row-with-button">
                                         <th>
-                                            <p><xsl:value-of select="./other"></xsl:value-of></p>
+                                            <a class="navigator-button" href="/moderation/overview?view=b&amp;id={./other_short}">
+                                                <xsl:value-of select="./other"></xsl:value-of>
+                                            </a>
                                             <!-- So that PHP knows what this is connected to (is bad i guess)-->
                                             <input type="hidden" name="connection-{position()}" value="{./other}" />
                                         </th>
@@ -219,7 +221,7 @@
                                         <p>Neu verbinden: (Kürzel)</p>
                                     </th>
                                 </tr>
-                                
+
                                 <tr>
                                     <th>
                                         <input type="text" name="new-connection" list="stations" />
