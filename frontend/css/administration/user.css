@@ -1,0 +1,27 @@
+@import "../account/profile.css";
+
+.value {
+    font-weight: normal;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    color: black;
+}
+
+.text {
+    color: black;
+}
+
+.change_rank {
+    margin-bottom: 15px;
+}
+
+.green {
+    color: green;
+}
+
+.ALARM {
+    position: absolute;
+    margin-top: 50cm;
+
+    border: 1cm outset red;
+    color: black;
+}

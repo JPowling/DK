@@ -14,7 +14,7 @@
                 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
                 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-                <title>#Jens</title>
+                <title><xsl:value-of select="xml/title"></xsl:value-of></title>
 
                 <link rel="stylesheet" href="/frontend/css/base.css" />
             </head>
@@ -32,10 +32,10 @@
                                 <a class="header-button" href="/account/logout">Ausloggen</a>
 
                                 <xsl:if test="(xml/privileges = 'Moderator') or (xml/privileges = 'Admin')">
-                                    <a class="header-button" href="/moderation">Moderation</a>
+                                    <a class="header-button" href="/moderation/overview?view=f">Moderation</a>
                                 </xsl:if>
                                 <xsl:if test="xml/privileges = 'Admin'">
-                                    <a class="header-button" href="/administration">Administration</a>
+                                    <a class="header-button" href="/administration/users">Administration</a>
                                 </xsl:if>
 
                                 <a class="welcome">Willkommen, <xsl:value-of select="//xml/forename"></xsl:value-of></a>

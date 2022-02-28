@@ -12,6 +12,7 @@ class User {
     public string $postal;
     public string $street;
     public string $house;
+    public string $creation_date;
 
     public function __construct(string $email, bool $autofetch = true) {
         $this->email = $email;
@@ -21,7 +22,7 @@ class User {
         }
     }
 
-    public function get_priviliges() {
+    public function get_privileges() {
         $sql = new SQL();
 
         $result = $sql->sql_request("SELECT Ber.Bezeichnung FROM Benutzer as Ben "
@@ -47,6 +48,7 @@ class User {
         $this->postal = $result->get_from_column("PLZ");
         $this->street = $result->get_from_column("Strasse");
         $this->house = $result->get_from_column("Hausnummer");
+        $this->creation_date = $result->get_from_column("Erstelldatum");
     }
 
     // Store data in database
@@ -56,7 +58,8 @@ class User {
         $sql->sql_request("UPDATE Benutzer SET Name='$this->surname', "
             . "Vorname='$this->forename', Telefon='$this->phone', "
             . "Ort='$this->residence', PLZ='$this->postal', "
-            . "Strasse='$this->street', Hausnummer='$this->house' "
+            . "Strasse='$this->street', Hausnummer='$this->house', "
+            . "Erstelldatum='$this->creation_date' "
             . "WHERE EMail='$this->email'");
     }
 
@@ -69,7 +72,6 @@ class User {
 
     public static function email_exists(string $email) {
         $sql = new SQL();
-        echo $sql->sql_request("SELECT * FROM Benutzer WHERE EMail='$email'")->get_num_rows();
         return $sql->sql_request("SELECT * FROM Benutzer WHERE EMail='$email'")->get_num_rows() == 1;
     }
 
@@ -80,7 +82,7 @@ class User {
         }
 
         $hash = password_hash($clearpassword, PASSWORD_DEFAULT);
-        $sql->sql_request("INSERT INTO Benutzer (BerechtigungsID, EMail, PasswordHash) VALUES (1, '$email', '$hash')");
+        $sql->sql_request("INSERT INTO Benutzer (BerechtigungsID, EMail, PasswordHash, Erstelldatum) VALUES (1, '$email', '$hash', '".date("Y-m-d H:i:s")."')");
         return true;
     }
 

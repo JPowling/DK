@@ -12,6 +12,7 @@ body {
 
 .content {
     margin-left: 5px;
+    font-family: 'Source Sans Pro', Arial, sans-serif;
 }
 
 footer {
@@ -95,4 +96,16 @@ footer {
 
     padding-left: 10px;
     padding-right: 10px;
+}
+
+p {
+    margin: 0;
+    font-weight: 100;
+}
+
+h2 {
+    margin: 0;
+    padding: 10px 15px 10px;
+    font-weight: 500;
+    color: ghostwhite;
 }

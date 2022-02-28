@@ -40,7 +40,7 @@ $xsl->load("disallowed/xsl/base.xsl");
     if (is_loggedin()) {
         $user = new User($_SESSION["email"]);
 
-        $xml->addChild("privileges", $user->get_priviliges());
+        $xml->addChild("privileges", $user->get_privileges());
     }
 }
 

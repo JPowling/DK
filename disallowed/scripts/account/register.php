@@ -1,6 +1,8 @@
 <?php
 # Paul
 
+$xml->addChild("title", "Neuen Account anlegen | BD");
+
 if ($_POST) {
     $reload = false;
 
@@ -28,7 +30,7 @@ if ($_POST) {
     if (strlen($_POST["email"]) > 50) {
         $reload = true;
         $xml->addChild("message", "Die E-Mail Adresse ist zu lang!");
-        $xml->addChild("surname_red", "red");
+        $xml->addChild("email_red", "red");
     }
     if ($_POST["email"] !== $_POST["email2"]) {
         $reload = true;
@@ -51,7 +53,7 @@ if ($_POST) {
             
         $reload = true;
         $xml->addChild("message", "Das Passwort muss mindestens einen Buchstaben, eine Zahl und 6 Zeichen Lang sein!");
-        $xml->addChild("surname_red", "red");
+        $xml->addChild("password_red", "red");
     }
     if (strlen($_POST["phone"]) > 30 || !is_numeric($_POST["phone"])) {
         $reload = true;
@@ -86,12 +88,6 @@ if ($_POST) {
     } else {
         // Valid data, create accound and login
 
-        // replace all " to \" and ' to \' to achieve a little more sql injection safety
-        foreach ($columns as $key => $value){
-            $value = str_replace("'", "\\'", $value);
-            $columns[$key]  = str_replace("\"", "\\\"", $value);
-        }
-
         if (is_loggedin()) {
             logout();
         }
@@ -100,7 +96,7 @@ if ($_POST) {
         login($_POST["email"], $_POST["password"]);
 
         if (is_loggedin()) {
-            $user = new User($_SESSION["email"], false);
+            $user = new User($_SESSION["email"]);
 
             $user->forename = strval($_POST["forename"]);
             $user->surname = strval($_POST["surname"]);
@@ -115,5 +111,3 @@ if ($_POST) {
         }
     }
 }
-
-#echo "This is php";

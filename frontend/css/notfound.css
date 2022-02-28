@@ -9,7 +9,6 @@
     display: inline-block;
     box-shadow: 0 .1875rem .375rem rgba(0, 0, 0, .25);
     background-color: transparent;
-    font-family: 'Source Sans Pro', Arial, sans-serif;
 }
 
 .box-header {
@@ -24,16 +23,4 @@
 
 .box-body {
     background-color: ghostwhite;
-}
-
-p {
-    margin: 0;
-    font-weight: 100;
-}
-
-h2 {
-    margin: 0;
-    padding: 10px 15px 10px;
-    font-weight: 500;
-    color: ghostwhite;
 }

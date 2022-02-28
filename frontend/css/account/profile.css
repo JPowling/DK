@@ -72,6 +72,11 @@
     text-align: left;
     font-weight: lighter;
 }
+.value {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-weight: normal;
+    color: black;
+}
 
 .hr {
     background-color: gray;

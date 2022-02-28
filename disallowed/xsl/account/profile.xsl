@@ -22,6 +22,10 @@
                         <h2 class="value"><xsl:value-of select="xml/fulladdress"></xsl:value-of></h2>
                         <h2 class="value"><xsl:value-of select="xml/fullresidence"></xsl:value-of></h2>
                     </div>
+                    <div class="form-group">
+                        <h1 class="text">Erstelldatum: </h1>
+                        <h2 class="value"><xsl:value-of select="xml/creation_date"></xsl:value-of></h2>
+                    </div>
 
                     <div class="hr"/>
 
