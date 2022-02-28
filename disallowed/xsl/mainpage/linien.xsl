@@ -3,12 +3,22 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
     <xsl:template match="/" mode="mo">
-
-        <p>hallo</p>
         <div>
-            <xsl:for-each select="xml/linien">
-                <p><xsl:value-of select="LinienID"></xsl:value-of></p>
-            </xsl:for-each>
+            <table>
+                <xsl:for-each select="xml/linien">
+                    <tr>
+                        <td>
+                            <xsl:value-of select="LinienID" />
+                        </td>
+                        <td>
+                            <xsl:value-of select="Startzeit" />
+                        </td>
+                        <td>
+                            <xsl:value-of select="ZuggattungsID" />
+                        </td>
+                    </tr>
+                </xsl:for-each>
+            </table>
         </div>
 
     </xsl:template>

@@ -49,3 +49,10 @@ $xslt->importStylesheet($xsl);
 $html = $xslt->transformToXml($xml);
 
 echo $html;
+// echo "hallo";
+// print_r($xml);
+
+$doc =  new DOMDocument();
+$doc->formatOutput = true;
+$doc->loadXML($xml->asXML());
+echo $doc->saveXML();

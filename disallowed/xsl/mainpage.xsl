@@ -26,7 +26,7 @@
                             </div>
                         </a>
 
-                        <a style="display:block" href="/?site=bahnofe">
+                        <a style="display:block" href="/?site=bahnhofe">
                             <div class="menu-button">
                                 <img class="menu-button-icon" src="frontend/res/icon-bahnhof.png" />
                                 <div class="menu-button-text">

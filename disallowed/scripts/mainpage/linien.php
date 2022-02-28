@@ -13,11 +13,9 @@ if ($result->get_num_rows() > 1) {
     if (key_exists("LinienID", $array[0]) && key_exists("Startzeit", $array[0]) && key_exists("ZuggattungsID", $array[0])) {
         foreach ($array as $key => $row) {
             $linien_node = $xml->addChild("linien");
-            $linien_node->addChild("LinienID")->addChild($row["LinienID"]);
-            $linien_node->addChild("Startzeit")->addChild($row["Startzeit"]);
-            $linien_node->addChild("ZuggattungsID")->addChild($row["ZuggattungsID"]);
+            $linien_node->addChild("LinienID", $row["LinienID"]);
+            $linien_node->addChild("Startzeit", $row["Startzeit"]);
+            $linien_node->addChild("ZuggattungsID", $row["ZuggattungsID"]);
         }
     }
-    echo "<br/>";
-    echo print_r($xml, false);
 }
