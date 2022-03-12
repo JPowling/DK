@@ -26,7 +26,6 @@ function stationsFocusIn() {
   document.getElementById("stations_select").value = "";
 }
 
-// https://stackoverflow.com/questions/24934669/how-can-i-validate-the-input-from-a-html5-datalist
 function is_valid_datalist_value(idDataList, inputValue) {
   var option = document.querySelector("#" + idDataList + " option[value='" + inputValue + "']");
   if (option != null) {

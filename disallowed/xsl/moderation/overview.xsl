@@ -202,7 +202,7 @@
                                                 <xsl:value-of select="./other"></xsl:value-of>
                                             </a>
                                             <!-- So that PHP knows what this is connected to (is bad i guess)-->
-                                            <input type="hidden" name="connection-{position()}" value="{./other}" />
+                                            <input type="hidden" name="connection-{position()}" value="{./other_short}" />
                                         </th>
                                         <th>
                                             <input type="number" name="duration-{position()}" value="{./duration}" />

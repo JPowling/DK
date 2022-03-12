@@ -116,11 +116,12 @@ function load_b($xml) {
                 $sql = new SQL(true);
 
                 if ($delete) {
-                    $sql->sql_request("DELETE FROM Verbindungen WHERE BahnhofA='".$_GET["id"]."' AND BahnhofB='$connected'");
-                    $sql->sql_request("DELETE FROM Verbindungen WHERE BahnhofB='".$_GET["id"]."' AND BahnhofA='$connected'");
+                    $sql->sql_request("DELETE FROM Verbindungen WHERE BahnhofA='$station->short' AND BahnhofB='$connected'");
+                    $sql->sql_request("DELETE FROM Verbindungen WHERE BahnhofB='$station->short' AND BahnhofA='$connected'");
                 } else {
-                    $sql->sql_request("UPDATE Verbindungen SET Dauer=$duration WHERE BahnhofA='".$_GET["id"]."' AND BahnhofB='$connected'");
-                    $sql->sql_request("UPDATE Verbindungen SET Dauer=$duration_rev WHERE BahnhofB='".$_GET["id"]."' AND BahnhofA='$connected'");
+                    print_r($_POST);
+                    $sql->sql_request("UPDATE Verbindungen SET Dauer=$duration WHERE BahnhofA='$station->short' AND BahnhofB='$connected'");
+                    $sql->sql_request("UPDATE Verbindungen SET Dauer=$duration_rev WHERE BahnhofB='$station->short' AND BahnhofA='$connected'");
                 }
 
                 $count++;
