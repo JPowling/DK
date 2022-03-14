@@ -3,6 +3,7 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
     <xsl:include href="mainpage/linien.xsl" />
+    <xsl:include href="mainpage/bahnhofe.xsl" />
 
     <xsl:template match="/" mode="mode">
         <div class="outer-box">
@@ -42,12 +43,26 @@
                 </div>
 
                 <div class="content-box">
-                    <p>
-                        <xsl:value-of select="xml/site"></xsl:value-of>
-                    </p>
-                    <xsl:if test="xml/site = 'linien'">
-                        <xsl:apply-templates select="/" mode="mo"></xsl:apply-templates>
-                    </xsl:if>
+                                        
+                    <xsl:choose>
+                        <xsl:when test="xml/site = 'linien'">
+                            <xsl:apply-templates select="/" mode="linien-header"></xsl:apply-templates>
+                        </xsl:when>
+                        <xsl:when test="xml/site = 'bahnhofe'">
+                            <xsl:apply-templates select="/" mode="bahnhofe"></xsl:apply-templates>
+                        </xsl:when>
+                        <xsl:otherwise></xsl:otherwise>
+                    </xsl:choose>
+
+                    <xsl:choose>
+                        <xsl:when test="xml/site = 'linien'">
+                            <xsl:apply-templates select="/" mode="linien-content"></xsl:apply-templates>
+                        </xsl:when>
+                        <xsl:when test="xml/site = 'bahnhofe'">
+                            <xsl:apply-templates select="/" mode="bahnhofe"></xsl:apply-templates>
+                        </xsl:when>
+                        <xsl:otherwise></xsl:otherwise>
+                    </xsl:choose>
 
                 </div>
 
