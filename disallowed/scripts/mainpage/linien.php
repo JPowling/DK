@@ -6,7 +6,7 @@ $sql = new SQL(false);
 $sql_string = "SELECT LinienID, Startzeit, ZuggattungsID FROM Linien";
 
 
-$sql_query = "SELECT L.LinienID, L.Startzeit, L.Fahrzeugnummer, Z.Bezeichnung, BA.Name AS 'From', BB.Name AS 'TO' "
+$sql_query = "SELECT L.LinienID, L.Startzeit, L.Fahrzeugnummer, Z.ZuggattungsID, BA.Name AS 'From', BB.Name AS 'TO' "
                 . "FROM Linien AS L "
                 . "INNER JOIN Routen AS R ON L.RoutenID = R.RoutenID "
                 . "INNER JOIN (SELECT RoutenID, B.Name "
@@ -33,9 +33,8 @@ if ($result->get_num_rows() > 1) {
         foreach ($array as $key => $row) {
             $linien_node = $xml->addChild("linien");
             $linien_node->addChild("LinienID", $row["LinienID"]);
+            $linien_node->addChild("Zugnummer", $row["ZuggattungsID"].$row["LinienID"]);
             $linien_node->addChild("Startzeit", $row["Startzeit"]);
-            $linien_node->addChild("Fahrzeugnummer", $row["Fahrzeugnummer"]);
-            $linien_node->addChild("Bezeichnung", $row["Bezeichnung"]);
             $linien_node->addChild("From", $row["From"]);
             $linien_node->addChild("TO", $row["TO"]);
         }

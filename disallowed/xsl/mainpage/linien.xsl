@@ -17,24 +17,19 @@
 
             <div class="linien-table-header">
                 <p class="empty-left"></p>
-                <p class="collumn-small-header">
-                    LinienID
+                <p class="collumn-small fat">
+                    Zugnummer
                 </p>
-                <p class="collumn-medium-header">
+                <p class="collumn-large fat">
+                    Startbahnhof
+                </p>
+                <p class="collumn-large fat">
+                    Endbahnhof
+                </p>
+                <p class="collumn-medium fat">
                     Startzeit
                 </p>
-                <p class="collumn-small-header">
-                    ZuggattungsID
-                </p>
-                <p class="collumn-large-header">
-                    ZuggattungsID
-                </p>
-                <p class="collumn-large-header">
-                    ZuggattungsID
-                </p>
-                <p class="collumn-large-header">
-                    ZuggattungsID
-                </p>
+                <p class="empty-right-header"></p>
             </div>
 
             <xsl:for-each select="xml/linien">
@@ -42,16 +37,7 @@
                     <a class="linien-table-row-link" href="/?site=linie?id={LinienID}">
                         <p class="empty-left"></p>
                         <p class="collumn-small">
-                            <xsl:value-of select="LinienID" />
-                        </p>
-                        <p class="collumn-medium">
-                            <xsl:value-of select="Startzeit" />
-                        </p>
-                        <p class="collumn-small">
-                            <xsl:value-of select="Fahrzeugnummer" />
-                        </p>
-                        <p class="collumn-large">
-                            <xsl:value-of select="Bezeichnung" />
+                            <xsl:value-of select="Zugnummer" />
                         </p>
                         <p class="collumn-large">
                             <xsl:value-of select="From" />
@@ -59,6 +45,10 @@
                         <p class="collumn-large">
                             <xsl:value-of select="TO" />
                         </p>
+                        <p class="collumn-medium">
+                            <xsl:value-of select="Startzeit" />
+                        </p>
+                        <p class="empty-right-header"></p>
                     </a>
                 </div>
             </xsl:for-each>

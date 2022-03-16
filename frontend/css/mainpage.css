@@ -131,18 +131,10 @@
 }
 
 .collumn-small {
-    flex: 5;
-}
-
-.collumn-small-header {
-    flex: 5;
+    flex: 20;
 }
 
 .collumn-medium {
-    flex: 30;
-}
-
-.collumn-medium-header {
     flex: 30;
 }
 
@@ -150,8 +142,8 @@
     flex: 50;
 }
 
-.collumn-large-header {
-    flex: 50;
+.fat {
+    font-weight: 600;
 }
 
 h2 {
