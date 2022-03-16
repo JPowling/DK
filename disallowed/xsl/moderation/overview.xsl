@@ -244,7 +244,9 @@
             </div>
         </div>
     </xsl:template>
-    <xsl:template match="/" mode="routen"></xsl:template>
+    <xsl:template match="/" mode="routen">
+    
+    </xsl:template>
     <xsl:template match="/" mode="linien"></xsl:template>
 
 </xsl:stylesheet>

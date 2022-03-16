@@ -8,7 +8,6 @@ class Route {
     public array $data;
 
     public int $index;
-    public int $stand_time;
 
     private function __construct(int $id, bool $fetch) {
         $this->id = $id;
