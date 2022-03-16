@@ -14,23 +14,53 @@
     <xsl:template match="/" mode="linien-content">
         <div class="content-body">
 
-            <xsl:for-each select="xml/linien">
 
+            <div class="linien-table-header">
+                <p class="empty-left"></p>
+                <p class="collumn-small-header">
+                    LinienID
+                </p>
+                <p class="collumn-medium-header">
+                    Startzeit
+                </p>
+                <p class="collumn-small-header">
+                    ZuggattungsID
+                </p>
+                <p class="collumn-large-header">
+                    ZuggattungsID
+                </p>
+                <p class="collumn-large-header">
+                    ZuggattungsID
+                </p>
+                <p class="collumn-large-header">
+                    ZuggattungsID
+                </p>
+            </div>
+
+            <xsl:for-each select="xml/linien">
                 <div class="linien-table-row">
                     <a class="linien-table-row-link" href="/?site=linie?id={LinienID}">
                         <p class="empty-left"></p>
-                        <p class="linien-id-name">
+                        <p class="collumn-small">
                             <xsl:value-of select="LinienID" />
                         </p>
-                        <p class="linien-start-time">
+                        <p class="collumn-medium">
                             <xsl:value-of select="Startzeit" />
                         </p>
-                        <p class="linien-train-type">
-                            <xsl:value-of select="ZuggattungsID" />
+                        <p class="collumn-small">
+                            <xsl:value-of select="Fahrzeugnummer" />
+                        </p>
+                        <p class="collumn-large">
+                            <xsl:value-of select="Bezeichnung" />
+                        </p>
+                        <p class="collumn-large">
+                            <xsl:value-of select="From" />
+                        </p>
+                        <p class="collumn-large">
+                            <xsl:value-of select="TO" />
                         </p>
                     </a>
                 </div>
-
             </xsl:for-each>
 
 
