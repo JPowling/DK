@@ -89,7 +89,7 @@
     margin-left: 2%;
 }
 
-.linien-table-row {
+.table-row {
     text-decoration: none;
     color: black;
     margin-bottom: 5px;
@@ -100,11 +100,11 @@
     font-family: 'Source Sans Pro', Arial, sans-serif;
 }
 
-.linien-table-row:hover {
+.table-row:hover {
     background-color: rgb(219, 219, 219);
 }
 
-.linien-table-header {
+.table-header {
     display: flex;
     text-decoration: none;
     padding: 5px 3px 5px;
@@ -118,7 +118,7 @@
     background-color: rgba(219, 219, 219, 0.479);
 }
 
-.linien-table-row-link {
+.table-row-link {
     display: flex;
     padding: 5px 3px 5px;
     text-decoration: none;

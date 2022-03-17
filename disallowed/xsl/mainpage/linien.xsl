@@ -15,8 +15,8 @@
         <div class="content-body">
 
 
-            <div class="linien-table-header">
-                <p class="empty-left"></p>
+            <div class="table-header">
+                <p class="empty-left" />
                 <p class="collumn-small fat">
                     Zugnummer
                 </p>
@@ -33,8 +33,8 @@
             </div>
 
             <xsl:for-each select="xml/linien">
-                <div class="linien-table-row">
-                    <a class="linien-table-row-link" href="/?site=linie?id={LinienID}">
+                <div class="table-row">
+                    <a class="table-row-link" href="/?site=linie?id={LinienID}">
                         <p class="empty-left"></p>
                         <p class="collumn-small">
                             <xsl:value-of select="Zugnummer" />

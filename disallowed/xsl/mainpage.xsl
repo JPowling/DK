@@ -49,7 +49,7 @@
                             <xsl:apply-templates select="/" mode="linien-header"></xsl:apply-templates>
                         </xsl:when>
                         <xsl:when test="xml/site = 'bahnhofe'">
-                            <xsl:apply-templates select="/" mode="bahnhofe"></xsl:apply-templates>
+                            <xsl:apply-templates select="/" mode="bahnhofe-header"></xsl:apply-templates>
                         </xsl:when>
                         <xsl:otherwise></xsl:otherwise>
                     </xsl:choose>
@@ -59,7 +59,7 @@
                             <xsl:apply-templates select="/" mode="linien-content"></xsl:apply-templates>
                         </xsl:when>
                         <xsl:when test="xml/site = 'bahnhofe'">
-                            <xsl:apply-templates select="/" mode="bahnhofe"></xsl:apply-templates>
+                            <xsl:apply-templates select="/" mode="bahnhofe-content"></xsl:apply-templates>
                         </xsl:when>
                         <xsl:otherwise></xsl:otherwise>
                     </xsl:choose>
