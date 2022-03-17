@@ -15,7 +15,6 @@
                         <h2>Menü</h2>
                     </div>
                     <div class="menu-content">
-
                         <a style="display:block" href="/?site=linien">
                             <div class="menu-button">
                                 <img class="menu-button-icon" src="frontend/res/icon-linien.png" />
@@ -26,13 +25,32 @@
                                 </div>
                             </div>
                         </a>
-
                         <a style="display:block" href="/?site=bahnhofe">
                             <div class="menu-button">
-                                <img class="menu-button-icon" src="frontend/res/icon-bahnhof.png" />
+                                <img class="menu-button-icon" src="frontend/res/icon-bahnhofe.png" />
                                 <div class="menu-button-text">
                                     <p>
                                         Bahnhöfe
+                                    </p>
+                                </div>
+                            </div>
+                        </a>
+                        <a style="display:block" href="/?site=reservierungen">
+                            <div class="menu-button">
+                                <img class="menu-button-icon" src="frontend/res/icon-reservierungen.png" />
+                                <div class="menu-button-text">
+                                    <p>
+                                        Reservierungen
+                                    </p>
+                                </div>
+                            </div>
+                        </a>
+                        <a style="display:block" href="/?site=suchen">
+                            <div class="menu-button">
+                                <img class="menu-button-icon" src="frontend/res/icon-suchen.png" />
+                                <div class="menu-button-text">
+                                    <p>
+                                        Suchen
                                     </p>
                                 </div>
                             </div>
@@ -51,6 +69,12 @@
                         <xsl:when test="xml/site = 'bahnhofe'">
                             <xsl:apply-templates select="/" mode="bahnhofe-header"></xsl:apply-templates>
                         </xsl:when>
+                        <xsl:when test="xml/site = 'reservierungen'">
+                            <xsl:apply-templates select="/" mode="reservierungen-header"></xsl:apply-templates>
+                        </xsl:when>
+                        <xsl:when test="xml/site = 'suchen'">
+                            <xsl:apply-templates select="/" mode="suchen-header"></xsl:apply-templates>
+                        </xsl:when>
                         <xsl:otherwise></xsl:otherwise>
                     </xsl:choose>
 
@@ -60,6 +84,12 @@
                         </xsl:when>
                         <xsl:when test="xml/site = 'bahnhofe'">
                             <xsl:apply-templates select="/" mode="bahnhofe-content"></xsl:apply-templates>
+                        </xsl:when>
+                        <xsl:when test="xml/site = 'reservierungen'">
+                            <xsl:apply-templates select="/" mode="reservierungen-content"></xsl:apply-templates>
+                        </xsl:when>
+                        <xsl:when test="xml/site = 'suchen'">
+                            <xsl:apply-templates select="/" mode="suchen-content"></xsl:apply-templates>
                         </xsl:when>
                         <xsl:otherwise></xsl:otherwise>
                     </xsl:choose>

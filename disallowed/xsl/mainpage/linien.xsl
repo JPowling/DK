@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Jens -->
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:stylesheet version="1.0"
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
 
     <xsl:template match="/" mode="linien-header">
@@ -12,9 +13,13 @@
     </xsl:template>
 
     <xsl:template match="/" mode="linien-content">
+        <xsl:apply-templates select="/" mode="linien"></xsl:apply-templates>
+
+    </xsl:template>
+
+
+    <xsl:template match="/" mode="linien">
         <div class="content-body">
-
-
             <div class="table-header">
                 <p class="empty-left" />
                 <p class="collumn-small fat">
@@ -33,29 +38,41 @@
             </div>
 
             <xsl:for-each select="xml/linien">
-                <div class="table-row">
-                    <a class="table-row-link" href="/?site=linie?id={LinienID}">
-                        <p class="empty-left"></p>
-                        <p class="collumn-small">
-                            <xsl:value-of select="Zugnummer" />
-                        </p>
-                        <p class="collumn-large">
-                            <xsl:value-of select="From" />
-                        </p>
-                        <p class="collumn-large">
-                            <xsl:value-of select="TO" />
-                        </p>
-                        <p class="collumn-medium">
-                            <xsl:value-of select="Startzeit" />
-                        </p>
-                        <p class="empty-right-header"></p>
-                    </a>
-                </div>
+                <xsl:variable name="LinienID" select="./LinienID"></xsl:variable>
+                <xsl:choose>
+                    <xsl:when test="//linie[id=$LinienID]">
+                        <p class="table-row">test <xsl:value-of select="LinienID"/></p>
+
+
+                        
+
+
+
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <div class="table-row">
+                            <a class="table-row-link" href="/?site=linien&amp;id={LinienID}">
+                                <p class="empty-left"></p>
+                                <p class="collumn-small">
+                                    <xsl:value-of select="Zugnummer" />
+                                </p>
+                                <p class="collumn-large">
+                                    <xsl:value-of select="From" />
+                                </p>
+                                <p class="collumn-large">
+                                    <xsl:value-of select="TO" />
+                                </p>
+                                <p class="collumn-medium">
+                                    <xsl:value-of select="Startzeit" />
+                                </p>
+                                <p class="empty-right-header"></p>
+                            </a>
+                        </div>
+                    </xsl:otherwise>
+                </xsl:choose>
             </xsl:for-each>
-
-
         </div>
-
     </xsl:template>
+
 
 </xsl:stylesheet>
