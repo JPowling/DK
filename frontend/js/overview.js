@@ -26,6 +26,20 @@ function stationsFocusIn() {
   document.getElementById("stations_select").value = "";
 }
 
+function routesFocusOut() {
+  var routeID = document.getElementById("routes_select").value;
+
+  if (!is_valid_datalist_value("routes", routeID)) {
+    return;
+  }
+
+  location.href = "/moderation/overview?view=r&id=" + routeID;
+}
+
+function routesFocusIn() {
+  document.getElementById("routes_select").value = "";
+}
+
 function is_valid_datalist_value(idDataList, inputValue) {
   var option = document.querySelector("#" + idDataList + " option[value='" + inputValue + "']");
   if (option != null) {

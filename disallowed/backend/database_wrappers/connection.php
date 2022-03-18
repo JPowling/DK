@@ -47,6 +47,12 @@ class Connection {
         $result = $sql->sql_request("SELECT Dauer FROM Verbindungen WHERE BahnhofA='$station_a' AND BahnhofB='$station_b'")->get_from_column("Dauer");
         $result_rev = $sql->sql_request("SELECT Dauer FROM Verbindungen WHERE BahnhofA='$station_b' AND BahnhofB='$station_a'")->get_from_column("Dauer");
 
+        if (!isset($result)) {
+            $result = -1;
+        }
+        if (!isset($result_rev)) {
+            $result_rev = -1;
+        }
         return new Connection($station_a, $station_b, $result, $result_rev);
     }
 

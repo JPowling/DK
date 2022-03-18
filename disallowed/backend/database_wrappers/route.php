@@ -7,8 +7,6 @@ class Route {
 
     public array $data;
 
-    public int $index;
-
     private function __construct(int $id, bool $fetch) {
         $this->id = $id;
 
@@ -21,46 +19,53 @@ class Route {
     // Store recursive to database
     public function save() {
         $sql = new SQL(true);
+        $commands = array();
+        array_push($commands, "SET FOREIGN_KEY_CHECKS = 0;");
 
-        $checkexistsresult = $sql->sql_request("SELECT BahnhofA, BahnhofB FROM Routen WHERE RoutenID=$this->id ORDER BY VerbindungsIndex")->result;
+        $checkexistsresult = $sql->sql_request("SELECT BahnhofA, BahnhofB, VerbindungsIndex FROM Routen WHERE RoutenID=$this->id ORDER BY VerbindungsIndex")->result;
 
-        foreach ($this->data as $stored) {
+        foreach ($this->data as $local_index => $stored) {
             $exists = false;
+            $changed = true;
+            $local_a = $stored["a"];
+            $local_b = $stored["b"];
+            $local_stand = $stored["stand_time"];
 
             foreach ($checkexistsresult as $remoteindex => $remotekeys) {
-                $local_a = $stored["keys"]["a"];
-                $local_b = $stored["keys"]["b"];
-                $local_index = $stored["vals"]["index"];
-                $local_stand = $stored["vals"]["stand_time"];
 
                 if ($local_a == $remotekeys["BahnhofA"] && $local_b == $remotekeys["BahnhofB"]) {
                     // local key is already in remote, so it will be needed to be updated instead of created
 
                     $exists = true;
 
+                    if ($local_index == $remotekeys["VerbindungsIndex"]) {
+                        $changed = false;
+                    }
+
                     // When unsetting the result, we can check later whether the remote has a key thats not in local and therefore needs to be deleted
                     unset($checkexistsresult[$remoteindex]);
                 }
+                
+            }
 
-                // It might be the case, that a UNIQUE constraint fails, so 'SET UNIQUE_CHECKS = 0;' is a workaround
+
+            // It might be the case, that a UNIQUE constraint fails, so 'SET UNIQUE_CHECKS = 0;' is a workaround
+            if ($changed) {
                 if ($exists) {
-                    $sql->sql_request("SET UNIQUE_CHECKS = 0; 
-                                        UPDATE Routen SET VerbindungsIndex=$local_index, Standzeit=$local_stand WHERE BahnhofA='$local_a' AND BahnhofB='$local_b'; 
-                                        SET UNIQUE_CHECKS = 1;");
+                    array_push($commands, "UPDATE Routen SET VerbindungsIndex=$local_index, Standzeit=$local_stand WHERE BahnhofA='$local_a' AND BahnhofB='$local_b';");
                 } else {
-                    $sql->sql_request("SET UNIQUE_CHECKS = 0; 
-                                        INSERT INTO Routen VALUES ($this->id, '$local_a', '$local_b', $local_index, $local_stand); 
-                                        SET UNIQUE_CHECKS = 1;");
+                    array_push($commands, "INSERT INTO Routen VALUES ($this->id, '$local_a', '$local_b', $local_index, $local_stand);");
                 }
             }
         }
 
         // Delete leftovers
-        foreach ($checkexistsresult as $keys => $_) {
-            $sql->sql_request("SET UNIQUE_CHECKS = 0;
-                                    DELETE FROM Routen WHERE RoutenID=$this->id AND BahnhofA='" . $keys["BahnhofA"] . "' AND BahnhofB='" . $keys["BahnhofB"] . "; 
-                                    SET UNIQUE_CHECKS = 1;");
+        foreach ($checkexistsresult as $_ => $vals) {
+            array_push($commands, "DELETE FROM Routen WHERE RoutenID=$this->id AND BahnhofA='" . $vals["BahnhofA"] . "' AND BahnhofB='" . $vals["BahnhofB"] . "';");
         }
+        array_push($commands, "SET FOREIGN_KEY_CHECKS = 1;");
+
+        $sql->transaction($commands, array());
     }
 
     public function get_connections() {

@@ -35,7 +35,7 @@ function load_f($xml) {
     if (isset($_GET["create"])) {
         $_GET["id"] = Train::create(1);
 
-        header("Location: /moderation/overview?view=f&id=".$_GET["id"]);
+        header("Location: /moderation/overview?view=f&id=" . $_GET["id"]);
         return;
     }
 
@@ -83,7 +83,7 @@ function load_b($xml) {
 
         Station::create($_POST["newshort"], "Bitte sofort ändern");
 
-        header("Location: /moderation/overview?view=b&id=".$_POST["newshort"]);
+        header("Location: /moderation/overview?view=b&id=" . $_POST["newshort"]);
         return;
     }
 
@@ -150,9 +150,9 @@ function load_b($xml) {
 
             $connections = $station->get_connections();
 
-            foreach($connections as $connection) {
+            foreach ($connections as $connection) {
                 $connectionxml = $selection->addChild("connection");
-                $connected_station = Station::by_id($connection->connections["b"]);
+                $connected_station = Station::by_id($connection->b);
                 $connectionxml->addChild("other", $connected_station->name);
                 $connectionxml->addChild("other_short", $connected_station->short);
                 $connectionxml->addChild("duration", $connection->duration);
@@ -164,12 +164,74 @@ function load_b($xml) {
 function load_r($xml) {
     $xml->addChild("title", "Routen bearbeiten | BD");
 
-    $routes = Route::get_routes()[0]->get_connections();
 
-    print_r($routes);
+    $routes = Route::get_routes();
 
     foreach ($routes as $route) {
         $xmlroute = $xml->addChild("route");
+        $xmlroute->addChild("id", $route->id);
+    }
+
+    if (isset($_GET["id"])) {
+        $route = Route::by_id($_GET["id"]);
+
+        if (isset($_POST["up"])) {
+            $_POST["down"] = $_POST["up"] - 1;
+        }
+        if (isset($_POST["down"])) {
+            $downpos = $_POST["down"];
+
+            if ($downpos == 0) {
+                $swap = $route->data[1]["a"];
+                $route->data[1]["a"] = $route->data[1]["b"];
+                $route->data[1]["b"] = $swap;
+
+                if (isset($route->data[2])) {
+                    $route->data[2]["a"] = $swap;
+                }
+            } else {
+                $swap = $route->data[$downpos]["b"];
+                $route->data[$downpos]["b"] = $route->data[$downpos + 1]["b"];
+                $route->data[$downpos + 1]["b"] = $swap;
+                $route->data[$downpos + 1]["a"] = $route->data[$downpos]["b"];
+            }
+        }
+        $route->save();
+
+        if (isset($route)) {
+            $xml->addChild("id", $_GET["id"]);
+
+            $selection = $xml->addChild("selection");
+            $xmldata = $selection->addChild("data");
+            $xmldata->addChild("station", $route->data[1]["a"]);
+            $xmldata->addChild("station_full", Station::by_id($route->data[1]["a"])->name);
+            $xmldata->addChild("duration", 0);
+            $xmldata->addChild("stand_time", "null");
+
+            foreach ($route->data as $data) {
+                $xmldata = $selection->addChild("data");
+                $xmldata->addChild("station", $data["b"]);
+                $xmldata->addChild("station_full", Station::by_id($data["b"])->name);
+
+                $con = Connection::by_id($data["a"], $data["b"]);
+                $xmldata->addChild("duration", $con->duration);
+
+                if (isset($data["stand_time"])) {
+                    $xmldata->addChild("stand_time", $data["stand_time"]);
+                } else {
+                    $xmldata->addChild("stand_time", "null");
+                }
+            }
+        }
+    }
+
+    $stations = Station::get_stations();
+
+    foreach ($stations as $station) {
+        $xmlstation = $xml->addChild("station");
+        $xmlstation->addChild("id", $station->short);
+        $xmlstation->addChild("name", $station->name);
+        $xmlstation->addChild("platforms", $station->platforms);
     }
 }
 function load_l($xml) {

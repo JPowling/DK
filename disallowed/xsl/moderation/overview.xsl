@@ -245,7 +245,126 @@
         </div>
     </xsl:template>
     <xsl:template match="/" mode="routen">
-    
+        <div class="content-parent">
+            <div class="content-search">
+
+                <p>
+                    RoutenID eingeben:
+                    <br />
+                    (Fokus auf Textbox verlieren)
+                </p>
+                <input list="routes" id="routes_select" onfocusout="routesFocusOut()" onfocusin="routesFocusIn()" value="{xml/id}" />
+                <datalist id="routes">
+                    <xsl:for-each select="xml/route">
+                        <option value="{./id}" />
+                    </xsl:for-each>
+                </datalist>
+
+                <p>
+            Oder:
+        </p>
+                <br />
+
+                <form action="/moderation/overview?view=r" method="post">
+                    <input type="hidden" name="newroute" />
+                    <button type="submit">Route erstellen</button>
+                </form>
+            </div>
+            <div class="content-splitter" />
+            <div class="content-result">
+
+                <xsl:choose>
+                    <xsl:when test="xml/selection">
+                        <p class="bold">
+                            Du betrachtest: Route mit ID
+                            <xsl:value-of select="xml/id" />
+                        </p>
+
+                        <form action="/moderation/overview?view=r&amp;id={xml/id}" method="post">
+                            <table>
+                                <tr>
+                                    <th>
+                                        <p class="bold">Reihenfolge</p>
+                                    </th>
+                                    <th>
+                                        <p class="bold">Bahnhof</p>
+                                    </th>
+                                    <th>
+                                        <p class="bold">Zug hält?</p>
+                                    </th>
+                                    <th>
+                                        <p class="bold">Standzeit (min)</p>
+                                    </th>
+                                </tr>
+                                <xsl:for-each select="xml/selection/data">
+                                    <tr class="row-with-button">
+                                        <th>
+                                            <p>
+                                                <xsl:if test="not(position() = 1)">
+                                                    <button type="submit" name="up" value="{position()-1}">up</button>
+                                                </xsl:if>
+                                                <xsl:if test="not(position() = last())">
+                                                    <button type="submit" name="down" value="{position()-1}">down</button>
+                                                </xsl:if>
+                                            </p>
+                                        </th>
+                                        <th>
+                                            <a class="navigator-button" href="/moderation/overview?view=b&amp;id={./station}">
+                                                <xsl:value-of select="./station_full"></xsl:value-of>
+                                            </a>
+                                        </th>
+                                        <th>
+                                            <xsl:choose>
+                                                <xsl:when test="not(position() = last() or position() = 1)">
+                                                    <input type="checkbox" name="stands-{position()}">
+                                                        <xsl:if test="./stand_time != 'null'">
+                                                            <xsl:attribute name="checked" />
+                                                        </xsl:if>
+                                                    </input>
+                                                </xsl:when>
+                                            </xsl:choose>
+                                        </th>
+                                        <th>
+                                            <xsl:if test="not(./stand_time = 'null' or position() = last() or position() = 1)">
+                                                <input type="number" name="duration-{position()}" value="{./stand_time}" />
+                                            </xsl:if>
+                                        </th>
+                                    </tr>
+                                </xsl:for-each>
+
+                                <tr>
+                                    <th>
+                                        <p>Neu verbinden: (Kürzel)</p>
+                                    </th>
+                                </tr>
+
+                                <tr>
+                                    <th>
+                                        <input type="text" name="new-connection" list="stations" />
+                                        <datalist id="stations">
+                                            <xsl:for-each select="xml/station">
+                                                <option value="{./id}" />
+                                            </xsl:for-each>
+                                        </datalist>
+                                    </th>
+                                </tr>
+                            </table>
+
+                            <button type="submit" class="button input">Speichern</button>
+
+                            <br />
+                            <br />
+                            <a href="/moderation/overview?view=r&amp;id={xml/id}&amp;delete=1" class="navigator-button delete">Löschen</a>
+                        </form>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <p>Es wurde keine Route ausgewählt</p>
+                    </xsl:otherwise>
+                </xsl:choose>
+
+            </div>
+        </div>
+
     </xsl:template>
     <xsl:template match="/" mode="linien"></xsl:template>
 
