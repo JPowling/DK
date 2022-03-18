@@ -21,7 +21,7 @@
     <xsl:template match="/" mode="linien">
         <div class="content-body">
             <div class="table-header">
-                <p class="empty-left" />
+                <p class="extra-small" />
                 <p class="collumn-small fat">
                     Zugnummer
                 </p>
@@ -41,18 +41,77 @@
                 <xsl:variable name="LinienID" select="./LinienID"></xsl:variable>
                 <xsl:choose>
                     <xsl:when test="//linie[id=$LinienID]">
-                        <p class="table-row">test <xsl:value-of select="LinienID"/></p>
+                        <div class="table-row">
+                            <div>
+                                <a class="linie-header table-row-link hoverable" href="/?site=linien">
+                                    <div class="table-row">
+                                        <div class="table-row-link">
+                                            <p class="extra-small"></p>
+                                            <p class="collumn-small">
+                                                <xsl:value-of select="Zugnummer" />
+                                            </p>
+                                            <p class="collumn-large">
+                                                <xsl:value-of select="From" />
+                                            </p>
+                                            <p class="collumn-large">
+                                                <xsl:value-of select="TO" />
+                                            </p>
+                                            <p class="collumn-medium">
+                                                <xsl:value-of select="Startzeit" />
+                                            </p>
+                                            <p class="empty-right-header"></p>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
 
 
-                        
+                            <div class="table-header">
+                                <p class="extra-small" />
+                                <p class="collumn-small fat">
+                                    Halt
+                                </p>
+                                <p class="collumn-large fat">
+                                    Bahnhof
+                                </p>
+                                <p class="collumn-large fat">
+                                    Ankunftszeit
+                                </p>
+                                <p class="collumn-medium fat">
+                                    Abfahrtszeit
+                                </p>
+                                <p class="empty-right-header"></p>
+                            </div>
+                            <xsl:for-each select="//linien[LinienID=$LinienID]/haltestelle">
+                                <div class="table-row hoverable">
+                                    <a class="table-row-link" href="/?site=linien&amp;id={LinienID}">
+                                        <p class="extra-small"></p>
+                                        <p class="collumn-small">
+                                            <xsl:value-of select="Nummer" />
+                                        </p>
+                                        <p class="collumn-large">
+                                            <xsl:value-of select="Bahnhof" />
+                                        </p>
+                                        <p class="collumn-large">
+                                            <xsl:value-of select="Ankunftszeit" />
+                                        </p>
+                                        <p class="collumn-medium">
+                                            <xsl:value-of select="Abfahrtszeit" />
+                                        </p>
+                                        <p class="empty-right-header"></p>
+                                    </a>
+                                </div>
+                            </xsl:for-each>
+                        </div>
 
 
 
                     </xsl:when>
+
                     <xsl:otherwise>
-                        <div class="table-row">
+                        <div class="table-row hoverable">
                             <a class="table-row-link" href="/?site=linien&amp;id={LinienID}">
-                                <p class="empty-left"></p>
+                                <p class="extra-small"></p>
                                 <p class="collumn-small">
                                     <xsl:value-of select="Zugnummer" />
                                 </p>
