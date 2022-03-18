@@ -164,7 +164,9 @@ function load_b($xml) {
 function load_r($xml) {
     $xml->addChild("title", "Routen bearbeiten | BD");
 
-    $routes = Route::get_routes();
+    $routes = Route::get_routes()[0]->get_connections();
+
+    print_r($routes);
 
     foreach ($routes as $route) {
         $xmlroute = $xml->addChild("route");

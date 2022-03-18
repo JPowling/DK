@@ -24,14 +24,14 @@ class Route {
 
         $checkexistsresult = $sql->sql_request("SELECT BahnhofA, BahnhofB FROM Routen WHERE RoutenID=$this->id ORDER BY VerbindungsIndex")->result;
 
-        foreach ($this->data as $localkeys => $localvals) {
+        foreach ($this->data as $stored) {
             $exists = false;
 
             foreach ($checkexistsresult as $remoteindex => $remotekeys) {
-                $local_a = $localkeys["a"];
-                $local_b = $localkeys["b"];
-                $local_index = $localvals["index"];
-                $local_stand = $localvals["stand_time"];
+                $local_a = $stored["keys"]["a"];
+                $local_b = $stored["keys"]["b"];
+                $local_index = $stored["vals"]["index"];
+                $local_stand = $stored["vals"]["stand_time"];
 
                 if ($local_a == $remotekeys["BahnhofA"] && $local_b == $remotekeys["BahnhofB"]) {
                     // local key is already in remote, so it will be needed to be updated instead of created
@@ -66,8 +66,10 @@ class Route {
     public function get_connections() {
         $connections = array();
 
-        foreach ($this->data as $keys => $vals) {
-            $connections += [Connection::by_id($keys["a"], $keys["b"]) => $vals["stand_time"]];
+        foreach ($this->data as $data) {
+            $connection = Connection::by_id($data["a"], $data["b"]);
+
+            array_push($connections, $connection);
         }
 
         return $connections;
@@ -78,7 +80,7 @@ class Route {
         $newdata = array();
 
         foreach ($connections as $index => $val) {
-            $newdata += [["a" => $val[0]->station_a, "b" => $val[0]->station_b] => ["index" => $index, "stand_time" => $val[1]]];
+            $newdata[$index] = ["a" => $val[0]->station_a, "b" => $val[0]->station_b, "stand_time" => $val[1]];
         }
 
         $this->data = $newdata;
@@ -92,15 +94,15 @@ class Route {
 
     public function fetch() {
         $sql = new SQL();
+        $this->data = array();
 
-        $result = $sql->sql_request("SELECT BahnhofA, BahnhofB, VerbindungsIndex, Standzeit FROM Routen WHERE RoutenID=$this->id");
+        $result = $sql->sql_request("SELECT BahnhofA, BahnhofB, VerbindungsIndex, Standzeit FROM Routen WHERE RoutenID=$this->id")->get_result();
 
-        foreach ($result as $index => $row) {
-            $keys = ["a" => $row["BahnhofA"], "b" => $row["BahnhofB"]];
-            $vals = ["index" => $row["VerbindungsIndex"], "stand_time" => $row["Standzeit"]];
-
-            $this->data = [$keys => $vals];
+        foreach ($result as $row) {
+            $this->data[$row["VerbindungsIndex"]] = ["a" => $row["BahnhofA"], "b" => $row["BahnhofB"], "stand_time" => $row["Standzeit"]];
         }
+
+        ksort($this->data);
     }
 
     public static function get_routes() {
