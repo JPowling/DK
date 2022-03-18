@@ -78,10 +78,10 @@ if ($result->get_num_rows() > 1) {
     if (key_exists("LinienID", $array[0])) {
         foreach ($array as $key => $row) {
             if ($row["Ankunftszeit"] == null) {
-                $row["Ankunftszeit"] = "--";
+                $row["Ankunftszeit"] = "--:--:--";
             }
             if ($row["Abfahrtszeit"] == null) {
-                $row["Abfahrtszeit"] = "--";
+                $row["Abfahrtszeit"] = "--:--:--";
             }
 
             $linie_nod = $xml->xpath("//xml/linien[LinienID=" . $row["LinienID"] . "]")[0]->addChild("haltestelle");

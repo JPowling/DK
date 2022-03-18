@@ -12,7 +12,7 @@
 
     <xsl:template match="/" mode="bahnhofe-content">
         <div class="content-body">
-            <div class="table-header">
+            <div class="table-header border">
                 <p class="empty-left" />
                 <p class="collumn-medium fat">
                     Bahnhof
@@ -23,8 +23,8 @@
             </div>
 
             <xsl:for-each select="xml/bahnhofe">
-                <div class="table-row">
-                    <a class="table-row-link" href="/?site=linie?id={LinienID}">
+                <div class="table-row border">
+                    <div class="table-row-link">
                         <p class="empty-left" />
                         <p class="collumn-medium">
                             <xsl:value-of select="Name" />
@@ -32,7 +32,7 @@
                         <p class="collumn-large">
                             <xsl:value-of select="Gleise" />
                         </p>
-                    </a>
+                    </div>
                 </div>
             </xsl:for-each>
         </div>

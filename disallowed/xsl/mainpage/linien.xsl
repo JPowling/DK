@@ -20,7 +20,7 @@
 
     <xsl:template match="/" mode="linien">
         <div class="content-body">
-            <div class="table-header">
+            <div class="table-header border">
                 <p class="extra-small" />
                 <p class="collumn-small fat">
                     Zugnummer
@@ -41,22 +41,22 @@
                 <xsl:variable name="LinienID" select="./LinienID"></xsl:variable>
                 <xsl:choose>
                     <xsl:when test="//linie[id=$LinienID]">
-                        <div class="table-row">
+                        <div class="table-row border">
                             <div>
-                                <a class="linie-header table-row-link hoverable" href="/?site=linien">
-                                    <div class="table-row">
+                                <a class="" href="/?site=linien">
+                                    <div class="table-row hoverable border-opaque">
                                         <div class="table-row-link">
                                             <p class="extra-small"></p>
-                                            <p class="collumn-small">
+                                            <p class="collumn-small fat">
                                                 <xsl:value-of select="Zugnummer" />
                                             </p>
-                                            <p class="collumn-large">
+                                            <p class="collumn-large fat">
                                                 <xsl:value-of select="From" />
                                             </p>
-                                            <p class="collumn-large">
+                                            <p class="collumn-large fat">
                                                 <xsl:value-of select="TO" />
                                             </p>
-                                            <p class="collumn-medium">
+                                            <p class="collumn-medium fat">
                                                 <xsl:value-of select="Startzeit" />
                                             </p>
                                             <p class="empty-right-header"></p>
@@ -66,7 +66,7 @@
                             </div>
 
 
-                            <div class="table-header">
+                            <div class="table-header border">
                                 <p class="extra-small" />
                                 <p class="collumn-small fat">
                                     Halt
@@ -83,7 +83,7 @@
                                 <p class="empty-right-header"></p>
                             </div>
                             <xsl:for-each select="//linien[LinienID=$LinienID]/haltestelle">
-                                <div class="table-row hoverable">
+                                <div class="table-row hoverable border">
                                     <a class="table-row-link" href="/?site=linien&amp;id={LinienID}">
                                         <p class="extra-small"></p>
                                         <p class="collumn-small">
@@ -109,7 +109,7 @@
                     </xsl:when>
 
                     <xsl:otherwise>
-                        <div class="table-row hoverable">
+                        <div class="table-row hoverable border">
                             <a class="table-row-link" href="/?site=linien&amp;id={LinienID}">
                                 <p class="extra-small"></p>
                                 <p class="collumn-small">
