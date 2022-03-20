@@ -218,7 +218,7 @@
 
                                 <tr>
                                     <th>
-                                        <p>Neu verbinden: (Kürzel)</p>
+                                        <p>Neu verbinden: (Kürzel) oder neuen Bahnhof erstellen</p>
                                     </th>
                                 </tr>
 

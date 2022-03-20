@@ -129,11 +129,21 @@ function load_b($xml) {
 
             if (isset($_POST["new-connection"]) && !empty($_POST["new-connection"])) {
                 $new_connectionstation = Station::by_id($_POST["new-connection"]);
+                $sql = new SQL(true);
 
-                if (isset($new_connectionstation)) {
-                    $sql = new SQL(true);
-                    $sql->sql_request("INSERT INTO Verbindungen VALUES ('$station->short', '$new_connectionstation->short', 1)");
-                    $sql->sql_request("INSERT INTO Verbindungen VALUES ('$new_connectionstation->short', '$station->short', 1)");
+                $send = false;
+
+                if (!isset($new_connectionstation)) {
+                    Station::create($_POST["new-connection"], "Bitte sofort ändern", 1000);
+                    $new_connectionstation = Station::by_id($_POST["new-connection"]);
+                    $send = true;
+                }
+
+                $sql->sql_request("INSERT INTO Verbindungen VALUES ('$station->short', '$new_connectionstation->short', 1)");
+                $sql->sql_request("INSERT INTO Verbindungen VALUES ('$new_connectionstation->short', '$station->short', 1)");
+
+                if ($send) {
+                    header("Location: /moderation/overview?view=b&id=".$_POST["new-connection"]);
                 }
             }
 
