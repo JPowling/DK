@@ -13,7 +13,11 @@
 
     <xsl:template match="/" mode="suchen-content">
         <div class="content-body">
-            
+            <form method="get" action="?site=suchen">
+                <input type="text" name="sucheBahnhofA" class="input" value="{//xml/suche/sucheBahnhofA}" placeholder="Bahnhof A" required="" />
+                <input type="text" name="sucheBahnhofB" class="input" value="{//xml/suche/sucheBahnhofB}" placeholder="Bahnhof B" required="" />
+                <button type="submit" name="site" value="suchen">suchen</button>
+            </form>
         </div>
 
     </xsl:template>

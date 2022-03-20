@@ -84,7 +84,7 @@
                             </div>
                             <xsl:for-each select="//linien[LinienID=$LinienID]/haltestelle">
                                 <div class="table-row hoverable border">
-                                    <a class="table-row-link" href="/?site=linien&amp;id={LinienID}">
+                                    <a class="table-row-link" href="/?site=bahnhofe">
                                         <p class="extra-small"></p>
                                         <p class="collumn-small">
                                             <xsl:value-of select="Nummer" />

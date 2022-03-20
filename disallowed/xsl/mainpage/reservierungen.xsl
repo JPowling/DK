@@ -13,7 +13,9 @@
 
     <xsl:template match="/" mode="reservierungen-content">
         <div class="content-body">
-            
+            <form>
+                
+            </form>
         </div>
 
     </xsl:template>

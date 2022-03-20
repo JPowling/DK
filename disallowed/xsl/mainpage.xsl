@@ -4,6 +4,8 @@
 
     <xsl:include href="mainpage/linien.xsl" />
     <xsl:include href="mainpage/bahnhofe.xsl" />
+    <xsl:include href="mainpage/reservierungen.xsl" />
+    <xsl:include href="mainpage/suchen.xsl" />
 
     <xsl:template match="/" mode="mode">
         <div class="outer-box">
