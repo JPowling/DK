@@ -2,9 +2,10 @@ package train
 
 import java.time.LocalTime
 
-class TrainStop(
+data class TrainStop(
     val trainstaion: TrainStation,
-    val time: LocalTime
+    val arrivalTime: LocalTime,
+    val lineID: Int
 ) {
 
 }

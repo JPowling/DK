@@ -1,4 +1,5 @@
 package train
 
-class TrainStation {
+data class TrainStation (val key: String, val name: String) {
+
 }
