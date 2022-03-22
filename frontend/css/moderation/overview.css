@@ -5,6 +5,7 @@
 }
 
 .navigator {
+    margin-top: 20px;
     display: flex;
 }
 
@@ -57,4 +58,12 @@
 .delete {
     border: 1px solid red;
     color: red;
+}
+
+.bold {
+    font-weight: 600;
+}
+
+.row-with-button {
+    height: 30px;
 }

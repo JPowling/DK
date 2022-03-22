@@ -2,12 +2,14 @@
 
 // Jens
 
-$xml->addChild("title", "mainpage");
+$xml->addChild("title", "Beutsche Dahn");
 
-if (isset($_GET["site"])) {
-    $xml->addChild("site", $_GET["site"]);
+if (!isset($_GET['site'])) {
+    $_GET["site"] = "linien";
+}
 
-    if (file_exists("disallowed/scripts/mainpage/" . $_GET["site"] . ".php")) {
-        require "disallowed/scripts/mainpage/" . $_GET["site"] . ".php";
-    }
+$xml->addChild("site", $_GET["site"]);
+
+if (file_exists("disallowed/scripts/mainpage/" . $_GET["site"] . ".php")) {
+    require "disallowed/scripts/mainpage/" . $_GET["site"] . ".php";
 }
