@@ -38,15 +38,17 @@ class Train {
     }
 
     public static function by_id(int $id) {
-        $sql = new SQL();
+        $trains = Train::get_trains();
 
-        $result = $sql->sql_request("SELECT * FROM Fahrzeuge WHERE Fahrzeugnummer=$id");
+        $trains = array_filter($trains, function($s) use ($id) {
+            return $s->number == $id;
+        });
 
-        if ($result->get_num_rows() !== 1) {
+        if (empty($trains)) {
             return null;
         }
 
-        return new Train($result->get_from_column("Fahrzeugnummer"), $result->get_from_column("Sitzplatze"));
+        return $trains[array_key_first($trains)];
     }
 
     public static function create(int $seats) {
