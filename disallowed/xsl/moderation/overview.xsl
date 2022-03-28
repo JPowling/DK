@@ -266,8 +266,16 @@
                 <br />
 
                 <form action="/moderation/overview?view=r" method="post">
-                    <input type="hidden" name="newroute" />
+                    <input type="text" name="newfrom" placeholder="von" list="stations"/>
+                    <br/>
+                    <input type="text" name="newto" placeholder="zu" list="stations"/>
+                    <br/>
                     <button type="submit">Route erstellen</button>
+                    <datalist id="stations">
+                        <xsl:for-each select="xml/station">
+                            <option value="{./id}" />
+                        </xsl:for-each>
+                    </datalist>
                 </form>
             </div>
             <div class="content-splitter" />
@@ -281,7 +289,7 @@
                         </p>
 
                         <form action="/moderation/overview?view=r&amp;id={xml/id}" method="post">
-                            <table>
+                            <table id="list">
                                 <tr>
                                     <th>
                                         <p class="bold">Reihenfolge</p>
@@ -297,26 +305,23 @@
                                     </th>
                                 </tr>
                                 <xsl:for-each select="xml/selection/data">
+
                                     <tr class="row-with-button">
                                         <th>
-                                            <p>
-                                                <xsl:if test="not(position() = 1)">
-                                                    <button type="submit" name="up" value="{position()-1}">up</button>
-                                                </xsl:if>
-                                                <xsl:if test="not(position() = last())">
-                                                    <button type="submit" name="down" value="{position()-1}">down</button>
-                                                </xsl:if>
+                                            <p class="lightgray grabber" id="{position()}" ondrop="drop(event)" ondragover="allowDrop(event)" draggable="true" ondragstart="drag(event)">
+                                                Drag
                                             </p>
                                         </th>
                                         <th>
                                             <a class="navigator-button" href="/moderation/overview?view=b&amp;id={./station}">
                                                 <xsl:value-of select="./station_full"></xsl:value-of>
                                             </a>
+                                            <input type="hidden" name="short-{position()}" value="{./station}"/>
                                         </th>
-                                        <th>
+                                        <th id="stops">
                                             <xsl:choose>
                                                 <xsl:when test="not(position() = last() or position() = 1)">
-                                                    <input type="checkbox" name="stands-{position()}">
+                                                    <input type="checkbox" name="stands-{position()}" id="stands-{position()}" onchange="handleStopChange(this)">
                                                         <xsl:if test="./stand_time != 'null'">
                                                             <xsl:attribute name="checked" />
                                                         </xsl:if>
@@ -324,9 +329,16 @@
                                                 </xsl:when>
                                             </xsl:choose>
                                         </th>
-                                        <th>
+                                        <th id="time">
                                             <xsl:if test="not(./stand_time = 'null' or position() = last() or position() = 1)">
                                                 <input type="number" name="duration-{position()}" value="{./stand_time}" />
+                                            </xsl:if>
+                                        </th>
+                                        <th id="delete">
+                                            <xsl:if test="not(position() = last() or position() = 1)">
+                                                <p class="delete pointer" onclick="deleteRoutePart(this)" id="delete-{position()}">
+                                                Delete
+                                            </p>
                                             </xsl:if>
                                         </th>
                                     </tr>
@@ -340,21 +352,19 @@
 
                                 <tr>
                                     <th>
-                                        <input type="text" name="new-connection" list="stations" />
-                                        <datalist id="stations">
-                                            <xsl:for-each select="xml/station">
-                                                <option value="{./id}" />
-                                            </xsl:for-each>
-                                        </datalist>
+                                        <input type="text" id="newConnection" list="stations" />
+                                        <p class="lightgray pointer" onClick="addConnection()">hinzufügen</p>
                                     </th>
                                 </tr>
                             </table>
 
-                            <button type="submit" class="button input">Speichern</button>
+                            <input type="hidden" name="rows" value="{count(xml/selection/data)}"/>
+                            <button type="submit" class="button input" name="save">Speichern</button>
 
                             <br />
                             <br />
                             <a href="/moderation/overview?view=r&amp;id={xml/id}&amp;delete=1" class="navigator-button delete">Löschen</a>
+                            <a href="/moderation/overview?view=r&amp;id={xml/id}&amp;reverse=1" class="navigator-button">Rückverbindung erstellen</a>
                         </form>
                     </xsl:when>
                     <xsl:otherwise>

@@ -7,12 +7,14 @@ class Route {
 
     public array $data;
 
-    private function __construct(int $id, bool $fetch) {
+    public function __construct(int $id, bool $fetch) {
         $this->id = $id;
 
         if ($fetch) {
             // Since Routen is a m:n relation this gets stored weirdly in an array and needs to be built using only the id
             $this->fetch();
+        } else {
+            $this->data = array();
         }
     }
 
@@ -136,5 +138,20 @@ class Route {
         }
 
         return $routes[array_key_first($routes)];
+    }
+
+    public static function new_route(string $station_a, string $station_b) {
+        $sql = new SQL(true);
+        $id = Route::next_free();
+
+        $sql->sql_request("INSERT INTO Routen VALUES ($id, '$station_a', '$station_b', 1, NULL)");
+
+        return $id;
+    }
+
+    public static function next_free() {
+        $sql = new SQL();
+
+        return $sql->sql_request("SELECT MAX(RoutenID) as A FROM Routen")->get_from_column("A")+1;
     }
 }

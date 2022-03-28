@@ -143,7 +143,7 @@ function load_b($xml) {
                 $sql->sql_request("INSERT INTO Verbindungen VALUES ('$new_connectionstation->short', '$station->short', 1)");
 
                 if ($send) {
-                    header("Location: /moderation/overview?view=b&id=".$_POST["new-connection"]);
+                    header("Location: /moderation/overview?view=b&id=" . $_POST["new-connection"]);
                 }
             }
 
@@ -174,39 +174,86 @@ function load_b($xml) {
 function load_r($xml) {
     $xml->addChild("title", "Routen bearbeiten | BD");
 
-
     $routes = Route::get_routes();
 
-    foreach ($routes as $route) {
+    foreach ($routes as $route_i) {
         $xmlroute = $xml->addChild("route");
-        $xmlroute->addChild("id", $route->id);
+        $xmlroute->addChild("id", $route_i->id);
+    }
+
+    if (isset($_POST["newfrom"])) {
+        $id = Route::new_route($_POST["newfrom"], $_POST["newto"]);
+        header("Location: /moderation/overview?view=r&id=$id");
     }
 
     if (isset($_GET["id"])) {
         $route = Route::by_id($_GET["id"]);
 
-        if (isset($_POST["up"])) {
-            $_POST["down"] = $_POST["up"] - 1;
+        if (isset($_GET["delete"])) {
+            $route->delete();
+            header("Location: /moderation/overview?view=r");
+            exit;
         }
-        if (isset($_POST["down"])) {
-            $downpos = $_POST["down"];
 
-            if ($downpos == 0) {
-                $swap = $route->data[1]["a"];
-                $route->data[1]["a"] = $route->data[1]["b"];
-                $route->data[1]["b"] = $swap;
+        if (isset($_GET["reverse"])) {
+            $rev = new Route(Route::next_free(), false);
+            
+            $data = $route->data;
+            $data[sizeof($data) + 1] = "";
 
-                if (isset($route->data[2])) {
-                    $route->data[2]["a"] = $swap;
+            $data = array_reverse($data);
+
+            unset($data[0]);
+
+            foreach ($data as $index => $values) {
+                $a_store = $values["a"];
+                $data[$index]["a"] = $values["b"];
+                $data[$index]["b"] = $a_store;
+            }
+
+            $rev->data = $data;
+
+            $rev->save();
+            header("Location: /moderation/overview?view=r&id=$route->id");
+        }
+
+        if (isset($_POST["save"])) {
+            $route_new = Route::by_id($_GET["id"]);
+            $route_new->data = array();
+            $route_new->data[0] = ""; # VerbindungsIndex 0 isnt set but otherwise array_push wont work
+
+            $rows = $_POST["rows"];
+            $con_before = $_POST["short-1"];
+
+            $work = true;
+
+            for ($i = 2; $i <= $rows; $i++) {
+                $con_name = $_POST["short-$i"];
+                $con = Connection::by_id($con_before, $con_name);
+
+                if ($con == null) {
+                    echo ("The connection $con_before and $con_name doesn't exist! Please fix.");
+                    $work = false;
+                    break;
                 }
-            } else {
-                $swap = $route->data[$downpos]["b"];
-                $route->data[$downpos]["b"] = $route->data[$downpos + 1]["b"];
-                $route->data[$downpos + 1]["b"] = $swap;
-                $route->data[$downpos + 1]["a"] = $route->data[$downpos]["b"];
+
+                $duration = null;
+
+                if (isset($_POST["duration-$i"])) {
+                    $duration = $_POST["duration-$i"];
+                }
+
+                array_push($route_new->data, ["a" => $con_before, "b" => $con_name, "stand_time" => $duration]);
+
+                $con_before = $con_name;
+            }
+
+            if ($work) {
+                unset($route_new->data[0]);
+                $route = $route_new;
+                $route->save();
             }
         }
-        $route->save();
 
         if (isset($route)) {
             $xml->addChild("id", $_GET["id"]);
@@ -246,4 +293,8 @@ function load_r($xml) {
 }
 function load_l($xml) {
     $xml->addChild("title", "Linien bearbeiten | BD");
+}
+
+function alert($msg) {
+    echo "<script type='text/javascript'>alert('$msg');</script>";
 }

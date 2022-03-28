@@ -71,3 +71,20 @@
 .hidden {
     opacity: 0;
 }
+
+.lightgray {
+    background-color: gainsboro;
+}
+
+.pointer {
+    cursor: pointer;
+    padding: 1px;
+}
+
+.grabber {
+    cursor: grab;
+}
+
+.delete-col {
+    margin-left: 5px;
+}

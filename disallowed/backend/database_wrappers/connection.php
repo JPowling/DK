@@ -44,6 +44,10 @@ class Connection {
     public static function by_id(string $station_a, string $station_b) {
         $sql = new SQL();
 
+        if ($sql->sql_request("SELECT * FROM Verbindungen WHERE BahnhofA='$station_a' AND BahnhofB='$station_b'")->get_num_rows() == 0) {
+            return null;
+        }
+
         $result = $sql->sql_request("SELECT Dauer FROM Verbindungen WHERE BahnhofA='$station_a' AND BahnhofB='$station_b'")->get_from_column("Dauer");
         $result_rev = $sql->sql_request("SELECT Dauer FROM Verbindungen WHERE BahnhofA='$station_b' AND BahnhofB='$station_a'")->get_from_column("Dauer");
 
