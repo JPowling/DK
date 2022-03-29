@@ -17,14 +17,18 @@ class Search() {
         println(
             graph.getEdge(
                 Path(
-                    graph.getVertex(TrainStop(
-                        TrainStation("a", "amsel"), LocalTime.of(10, 0), 100, TrainStopType.DEPARTING
-                    ))!!.data,
-                    graph.getVertex(TrainStop(
-                        TrainStation("b", "busch"), LocalTime.of(11, 10), 100, TrainStopType.ARRIVING
-                    ))!!.data
+                    graph.getVertex(
+                        TrainStop(
+                            TrainStation("a", "amsel"), LocalTime.of(10, 0), 100, TrainStopType.DEPARTING
+                        )
+                    ).data,
+                    graph.getVertex(
+                        TrainStop(
+                            TrainStation("b", "busch"), LocalTime.of(11, 10), 100, TrainStopType.ARRIVING
+                        )
+                    ).data
                 )
-            )?.source?.data == trainstop1
+            ).source.data == trainstop1
         )
     }
 

@@ -6,10 +6,10 @@ data class TrainStop(
     val trainStation: TrainStation,
     val arrivalTime: LocalTime,
     val lineID: Int,
-    val stopType: TrainStopType
+    val stopType: TrainStopType,
 )
 
 enum class TrainStopType {
     ARRIVING,
-    DEPARTING
+    DEPARTING,
 }

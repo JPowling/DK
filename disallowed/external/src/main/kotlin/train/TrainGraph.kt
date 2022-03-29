@@ -12,7 +12,7 @@ class TrainGraph : AdjacencyListGraph<TrainStop>() {
 
     fun weight(path: Path) = weight(getVertex(path.a), getVertex(path.b))
 
-    fun getVertex(trainStop: TrainStop) = vertices().first { it.data == trainStop }
+    fun getVertex(trainStop: TrainStop) = vertices.first { it.data == trainStop }
 
     fun getEdge(path: Path) = edges(getVertex(path.a)).first { it.source.data == path.a }
 

@@ -1,5 +1,3 @@
 package graph
 
-abstract class AbstractGraph<E> : Graph<E> {
-
-}
+abstract class AbstractGraph<E> : Graph<E>
