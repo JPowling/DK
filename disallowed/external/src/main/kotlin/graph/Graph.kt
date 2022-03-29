@@ -10,9 +10,9 @@ interface Graph<E> {
         weight: Int
     )
 
-    fun edges(source: Vertex<E>): ArrayList<Edge<E>>
+    fun edges(source: Vertex<E>): MutableList<Edge<E>>
 
-    fun vertesies(): ArrayList<Vertex<E>>
+    val vertices: MutableSet<Vertex<E>>
 
     fun weight(
         source: Vertex<E>,

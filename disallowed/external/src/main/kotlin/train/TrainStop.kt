@@ -3,9 +3,13 @@ package train
 import java.time.LocalTime
 
 data class TrainStop(
-    val trainstaion: TrainStation,
+    val trainStation: TrainStation,
     val arrivalTime: LocalTime,
-    val lineID: Int
-) {
+    val lineID: Int,
+    val stopType: TrainStopType
+)
 
+enum class TrainStopType {
+    ARRIVING,
+    DEPARTING
 }

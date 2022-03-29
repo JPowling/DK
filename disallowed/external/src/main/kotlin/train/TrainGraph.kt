@@ -1,25 +1,19 @@
 package train
 
 import graph.AdjacencyListGraph
-import graph.Vertex
 
 class TrainGraph : AdjacencyListGraph<TrainStop>() {
 
-    fun addTrainStop(trainStop: TrainStop): TrainStop {
-        return createVertex(trainStop).data
+    fun addTrainStop(trainStop: TrainStop) = createVertex(trainStop).data
+
+    fun addPath(path: Path) {
+        addEdge(getVertex(path.a), getVertex(path.b), path.duration)
     }
 
-    fun addConnection(connection: Connection) {
-        getVertex(connection.a)?.let { getVertex(connection.b)?.let { it1 -> addEdge(it, it1, connection.duration) } }
-    }
+    fun weight(path: Path) = weight(getVertex(path.a), getVertex(path.b))
 
-    fun weight(connection: Connection): Int? =
-        getVertex(connection.a)?.let { getVertex(connection.b)?.let { it1 -> weight(it, it1) } }
+    fun getVertex(trainStop: TrainStop) = vertices().first { it.data == trainStop }
 
-    fun getVertex(trainStop: TrainStop): Vertex<TrainStop>? =
-        vertesies().firstOrNull() { it.data == trainStop }
-
-    fun AdjacencyListGraph<TrainStop>.getEdge(connection: Connection) =
-        getVertex(connection.a)?.let { edges(it) }?.firstOrNull() { it.source.data == connection.a }
+    fun getEdge(path: Path) = edges(getVertex(path.a)).first { it.source.data == path.a }
 
 }
