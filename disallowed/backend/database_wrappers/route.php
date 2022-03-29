@@ -33,6 +33,10 @@ class Route {
             $local_b = $stored["b"];
             $local_stand = $stored["stand_time"];
 
+            if (!isset($local_stand)) {
+                $local_stand = "1";
+            }
+
             foreach ($checkexistsresult as $remoteindex => $remotekeys) {
 
                 if ($local_a == $remotekeys["BahnhofA"] && $local_b == $remotekeys["BahnhofB"]) {
@@ -143,6 +147,9 @@ class Route {
     public static function new_route(string $station_a, string $station_b) {
         $sql = new SQL(true);
         $id = Route::next_free();
+
+        $station_a = Station::ensure_short($station_a);
+        $station_b = Station::ensure_short($station_b);
 
         $sql->sql_request("INSERT INTO Routen VALUES ($id, '$station_a', '$station_b', 1, NULL)");
 

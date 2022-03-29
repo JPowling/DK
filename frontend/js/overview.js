@@ -97,7 +97,7 @@ function drop(ev) {
     } else if (toStops.innerHTML === "") {
       toStops.innerHTML = "<input type=\"checkbox\" name=\"stands-" + toID + "\" checked=\"on\" />";
       toTime.innerHTML = "<input type=\"number\" name=\"duration-" + toID + "\" value=\"0\">";
-      toDelete.innerHTML = "<p class=\"delete pointer\" onclick=\"deleteRoutePart(this)\" id=\"delete-" + toID + "\">Delete</p>";
+      toDelete.innerHTML = "<p class=\"delete pointer\" onclick=\"deleteRoutePart(this)\" id=\"delete-" + $toID + "\">Delete</p>";
     }
 
     if (fromID == 1 || fromID == last) {
@@ -107,7 +107,7 @@ function drop(ev) {
     } else if (fromStops.innerHTML === "") {
       fromStops.innerHTML = "<input type=\"checkbox\" name=\"stands-" + fromID + "\" checked=\"on\" />";
       fromTime.innerHTML = "<input type=\"number\" name=\"duration-" + fromID + "\" value=\"0\">";
-      fromDelete.innerHTML = "<p class=\"delete pointer\" onclick=\"deleteRoutePart(this)\" id=\"delete-" + fromID + "\">Delete</p>\"";
+      fromDelete.innerHTML = "<p class=\"delete pointer\" onclick=\"deleteRoutePart(this)\" id=\"delete-" + $fromID + "\">Delete</p>";
     }
   }
 }
@@ -135,8 +135,7 @@ var template = "<th><p class=\"lightgray grabber\" id=\"{NUMBER}\" ondrop=\"drop
 + "ondragstart=\"drag(event)\">Drag</p></th><th><a class=\"navigator-button\" href=\"/moderation/overview?view=b&amp;id={NAME}\""
 + ">{NAME}</a><input type=\"hidden\" name=\"short-{NUMBER}\" value=\"{NAME}\"/></th><th id=\"stops\"><input type=\"checkbox\""
 + "name=\"stands-{NUMBER}\"  id=\"stands-{NUMBER}\" onchange=\"handleStopChange(this)\" checked=\"\"></th><th i"
-+ "d=\"time\"><input type=\"number\" name=\"duration-{NUMBER}\" value=\"1\"></th><th class=\"delete pointer\" onclick=\""
-+ "deleteRoutePart(this)\" id=\"delete-NUMBER\"><p>Delete</p></th>"
++ "d=\"time\"><input type=\"number\" name=\"duration-{NUMBER}\" value=\"1\"></th><th id=\"delete\"><p class=\"delete pointer\" onclick=\"deleteRoutePart(this)\" id=\"delete-{NUMBER}\">Delete</p></th>"
 
 function addConnection() {
   let input = document.getElementById("newConnection");
@@ -148,6 +147,8 @@ function addConnection() {
   t.insertRow(last);
 
   let html = template.replaceAll("{NUMBER}", last).replaceAll("{NAME}", input.value);
+
+  input.value = "";
 
   table[last].innerHTML = html;
 

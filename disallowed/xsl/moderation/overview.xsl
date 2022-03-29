@@ -266,14 +266,20 @@
                 <br />
 
                 <form action="/moderation/overview?view=r" method="post">
-                    <input type="text" name="newfrom" placeholder="von" list="stations"/>
+                    <input type="text" name="newfrom" placeholder="von" list="stations_full"/>
                     <br/>
-                    <input type="text" name="newto" placeholder="zu" list="stations"/>
+                    <input type="text" name="newto" placeholder="zu" list="stations_full"/>
                     <br/>
                     <button type="submit">Route erstellen</button>
                     <datalist id="stations">
                         <xsl:for-each select="xml/station">
                             <option value="{./id}" />
+                        </xsl:for-each>
+                    </datalist>
+                    
+                    <datalist id="stations_full">
+                        <xsl:for-each select="xml/station">
+                            <option value="{./name}" />
                         </xsl:for-each>
                     </datalist>
                 </form>
@@ -352,7 +358,7 @@
 
                                 <tr>
                                     <th>
-                                        <input type="text" id="newConnection" list="stations" />
+                                        <input type="text" id="newConnection" list="stations_full" />
                                         <p class="lightgray pointer" onClick="addConnection()">hinzufügen</p>
                                     </th>
                                 </tr>

@@ -99,6 +99,10 @@ function load_b($xml) {
     if (isset($_GET["id"])) {
         $station = Station::by_id($_GET["id"]);
 
+        if (!isset($station)) {
+            $station = Station::by_name($_GET["id"]);
+        }
+
         if (isset($station)) {
             if (isset($_POST["fullname"], $_POST["platforms"]) && is_numeric($_POST["platforms"])) {
                 $station->name = $_POST["fullname"];
@@ -214,7 +218,7 @@ function load_r($xml) {
             $rev->data = $data;
 
             $rev->save();
-            header("Location: /moderation/overview?view=r&id=$route->id");
+            header("Location: /moderation/overview?view=r&id=$rev->id");
         }
 
         if (isset($_POST["save"])) {
@@ -222,13 +226,13 @@ function load_r($xml) {
             $route_new->data = array();
             $route_new->data[0] = ""; # VerbindungsIndex 0 isnt set but otherwise array_push wont work
 
-            $rows = $_POST["rows"];
-            $con_before = $_POST["short-1"];
+            $con_before = Station::ensure_short($_POST["short-1"]);
 
             $work = true;
+            $i = 2;
 
-            for ($i = 2; $i <= $rows; $i++) {
-                $con_name = $_POST["short-$i"];
+            while (isset($_POST["short-$i"])) {
+                $con_name = Station::ensure_short($_POST["short-$i"]);
                 $con = Connection::by_id($con_before, $con_name);
 
                 if ($con == null) {
@@ -240,12 +244,15 @@ function load_r($xml) {
                 $duration = null;
 
                 if (isset($_POST["duration-$i"])) {
-                    $duration = $_POST["duration-$i"];
+                    array_push($route_new->data, ["a" => $con_before, "b" => $con_name, "stand_time" => $_POST["duration-$i"]]);
+                } else {
+                    array_push($route_new->data, ["a" => $con_before, "b" => $con_name, "stand_time" => "NULL"]);
                 }
 
-                array_push($route_new->data, ["a" => $con_before, "b" => $con_name, "stand_time" => $duration]);
+                
 
                 $con_before = $con_name;
+                $i++;
             }
 
             if ($work) {
