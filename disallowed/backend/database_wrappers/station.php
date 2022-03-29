@@ -64,6 +64,20 @@ class Station {
         });
 
         if (empty($stations)) {
+            return Station::by_name($short);
+        }
+
+        return $stations[array_key_first($stations)];
+    }
+
+    public static function by_name(string $name) {
+        $stations = Station::get_stations();
+
+        $stations = array_filter($stations, function ($s) use ($name) {
+            return $s->name == $name;
+        });
+
+        if (empty($stations)) {
             return null;
         }
 
@@ -74,5 +88,15 @@ class Station {
         $sql = new SQL(true);
 
         $sql->sql_request("INSERT INTO Bahnhofe VALUES ('$short', '$name', $platforms)");
+    }
+
+    public static function ensure_short(string $msg) {
+        $s = Station::by_name($msg);
+
+        if (isset($s)) {
+            return $s->short;
+        }
+
+        return $msg;
     }
 }

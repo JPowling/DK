@@ -218,7 +218,7 @@
 
                                 <tr>
                                     <th>
-                                        <p>Neu verbinden: (Kürzel)</p>
+                                        <p>Neu verbinden: (Kürzel) oder neuen Bahnhof erstellen</p>
                                     </th>
                                 </tr>
 
@@ -245,7 +245,142 @@
         </div>
     </xsl:template>
     <xsl:template match="/" mode="routen">
-    
+        <div class="content-parent">
+            <div class="content-search">
+
+                <p>
+                    RoutenID eingeben:
+                    <br />
+                    (Fokus auf Textbox verlieren)
+                </p>
+                <input list="routes" id="routes_select" onfocusout="routesFocusOut()" onfocusin="routesFocusIn()" value="{xml/id}" />
+                <datalist id="routes">
+                    <xsl:for-each select="xml/route">
+                        <option value="{./id}" />
+                    </xsl:for-each>
+                </datalist>
+
+                <p>
+            Oder:
+        </p>
+                <br />
+
+                <form action="/moderation/overview?view=r" method="post">
+                    <input type="text" name="newfrom" placeholder="von" list="stations_full"/>
+                    <br/>
+                    <input type="text" name="newto" placeholder="zu" list="stations_full"/>
+                    <br/>
+                    <button type="submit">Route erstellen</button>
+                    <datalist id="stations">
+                        <xsl:for-each select="xml/station">
+                            <option value="{./id}" />
+                        </xsl:for-each>
+                    </datalist>
+                    
+                    <datalist id="stations_full">
+                        <xsl:for-each select="xml/station">
+                            <option value="{./name}" />
+                        </xsl:for-each>
+                    </datalist>
+                </form>
+            </div>
+            <div class="content-splitter" />
+            <div class="content-result">
+
+                <xsl:choose>
+                    <xsl:when test="xml/selection">
+                        <p class="bold">
+                            Du betrachtest: Route mit ID
+                            <xsl:value-of select="xml/id" />
+                        </p>
+
+                        <form action="/moderation/overview?view=r&amp;id={xml/id}" method="post">
+                            <table id="list">
+                                <tr>
+                                    <th>
+                                        <p class="bold">Reihenfolge</p>
+                                    </th>
+                                    <th>
+                                        <p class="bold">Bahnhof</p>
+                                    </th>
+                                    <th>
+                                        <p class="bold">Zug hält?</p>
+                                    </th>
+                                    <th>
+                                        <p class="bold">Standzeit (min)</p>
+                                    </th>
+                                </tr>
+                                <xsl:for-each select="xml/selection/data">
+
+                                    <tr class="row-with-button">
+                                        <th>
+                                            <p class="lightgray grabber" id="{position()}" ondrop="drop(event)" ondragover="allowDrop(event)" draggable="true" ondragstart="drag(event)">
+                                                Drag
+                                            </p>
+                                        </th>
+                                        <th>
+                                            <a class="navigator-button" href="/moderation/overview?view=b&amp;id={./station}">
+                                                <xsl:value-of select="./station_full"></xsl:value-of>
+                                            </a>
+                                            <input type="hidden" name="short-{position()}" value="{./station}"/>
+                                        </th>
+                                        <th id="stops">
+                                            <xsl:choose>
+                                                <xsl:when test="not(position() = last() or position() = 1)">
+                                                    <input type="checkbox" name="stands-{position()}" id="stands-{position()}" onchange="handleStopChange(this)">
+                                                        <xsl:if test="./stand_time != 'null'">
+                                                            <xsl:attribute name="checked" />
+                                                        </xsl:if>
+                                                    </input>
+                                                </xsl:when>
+                                            </xsl:choose>
+                                        </th>
+                                        <th id="time">
+                                            <xsl:if test="not(./stand_time = 'null' or position() = last() or position() = 1)">
+                                                <input type="number" name="duration-{position()}" value="{./stand_time}" />
+                                            </xsl:if>
+                                        </th>
+                                        <th id="delete">
+                                            <xsl:if test="not(position() = last() or position() = 1)">
+                                                <p class="delete pointer" onclick="deleteRoutePart(this)" id="delete-{position()}">
+                                                Delete
+                                            </p>
+                                            </xsl:if>
+                                        </th>
+                                    </tr>
+                                </xsl:for-each>
+
+                                <tr>
+                                    <th>
+                                        <p>Neu verbinden: (Kürzel)</p>
+                                    </th>
+                                </tr>
+
+                                <tr>
+                                    <th>
+                                        <input type="text" id="newConnection" list="stations_full" />
+                                        <p class="lightgray pointer" onClick="addConnection()">hinzufügen</p>
+                                    </th>
+                                </tr>
+                            </table>
+
+                            <input type="hidden" name="rows" value="{count(xml/selection/data)}"/>
+                            <button type="submit" class="button input" name="save">Speichern</button>
+
+                            <br />
+                            <br />
+                            <a href="/moderation/overview?view=r&amp;id={xml/id}&amp;delete=1" class="navigator-button delete">Löschen</a>
+                            <a href="/moderation/overview?view=r&amp;id={xml/id}&amp;reverse=1" class="navigator-button">Rückverbindung erstellen</a>
+                        </form>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <p>Es wurde keine Route ausgewählt</p>
+                    </xsl:otherwise>
+                </xsl:choose>
+
+            </div>
+        </div>
+
     </xsl:template>
     <xsl:template match="/" mode="linien"></xsl:template>
 
