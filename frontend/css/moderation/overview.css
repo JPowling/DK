@@ -101,3 +101,48 @@
     padding-right: 3cm;
     padding-left: 3cm;
 }
+
+.ul {
+    height: 7cm;
+    overflow: scroll;
+    overflow-x: hidden;
+    list-style-type: none;
+    padding-left: 10px;
+    background-color: rgb(216, 228, 238);
+    border-radius: 10px;
+    display: block;
+    margin-right: 6px;
+
+    padding-top: 5px;
+    padding-bottom: 5px;
+
+    border: 1px solid rgb(80, 80, 80);
+}
+
+.ula {
+    text-decoration: none;
+    border: 1px solid #ddd;
+    display: block;
+    font-size: 16px;
+    color: black;
+    background-color: #f5f5f5;
+}
+
+.ulli {
+    margin-top: 2px;
+    margin-bottom: 3px;
+    margin-right: 10px;
+}
+
+.select_input {
+    width: 7cm;
+}
+
+input {
+    border: 1px solid gray;
+    border-radius: 4px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+
+    margin: 2px;
+}

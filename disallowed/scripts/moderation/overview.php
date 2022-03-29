@@ -123,7 +123,6 @@ function load_b($xml) {
                     $sql->sql_request("DELETE FROM Verbindungen WHERE BahnhofA='$station->short' AND BahnhofB='$connected'");
                     $sql->sql_request("DELETE FROM Verbindungen WHERE BahnhofB='$station->short' AND BahnhofA='$connected'");
                 } else {
-                    print_r($_POST);
                     $sql->sql_request("UPDATE Verbindungen SET Dauer=$duration WHERE BahnhofA='$station->short' AND BahnhofB='$connected'");
                     $sql->sql_request("UPDATE Verbindungen SET Dauer=$duration_rev WHERE BahnhofB='$station->short' AND BahnhofA='$connected'");
                 }
@@ -217,12 +216,15 @@ function load_r($xml) {
                 $a_store = $values["a"];
                 $data[$index]["a"] = $values["b"];
                 $data[$index]["b"] = $a_store;
+
+                $data[$index]["stand_time"] = "1";
             }
 
             $rev->data = $data;
 
             $rev->save();
             header("Location: /moderation/overview?view=r&id=$rev->id");
+            exit;
         }
 
         if (isset($_POST["save"])) {
@@ -245,15 +247,11 @@ function load_r($xml) {
                     break;
                 }
 
-                $duration = null;
-
                 if (isset($_POST["duration-$i"])) {
                     array_push($route_new->data, ["a" => $con_before, "b" => $con_name, "stand_time" => $_POST["duration-$i"]]);
                 } else {
                     array_push($route_new->data, ["a" => $con_before, "b" => $con_name, "stand_time" => "NULL"]);
                 }
-
-
 
                 $con_before = $con_name;
                 $i++;
@@ -263,6 +261,8 @@ function load_r($xml) {
                 unset($route_new->data[0]);
                 $route = $route_new;
                 $route->save();
+                header("Location: /moderation/overview?view=r&id=$route->id");
+                exit;
             }
         }
 
@@ -330,6 +330,8 @@ function load_l($xml) {
             $line->start_time = $_POST["start"];
             $line->category = $_POST["category"];
             $line->save();
+            header("Location: /moderation/overview?view=l&id=$line->id");
+            exit;
         }
 
         $xml->addChild("id", $_GET["id"]);

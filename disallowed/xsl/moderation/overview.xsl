@@ -7,7 +7,7 @@
 
         <div class="container-outer">
             <div class="container-inner">
-                <h1 class="title">Moderation: Übersicht(STC)</h1>
+                <h1 class="title">Moderation: Übersicht</h1>
                 <div class="body">
                     <div class="navigator">
                         <xsl:apply-templates select="/" mode="navigator" />
@@ -142,20 +142,25 @@
             <div class="content-search">
 
                 <p>
-                    Bahnhofkürzel eingeben:
-                    <br />
-                    (Fokus auf Textbox verlieren)
+                    Bahnhof auswählen:
                 </p>
-                <input list="stations" id="stations_select" onfocusout="stationsFocusOut()" onfocusin="stationsFocusIn()" value="{xml/id}" />
-                <datalist id="stations">
+
+                <input class="select_input" type="text" id="stations_select" onkeyup="search(stations_select)" placeholder="Suchen..." />
+                <ul class="ul" id="stations_select_ul">
                     <xsl:for-each select="xml/station">
-                        <option value="{./id}" />
+                        <li class="ulli">
+                            <a class="ula" href="/moderation/overview?view=b&amp;id={./id}">
+                                <xsl:value-of select="./id" />
+                                -
+                                <xsl:value-of select="./name" />
+                            </a>
+                        </li>
                     </xsl:for-each>
-                </datalist>
+                </ul>
 
                 <p>
-                Oder:
-            </p>
+                    Oder:
+                </p>
                 <br />
 
                 <form action="/moderation/overview?view=b" method="post">
@@ -358,7 +363,7 @@
 
                                 <tr>
                                     <th>
-                                        <input type="text" id="newConnection" list="stations_full" />
+                                        <input type="text" id="newConnection" list="stations_full" onkeydown="enter(event)" />
                                         <p class="lightgray pointer" onClick="addConnection()">hinzufügen</p>
                                     </th>
                                 </tr>

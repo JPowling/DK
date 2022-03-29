@@ -71,8 +71,8 @@ class Line {
         $result = $sql->sql_request("SELECT LinienID FROM Linien ORDER BY LinienID")->result;
         $numbers = array_merge_recursive(...$result)["LinienID"];
         
-        $lowestpossible = 1;
-        for ($i = 1; $i <= PHP_INT_MAX; $i++) {
+        $lowestpossible = 100;
+        for ($i = $lowestpossible; $i <= PHP_INT_MAX; $i++) {
             if (!in_array($i, $numbers)){
                 $lowestpossible = $i;
                 break;
