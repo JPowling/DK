@@ -250,24 +250,37 @@
         </div>
     </xsl:template>
     <xsl:template match="/" mode="routen">
+        <datalist id="routes">
+            <xsl:for-each select="xml/route">
+                <option value="{./id}" />
+            </xsl:for-each>
+        </datalist>
+
         <div class="content-parent">
             <div class="content-search">
 
-                <p>
+                <!-- <p>
                     RoutenID eingeben:
                     <br />
                     (Fokus auf Textbox verlieren)
                 </p>
-                <input list="routes" id="routes_select" onfocusout="routesFocusOut()" onfocusin="routesFocusIn()" value="{xml/id}" />
-                <datalist id="routes">
+                <input list="routes" id="routes_select" onfocusout="routesFocusOut()" onfocusin="routesFocusIn()" value="{xml/id}" /> -->
+
+                <input class="select_input" type="text" id="routes_select" onkeyup="search(routes_select)" placeholder="Suchen..." />
+                <ul class="ul" id="routes_select_ul">
                     <xsl:for-each select="xml/route">
-                        <option value="{./id}" />
+                        <li class="ulli">
+                            <a class="ula" href="/moderation/overview?view=r&amp;id={./id}">
+                                <xsl:value-of select="./id" />: 
+                                <xsl:value-of select="./start" /> - <xsl:value-of select="./end" />
+                            </a>
+                        </li>
                     </xsl:for-each>
-                </datalist>
+                </ul>
 
                 <p>
-            Oder:
-        </p>
+                    Oder:
+                </p>
                 <br />
 
                 <form action="/moderation/overview?view=r" method="post">

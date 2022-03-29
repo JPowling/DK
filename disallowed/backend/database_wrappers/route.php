@@ -110,11 +110,12 @@ class Route {
 
     public function get_start_finish() {
         $sql = new SQL();
-        $result = $sql->sql_request("SELECT * FROM Routen WHERE RoutenID = ".$this->id." AND (VerbindungsIndex = 1 OR VerbindungsIndex = (SELECT MAX(VerbindungsIndex) FROM Routen WHERE RoutenID = ".$this->id.")) ORDER BY VerbindungsIndex");
+        $args = ["Route" => $this->id, "Route2" => $this->id];
+        $result = $sql->request("SELECT A.Name AS A, B.Name AS B FROM Routen INNER JOIN Bahnhofe as A ON A.Kennzeichnung = BahnhofA INNER JOIN Bahnhofe as B ON B.Kennzeichnung = BahnhofB WHERE RoutenID = :Route AND (VerbindungsIndex = 1 OR VerbindungsIndex = (SELECT MAX(VerbindungsIndex) FROM Routen WHERE RoutenID = :Route2)) ORDER BY VerbindungsIndex", $args);
 
         $r = array();
-        array_push($r, $result->get_from_column("BahnhofA", 0));
-        array_push($r, $result->get_from_column("BahnhofB", 1));
+        array_push($r, $result->get_from_column("A", 0));
+        array_push($r, $result->get_from_column("B", 1));
 
         return $r;
     }

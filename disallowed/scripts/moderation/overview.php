@@ -182,6 +182,11 @@ function load_r($xml) {
     foreach ($routes as $route_i) {
         $xmlroute = $xml->addChild("route");
         $xmlroute->addChild("id", $route_i->id);
+
+        $startend = $route_i->get_start_finish();
+        $xmlroute->addChild("start", $startend[0]);
+        $xmlroute->addChild("end", $startend[1]);
+
     }
 
     if (isset($_POST["newfrom"])) {
