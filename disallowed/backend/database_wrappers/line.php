@@ -65,4 +65,22 @@ class Line {
         $sql->sql_request("INSERT INTO Linien VALUES ($id, $routeid, '$start_time', $train_id, '$category')");
     }
 
+    public static function create_inc() {
+        $sql = new SQL();
+
+        $result = $sql->sql_request("SELECT LinienID FROM Linien ORDER BY LinienID")->result;
+        $numbers = array_merge_recursive(...$result)["LinienID"];
+        
+        $lowestpossible = 1;
+        for ($i = 1; $i <= PHP_INT_MAX; $i++) {
+            if (!in_array($i, $numbers)){
+                $lowestpossible = $i;
+                break;
+            }
+        }
+
+        Line::create($lowestpossible, 1, "00:00:00", 1, "ICE");
+        return $lowestpossible;
+    }
+
 }

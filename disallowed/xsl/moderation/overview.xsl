@@ -266,17 +266,17 @@
                 <br />
 
                 <form action="/moderation/overview?view=r" method="post">
-                    <input type="text" name="newfrom" placeholder="von" list="stations_full"/>
-                    <br/>
-                    <input type="text" name="newto" placeholder="zu" list="stations_full"/>
-                    <br/>
+                    <input type="text" name="newfrom" placeholder="von" list="stations_full" />
+                    <br />
+                    <input type="text" name="newto" placeholder="zu" list="stations_full" />
+                    <br />
                     <button type="submit">Route erstellen</button>
                     <datalist id="stations">
                         <xsl:for-each select="xml/station">
                             <option value="{./id}" />
                         </xsl:for-each>
                     </datalist>
-                    
+
                     <datalist id="stations_full">
                         <xsl:for-each select="xml/station">
                             <option value="{./name}" />
@@ -300,7 +300,7 @@
                                     <th>
                                         <p class="bold">Reihenfolge</p>
                                     </th>
-                                    <th>
+                                    <th class="addpadding">
                                         <p class="bold">Bahnhof</p>
                                     </th>
                                     <th>
@@ -322,7 +322,7 @@
                                             <a class="navigator-button" href="/moderation/overview?view=b&amp;id={./station}">
                                                 <xsl:value-of select="./station_full"></xsl:value-of>
                                             </a>
-                                            <input type="hidden" name="short-{position()}" value="{./station}"/>
+                                            <input type="hidden" name="short-{position()}" value="{./station}" />
                                         </th>
                                         <th id="stops">
                                             <xsl:choose>
@@ -364,7 +364,7 @@
                                 </tr>
                             </table>
 
-                            <input type="hidden" name="rows" value="{count(xml/selection/data)}"/>
+                            <input type="hidden" name="rows" value="{count(xml/selection/data)}" />
                             <button type="submit" class="button input" name="save">Speichern</button>
 
                             <br />
@@ -382,6 +382,77 @@
         </div>
 
     </xsl:template>
-    <xsl:template match="/" mode="linien"></xsl:template>
+    <xsl:template match="/" mode="linien">
+        <div class="content-parent">
+            <div class="content-search">
+
+                <p>
+                    Liniennummer eingeben:
+                    <br />
+                    (Fokus auf Textbox verlieren)
+                </p>
+                <input list="lines" id="lines_select" onfocusout="linesFocusOut()" onfocusin="linesFocusIn()" value="{xml/id}" />
+                <datalist id="lines">
+                    <xsl:for-each select="xml/lines">
+                        <option value="{./id}" />
+                    </xsl:for-each>
+                </datalist>
+
+                <p>
+                Oder:
+            </p>
+                <br />
+
+                <a class="navigator-button" href="/moderation/overview?view=l&amp;create=1">Neue Linie anlegen</a>
+            </div>
+            <div class="content-splitter" />
+            <div class="content-result">
+
+                <xsl:choose>
+                    <xsl:when test="xml/selection">
+                        <p class="bold">
+                            Du betrachtest: Line mit Liniennummer
+                            <xsl:value-of select="xml/id" />
+                        </p>
+
+                        <form action="/moderation/overview?view=l&amp;id={xml/id}" method="post">
+                            <p>Route:⠀⠀Startzeit:⠀⠀⠀⠀⠀ Zuggattung:</p>
+                            <select name="route" class="addmargin">
+                                <xsl:for-each select="xml/routes">
+                                    <option value="{./id}">
+                                        <xsl:if test="./id = /xml/selection/route">
+                                            <xsl:attribute name="selected">selected</xsl:attribute>
+                                        </xsl:if>
+                                        <xsl:value-of select="./id"></xsl:value-of>
+                                    </option>
+                                </xsl:for-each>
+                            </select>
+                            <input type="time" name="start" value="{xml/selection/start}" class="addmargin" />
+                            <select name="category" class="addmargin">
+                                <xsl:for-each select="xml/categories">
+
+                                    <option value="{./name}">
+                                        <xsl:if test="./name = /xml/selection/category">
+                                            <xsl:attribute name="selected">selected</xsl:attribute>
+                                        </xsl:if>
+                                        <xsl:value-of select="./name"></xsl:value-of>
+                                    </option>
+                                </xsl:for-each>
+                            </select>
+                            <button type="submit" class="button input">Speichern</button>
+
+                            <br />
+                            <br />
+                            <a href="/moderation/overview?view=l&amp;id={xml/id}&amp;delete=1" class="navigator-button delete">Löschen</a>
+                        </form>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <p>Es wurde keine Linie ausgewählt</p>
+                    </xsl:otherwise>
+                </xsl:choose>
+
+            </div>
+        </div>
+    </xsl:template>
 
 </xsl:stylesheet>

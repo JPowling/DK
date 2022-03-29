@@ -88,3 +88,16 @@
 .delete-col {
     margin-left: 5px;
 }
+
+.addmargin {
+    margin-right: 5px;
+}
+
+.center-text{
+    text-align: center;
+}
+
+.addpadding {
+    padding-right: 3cm;
+    padding-left: 3cm;
+}

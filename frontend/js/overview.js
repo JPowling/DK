@@ -40,6 +40,21 @@ function routesFocusIn() {
   document.getElementById("routes_select").value = "";
 }
 
+function linesFocusOut() {
+  var routeID = document.getElementById("lines_select").value;
+
+  if (!is_valid_datalist_value("lines", routeID)) {
+    return;
+  }
+
+  location.href = "/moderation/overview?view=l&id=" + routeID;
+}
+
+function linesFocusIn() {
+  document.getElementById("lines_select").value = "";
+}
+
+
 function is_valid_datalist_value(idDataList, inputValue) {
   var option = document.querySelector("#" + idDataList + " option[value='" + inputValue + "']");
   if (option != null) {

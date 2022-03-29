@@ -68,4 +68,19 @@ class Train {
         $sql->sql_request("INSERT INTO Fahrzeuge VALUES ($lowestpossible, $seats)");
         return $lowestpossible;
     }
+
+    public static function get_categories() {
+        $sql = new SQL();
+
+        $result = $sql->sql_request("SELECT ZuggattungsID FROM Zuggattungen")->result;
+
+        $return = array();
+
+        foreach($result as $val) {
+            array_push($return, $val["ZuggattungsID"]);
+        }
+
+        return $return;
+    }
+
 }

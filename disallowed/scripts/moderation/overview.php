@@ -193,6 +193,10 @@ function load_r($xml) {
     if (isset($_GET["id"])) {
         $route = Route::by_id($_GET["id"]);
 
+        if (!isset($route)) {
+            return;
+        }
+
         if (isset($_GET["delete"])) {
             $route->delete();
             header("Location: /moderation/overview?view=r");
@@ -201,7 +205,7 @@ function load_r($xml) {
 
         if (isset($_GET["reverse"])) {
             $rev = new Route(Route::next_free(), false);
-            
+
             $data = $route->data;
             $data[sizeof($data) + 1] = "";
 
@@ -249,7 +253,7 @@ function load_r($xml) {
                     array_push($route_new->data, ["a" => $con_before, "b" => $con_name, "stand_time" => "NULL"]);
                 }
 
-                
+
 
                 $con_before = $con_name;
                 $i++;
@@ -300,8 +304,57 @@ function load_r($xml) {
 }
 function load_l($xml) {
     $xml->addChild("title", "Linien bearbeiten | BD");
-}
 
-function alert($msg) {
-    echo "<script type='text/javascript'>alert('$msg');</script>";
+    if (isset($_GET["create"])) {
+        $id = Line::create_inc();
+
+        header("Location: /moderation/overview?view=l&id=$id");
+        exit;
+    }
+
+    if (isset($_GET["id"])) {
+        $line = Line::by_id($_GET["id"]);
+
+        if (!isset($line)) {
+            return;
+        }
+
+        if (isset($_GET["delete"])) {
+            $line->delete();
+            header("Location: /moderation/overview?view=l");
+            exit;
+        }
+
+        if (isset($_POST["route"])) {
+            $line->routeid = $_POST["route"];
+            $line->start_time = $_POST["start"];
+            $line->category = $_POST["category"];
+            $line->save();
+        }
+
+        $xml->addChild("id", $_GET["id"]);
+
+        $selection = $xml->addChild("selection");
+        $selection->addChild("route", $line->routeid);
+        $selection->addChild("start", $line->start_time);
+        $selection->addChild("category", $line->category);
+    }
+
+    $lines = Line::get_lines();
+    foreach ($lines as $line) {
+        $xmlline = $xml->addChild("lines");
+        $xmlline->addChild("id", $line->id);
+    }
+
+    $routes = Route::get_routes();
+    foreach ($routes as $route) {
+        $xmlroutes = $xml->addChild("routes");
+        $xmlroutes->addChild("id", $route->id);
+    }
+
+    $categories = Train::get_categories();
+    foreach ($categories as $category) {
+        $xmlroutes = $xml->addChild("categories");
+        $xmlroutes->addChild("name", $category);
+    }
 }
