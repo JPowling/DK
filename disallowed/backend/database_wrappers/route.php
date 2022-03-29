@@ -109,28 +109,37 @@ class Route {
     }
 
     public function get_start_finish() {
-        $sql = new SQL();
-        $args = ["Route" => $this->id, "Route2" => $this->id];
-        $result = $sql->request("SELECT A.Name AS A, B.Name AS B FROM Routen INNER JOIN Bahnhofe as A ON A.Kennzeichnung = BahnhofA INNER JOIN Bahnhofe as B ON B.Kennzeichnung = BahnhofB WHERE RoutenID = :Route AND (VerbindungsIndex = 1 OR VerbindungsIndex = (SELECT MAX(VerbindungsIndex) FROM Routen WHERE RoutenID = :Route2)) ORDER BY VerbindungsIndex", $args);
-
         $r = array();
-        array_push($r, $result->get_from_column("A", 0));
-        array_push($r, $result->get_from_column("B", 1));
+        $a = $this->data[1]["a"];
+        $b = $this->data[array_key_last($this->data)]["b"];
 
+        $a = Station::ensure_long($a);
+        $b = Station::ensure_long($b);
+
+        array_push($r, $a, $b);
         return $r;
     }
 
     public static function get_routes() {
         $sql = new SQL();
 
-        $result = $sql->sql_request("SELECT DISTINCT RoutenID FROM Routen")->result;
+        $result = $sql->sql_request("SELECT * FROM Routen")->result;
 
         $routes = array();
 
-        foreach ($result as $index => $row) {
-            array_push($routes, new Route($row["RoutenID"], true));
-        }
+        foreach ($result as $row) {
+            $id = $row["RoutenID"];
 
+            if (!isset($routes[$id])) {
+                $routes[$id] = new Route($id, false);
+            }
+
+            $routes[$id]->data[$row["VerbindungsIndex"]] = ["a" => $row["BahnhofA"], "b" => $row["BahnhofB"], "stand_time" => $row["Standzeit"]];
+        }
+        
+        foreach ($routes as $route) {
+            ksort($route->data);
+        }
         return $routes;
     }
 

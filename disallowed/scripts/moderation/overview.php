@@ -18,7 +18,9 @@ if (isset($_GET["view"])) {
             load_b($xml);
             break;
         case "r":
+            // $start = microtime(true);
             load_r($xml);
+            // echo microtime(true) - $start." ";
             break;
         case "l":
             load_l($xml);
@@ -71,6 +73,7 @@ function load_f($xml) {
 }
 function load_b($xml) {
     $xml->addChild("title", "Bahnhöfe bearbeiten | BD");
+    Station::refresh();
 
     if (isset($_POST["newshort"]) and !empty($_POST["newshort"])) {
         $_POST["newshort"] = strtoupper($_POST["newshort"]);
@@ -176,9 +179,10 @@ function load_b($xml) {
 }
 function load_r($xml) {
     $xml->addChild("title", "Routen bearbeiten | BD");
-
     $routes = Route::get_routes();
 
+    Connection::refresh();
+    Station::refresh();
     foreach ($routes as $route_i) {
         $xmlroute = $xml->addChild("route");
         $xmlroute->addChild("id", $route_i->id);
@@ -186,7 +190,6 @@ function load_r($xml) {
         $startend = $route_i->get_start_finish();
         $xmlroute->addChild("start", $startend[0]);
         $xmlroute->addChild("end", $startend[1]);
-
     }
 
     if (isset($_POST["newfrom"])) {
@@ -277,14 +280,14 @@ function load_r($xml) {
             $selection = $xml->addChild("selection");
             $xmldata = $selection->addChild("data");
             $xmldata->addChild("station", $route->data[1]["a"]);
-            $xmldata->addChild("station_full", Station::by_id($route->data[1]["a"])->name);
+            $xmldata->addChild("station_full", Station::ensure_long($route->data[1]["a"]));
             $xmldata->addChild("duration", 0);
             $xmldata->addChild("stand_time", "null");
 
             foreach ($route->data as $data) {
                 $xmldata = $selection->addChild("data");
                 $xmldata->addChild("station", $data["b"]);
-                $xmldata->addChild("station_full", Station::by_id($data["b"])->name);
+                $xmldata->addChild("station_full", Station::ensure_long($data["b"]));
 
                 $con = Connection::by_id($data["a"], $data["b"]);
                 $xmldata->addChild("duration", $con->duration);

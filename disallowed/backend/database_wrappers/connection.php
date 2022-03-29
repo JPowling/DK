@@ -8,6 +8,8 @@ class Connection {
     public int $duration;
     public int $duration_rev;
 
+    public static array $cached = array();
+
     public function __construct(string $station_a, string $station_b, int $duration, int $duration_rev = -1) {
         $this->a = $station_a;
         $this->b = $station_b;
@@ -41,23 +43,30 @@ class Connection {
         return $connections;
     }
 
-    public static function by_id(string $station_a, string $station_b) {
+    public static function refresh() {
         $sql = new SQL();
+        Connection::$cached = $sql->request("SELECT * FROM Verbindungen")->result;
+    }
 
-        if ($sql->sql_request("SELECT * FROM Verbindungen WHERE BahnhofA='$station_a' AND BahnhofB='$station_b'")->get_num_rows() == 0) {
+    public static function by_id(string $station_a, string $station_b) {
+        $cache = Connection::$cached;
+
+
+        $result = array_filter($cache, function ($row) use ($station_a, $station_b) {
+            return $row["BahnhofA"] === $station_a && $row["BahnhofB"] === $station_b;
+        });
+        $result = array_values($result);
+
+        $result_rev = array_filter($cache, function ($row) use ($station_a, $station_b) {
+            return $row["BahnhofB"] === $station_a && $row["BahnhofA"] === $station_b;
+        });
+        $result_rev = array_values($result_rev);
+
+        if (!isset($result[0]["Dauer"])) {
             return null;
         }
 
-        $result = $sql->sql_request("SELECT Dauer FROM Verbindungen WHERE BahnhofA='$station_a' AND BahnhofB='$station_b'")->get_from_column("Dauer");
-        $result_rev = $sql->sql_request("SELECT Dauer FROM Verbindungen WHERE BahnhofA='$station_b' AND BahnhofB='$station_a'")->get_from_column("Dauer");
-
-        if (!isset($result)) {
-            $result = -1;
-        }
-        if (!isset($result_rev)) {
-            $result_rev = -1;
-        }
-        return new Connection($station_a, $station_b, $result, $result_rev);
+        return new Connection($station_a, $station_b, $result[0]["Dauer"], $result_rev[0]["Dauer"]);
     }
 
     public static function create(string $station_a, string $station_b, int $duration) {

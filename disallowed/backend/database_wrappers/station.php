@@ -7,6 +7,8 @@ class Station {
     public string $name;
     public int $platforms;
 
+    public static array $cached = array();
+
     public function __construct(string $short, string $name, int $platforms) {
         $this->short = $short;
         $this->name = $name;
@@ -57,31 +59,42 @@ class Station {
     }
 
     public static function by_id(string $short) {
-        $stations = Station::get_stations();
+        $cache = Station::$cached;
 
-        $stations = array_filter($stations, function ($s) use ($short) {
-            return $s->short == $short;
+        $result = array_filter($cache, function ($row) use ($short) {
+            return $row["Kennzeichnung"] === $short;
         });
+        $result = array_values($result);
 
-        if (empty($stations)) {
-            return Station::by_name($short);
-        }
-
-        return $stations[array_key_first($stations)];
-    }
-
-    public static function by_name(string $name) {
-        $stations = Station::get_stations();
-
-        $stations = array_filter($stations, function ($s) use ($name) {
-            return $s->name == $name;
-        });
-
-        if (empty($stations)) {
+        if (!isset($result[0]["Name"])) {
             return null;
         }
 
-        return $stations[array_key_first($stations)];
+        return new Station($result[0]["Kennzeichnung"],
+                            $result[0]["Name"],
+                            $result[0]["Gleise"]);
+    }
+
+    public static function by_name(string $name) {
+        $cache = Station::$cached;
+
+        $result = array_filter($cache, function ($row) use ($name) {
+            return $row["Name"] === $name;
+        });
+        $result = array_values($result);
+
+        if (!isset($result[0]["Name"])) {
+            return null;
+        }
+
+        return new Station($result[0]["Kennzeichnung"],
+                            $result[0]["Name"],
+                            $result[0]["Gleise"]);
+    }
+
+    public static function refresh() {
+        $sql = new SQL();
+        Station::$cached = $sql->request("SELECT * FROM Bahnhofe")->result;
     }
 
     public static function create(string $short, string $name, int $platforms = 1000) {
@@ -95,6 +108,16 @@ class Station {
 
         if (isset($s)) {
             return $s->short;
+        }
+
+        return $msg;
+    }
+
+    public static function ensure_long(string $msg) {
+        $s = Station::by_id($msg);
+
+        if (isset($s)) {
+            return $s->name;
         }
 
         return $msg;

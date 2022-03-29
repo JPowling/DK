@@ -50,6 +50,7 @@ $html = $xslt->transformToXml($xml);
 
 echo $html;
 
+exit;
 //for debugging: print xml
 $doc =  new DOMDocument();
 $doc->formatOutput = true;
