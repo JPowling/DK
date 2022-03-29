@@ -349,11 +349,19 @@ function load_l($xml) {
         $selection->addChild("start", $line->start_time);
         $selection->addChild("category", $line->category);
     }
+    
+    Station::refresh();
 
     $lines = Line::get_lines();
     foreach ($lines as $line) {
         $xmlline = $xml->addChild("lines");
         $xmlline->addChild("id", $line->id);
+        $xmlline->addChild("route", $line->routeid);
+        $xmlline->addChild("category", $line->category);
+
+        $route = Route::by_id($line->routeid)->get_start_finish();
+        $xmlline->addChild("start", Station::ensure_long($route[0]));
+        $xmlline->addChild("finish", Station::ensure_long($route[1]));
     }
 
     $routes = Route::get_routes();

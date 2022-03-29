@@ -259,13 +259,6 @@
         <div class="content-parent">
             <div class="content-search">
 
-                <!-- <p>
-                    RoutenID eingeben:
-                    <br />
-                    (Fokus auf Textbox verlieren)
-                </p>
-                <input list="routes" id="routes_select" onfocusout="routesFocusOut()" onfocusin="routesFocusIn()" value="{xml/id}" /> -->
-
                 <input class="select_input" type="text" id="routes_select" onkeyup="search(routes_select)" placeholder="Suchen..." />
                 <ul class="ul" id="routes_select_ul">
                     <xsl:for-each select="xml/route">
@@ -404,7 +397,7 @@
         <div class="content-parent">
             <div class="content-search">
 
-                <p>
+                <!-- <p>
                     Liniennummer eingeben:
                     <br />
                     (Fokus auf Textbox verlieren)
@@ -414,7 +407,20 @@
                     <xsl:for-each select="xml/lines">
                         <option value="{./id}" />
                     </xsl:for-each>
-                </datalist>
+                </datalist> -->
+
+                
+                <input class="select_input" type="text" id="lines_select" onkeyup="search(lines_select)" placeholder="Suchen..." />
+                <ul class="ul" id="lines_select_ul">
+                    <xsl:for-each select="xml/lines">
+                        <li class="ulli">
+                            <a class="ula" href="/moderation/overview?view=l&amp;id={./id}">
+                                <xsl:value-of select="./category"></xsl:value-of><xsl:value-of select="./id" />: Route
+                                <xsl:value-of select="./route" /> (<xsl:value-of select="./start" /> - <xsl:value-of select="./finish" />)
+                            </a>
+                        </li>
+                    </xsl:for-each>
+                </ul>
 
                 <p>
                 Oder:
