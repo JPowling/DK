@@ -101,6 +101,7 @@ class Station {
         $sql = new SQL(true);
 
         $sql->sql_request("INSERT INTO Bahnhofe VALUES ('$short', '$name', $platforms)");
+        Station::refresh();
     }
 
     public static function ensure_short(string $msg) {

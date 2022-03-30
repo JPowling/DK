@@ -397,19 +397,6 @@
         <div class="content-parent">
             <div class="content-search">
 
-                <!-- <p>
-                    Liniennummer eingeben:
-                    <br />
-                    (Fokus auf Textbox verlieren)
-                </p>
-                <input list="lines" id="lines_select" onfocusout="linesFocusOut()" onfocusin="linesFocusIn()" value="{xml/id}" />
-                <datalist id="lines">
-                    <xsl:for-each select="xml/lines">
-                        <option value="{./id}" />
-                    </xsl:for-each>
-                </datalist> -->
-
-                
                 <input class="select_input" type="text" id="lines_select" onkeyup="search(lines_select)" placeholder="Suchen..." />
                 <ul class="ul" id="lines_select_ul">
                     <xsl:for-each select="xml/lines">

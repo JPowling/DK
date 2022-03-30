@@ -100,6 +100,7 @@ function load_b($xml) {
     }
 
     if (isset($_GET["id"])) {
+        Station::refresh();
         $station = Station::by_id($_GET["id"]);
 
         if (!isset($station)) {
