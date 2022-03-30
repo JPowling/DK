@@ -12,8 +12,9 @@
             <xsl:for-each select="xml/lines">
                 <li class="ulli">
                     <a class="ula" href="/moderation/overview?view=l&amp;id={./id}">
-                        <xsl:value-of select="./category"></xsl:value-of><xsl:value-of select="./id" />: Route
-                        <xsl:value-of select="./route" /> (<xsl:value-of select="./start" /> - <xsl:value-of select="./finish" />)
+                        <xsl:value-of select="./category"></xsl:value-of><xsl:value-of select="./id" />: Route <xsl:value-of select="./route" /> 
+                        <br/>
+                        (<xsl:value-of select="./start" /> - <xsl:value-of select="./finish" />)
                     </a>
                 </li>
             </xsl:for-each>

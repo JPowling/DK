@@ -7,6 +7,8 @@ class Route {
 
     public array $data;
 
+    public static array $cached = array();
+
     public function __construct(int $id, bool $fetch) {
         $this->id = $id;
 
@@ -121,9 +123,7 @@ class Route {
     }
 
     public static function get_routes() {
-        $sql = new SQL();
-
-        $result = $sql->sql_request("SELECT * FROM Routen")->result;
+        $result = Route::$cached;
 
         $routes = array();
 
@@ -173,5 +173,10 @@ class Route {
         $sql = new SQL();
 
         return $sql->sql_request("SELECT MAX(RoutenID) as A FROM Routen")->get_from_column("A") + 1;
+    }
+
+    public static function refresh() {
+        $sql = new SQL();
+        Route::$cached = $sql->request("SELECT * FROM Routen")->result;
     }
 }

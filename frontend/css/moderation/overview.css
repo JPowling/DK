@@ -51,8 +51,6 @@
 .content-result {
     margin-left: 10px;
     margin-top: 20px;
-    width: min-content;
-    height: fit-content;
 }
 
 .delete {
@@ -145,4 +143,8 @@ input {
     padding-bottom: 2px;
 
     margin: 2px;
+}
+
+.new {
+    margin-top: 10px;
 }

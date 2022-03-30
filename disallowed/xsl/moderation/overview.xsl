@@ -5,6 +5,7 @@
     <xsl:include href="lines.xsl" />
     <xsl:include href="routes.xsl" />
     <xsl:include href="stations.xsl" />
+    <xsl:include href="trains.xsl" />
 
     <xsl:template match="/" mode="mode">
         <script src="/frontend/js/overview.js" />
