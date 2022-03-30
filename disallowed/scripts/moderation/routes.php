@@ -3,10 +3,13 @@
 
 function load($xml) {
     $xml->addChild("title", "Routen bearbeiten | BD");
-    $routes = Route::get_routes();
 
     Connection::refresh();
     Station::refresh();
+    Route::refresh();
+
+    $routes = Route::get_routes();
+    
     foreach ($routes as $route_i) {
         $xmlroute = $xml->addChild("route");
         $xmlroute->addChild("id", $route_i->id);

@@ -19,6 +19,7 @@
                             <a class="ula" href="/moderation/overview?view=r&amp;id={./id}">
                                 <xsl:value-of select="./id" />
                                 :
+                                <br/>
                                 <xsl:value-of select="./start" />
                                 -
                                 <xsl:value-of select="./end" />

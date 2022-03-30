@@ -51,6 +51,13 @@
 .content-result {
     margin-left: 10px;
     margin-top: 20px;
+    width: min-content;
+    height: fit-content;
+}
+
+.noncramped {
+    width: max-content;
+    height: max-content;
 }
 
 .delete {
