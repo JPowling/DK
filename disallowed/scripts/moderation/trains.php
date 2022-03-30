@@ -1,8 +1,6 @@
 <?php
 // Paul
 function load($xml) {
-    $xml->addChild("title", "Fahrzeuge bearbeiten | BD");
-
     if (isset($_GET["create"])) {
         $_GET["id"] = Train::create(1);
 
@@ -26,11 +24,14 @@ function load($xml) {
             if (isset($_POST["seats"]) && is_numeric($_POST["seats"])) {
                 $train->seats = $_POST["seats"];
                 $train->save();
+                header("Location: /moderation/overview?view=f");
+                exit;
             }
 
             if (isset($_GET["delete"])) {
                 $train->delete();
                 header("Location: /moderation/overview?view=f");
+                exit;
             }
 
             $xml->addChild("id", $_GET["id"]);

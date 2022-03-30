@@ -2,9 +2,6 @@
 # Paul
 
 function load($xml) {
-    $xml->addChild("title", "Bahnhöfe bearbeiten | BD");
-    Station::refresh();
-
     if (isset($_POST["newshort"]) and !empty($_POST["newshort"])) {
         $_POST["newshort"] = strtoupper($_POST["newshort"]);
 
@@ -12,12 +9,13 @@ function load($xml) {
         if (isset($tocheck)) {
             // Bahnhofkürzel existiert schon
             header("Location: /moderation/overview?view=b");
+            exit;
         }
 
-        Station::create($_POST["newshort"], "Bitte sofort ändern");
+        Station::create($_POST["newshort"], "Unbekannt");
 
         header("Location: /moderation/overview?view=b&id=" . $_POST["newshort"]);
-        return;
+        exit;
     }
 
     $stations = Station::get_stations();
@@ -42,6 +40,9 @@ function load($xml) {
                 $station->name = $_POST["fullname"];
                 $station->platforms = $_POST["platforms"];
                 $station->save();
+
+                header("Location: /moderation/overview?view=b&id=" . $_GET["id"]);
+                exit;
             }
 
             $count = 1;
@@ -71,7 +72,7 @@ function load($xml) {
                 $send = false;
 
                 if (!isset($new_connectionstation)) {
-                    Station::create($_POST["new-connection"], "Bitte sofort ändern", 1000);
+                    Station::create($_POST["new-connection"], "Unbekannt", 1000);
                     $new_connectionstation = Station::by_id($_POST["new-connection"]);
                     $send = true;
                 }
@@ -81,12 +82,14 @@ function load($xml) {
 
                 if ($send) {
                     header("Location: /moderation/overview?view=b&id=" . $_POST["new-connection"]);
+                    exit;
                 }
             }
 
             if (isset($_GET["delete"])) {
                 $station->delete();
                 header("Location: /moderation/overview?view=b");
+                exit;
             }
 
             $xml->addChild("id", $_GET["id"]);

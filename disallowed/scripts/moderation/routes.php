@@ -2,14 +2,8 @@
 # Paul
 
 function load($xml) {
-    $xml->addChild("title", "Routen bearbeiten | BD");
-
-    Connection::refresh();
-    Station::refresh();
-    Route::refresh();
-
     $routes = Route::get_routes();
-    
+
     foreach ($routes as $route_i) {
         $xmlroute = $xml->addChild("route");
         $xmlroute->addChild("id", $route_i->id);
@@ -22,6 +16,7 @@ function load($xml) {
     if (isset($_POST["newfrom"])) {
         $id = Route::new_route($_POST["newfrom"], $_POST["newto"]);
         header("Location: /moderation/overview?view=r&id=$id");
+        exit;
     }
 
     if (isset($_GET["id"])) {

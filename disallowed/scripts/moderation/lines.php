@@ -3,8 +3,6 @@
 
 
 function load($xml) {
-    $xml->addChild("title", "Linien bearbeiten | BD");
-
     if (isset($_GET["create"])) {
         $id = Line::create_inc();
 
@@ -41,11 +39,6 @@ function load($xml) {
         $selection->addChild("start", $line->start_time);
         $selection->addChild("category", $line->category);
     }
-
-    
-    Station::refresh();
-    Connection::refresh();
-    Route::refresh();
     
     $lines = Line::get_lines();
 
