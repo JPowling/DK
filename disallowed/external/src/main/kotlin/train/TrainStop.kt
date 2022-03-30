@@ -12,4 +12,5 @@ data class TrainStop(
 enum class TrainStopType {
     ARRIVING,
     DEPARTING,
+
 }

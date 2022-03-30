@@ -19,9 +19,17 @@ open class AdjacencyListGraph<E> : AbstractGraph<E>() {
     override fun weight(source: Vertex<E>, destination: Vertex<E>) =
         edges(source).first { it.destination == destination }.weight
 
-    override fun toString() = adjacencies.values.joinToString {
-        it.joinToString(separator = "\n") { "${it.source} ---> [${it.destination}]" }
-    }
+//    override fun toString() = adjacencies.values.joinToString(prefix = adjacencies.keys.toString()) {
+//        it.joinToString(separator = "\n") { "${it.source} ---> [${it.destination}]" }
+//    }
 
+    override fun toString(): String {
+        return buildString {
+            adjacencies.forEach { (vertex, edges) ->
+                val edgeString = edges.joinToString { it.destination.data.toString() }
+                append("${vertex.data} ---> [ $edgeString ]\n")
+            }
+        }
+    }
 
 }
