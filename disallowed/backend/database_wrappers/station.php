@@ -18,25 +18,32 @@ class Station {
     public function save() {
         $sql = new SQL(true);
 
-        $sql->sql_request("UPDATE Bahnhofe SET Name='$this->name', Gleise=$this->platforms WHERE Kennzeichnung='$this->short'");
+        $vals = [
+            "Name" => $this->name,
+            "Platforms" => $this->platforms,
+            "Short" => $this->short
+        ];
+
+        $sql->request("UPDATE Bahnhofe SET Name=':Name', Gleise=:Platforms WHERE Kennzeichnung=':Short'", $vals);
     }
 
     public function delete() {
         $sql = new SQL(true);
 
-        $sql->sql_request("DELETE FROM Bahnhofe WHERE Kennzeichnung='$this->short'");
+        $sql->request("DELETE FROM Bahnhofe WHERE Kennzeichnung=':Short'", ["Short" => $this->short]);
     }
 
     public function get_connections() {
         $sql = new SQL();
 
-        $result = $sql->sql_request("SELECT BahnhofB, Dauer FROM Verbindungen WHERE BahnhofA='$this->short'")->result;
+        $result = $sql->request("SELECT BahnhofB, Dauer FROM Verbindungen WHERE BahnhofA=':Short'", ["Short" => $this->short])->result;
 
         $return = array();
         foreach ($result as $index => $row) {
             $other = $row["BahnhofB"];
             $duration = $row["Dauer"];
-            $duration_rev = $sql->sql_request("SELECT Dauer FROM Verbindungen WHERE BahnhofA='$other' AND BahnhofB='$this->short'")->get_from_column("Dauer");
+            $duration_rev = $sql->request("SELECT Dauer FROM Verbindungen WHERE BahnhofA=':Other' 
+                AND BahnhofB=':Short'", ["Other" => $other, "Short" => $this->short])->get_from_column("Dauer");
 
             array_push($return, new Connection($this->short, $other, $duration, $duration_rev));
         }
@@ -47,7 +54,7 @@ class Station {
     public static function get_stations() {
         $sql = new SQL();
 
-        $result = $sql->sql_request("SELECT * FROM Bahnhofe")->result;
+        $result = $sql->request("SELECT * FROM Bahnhofe")->result;
 
         $stations = array();
 
@@ -100,7 +107,13 @@ class Station {
     public static function create(string $short, string $name, int $platforms = 1000) {
         $sql = new SQL(true);
 
-        $sql->sql_request("INSERT INTO Bahnhofe VALUES ('$short', '$name', $platforms)");
+        $vals = [
+            "Short" => $short,
+            "Name" => $name,
+            "Platforms" => $platforms
+        ];
+
+        $sql->request("INSERT INTO Bahnhofe VALUES (':Short', ':Name', :Platforms)", $vals);
         Station::refresh();
     }
 

@@ -26,17 +26,14 @@ class Route {
         $commands = array();
         array_push($commands, "SET FOREIGN_KEY_CHECKS = 0;");
 
-        $checkexistsresult = $sql->sql_request("SELECT BahnhofA, BahnhofB, VerbindungsIndex, Standzeit FROM Routen WHERE RoutenID=$this->id ORDER BY VerbindungsIndex")->result;
+        $checkexistsresult = $sql->request("SELECT BahnhofA, BahnhofB, VerbindungsIndex,
+         Standzeit FROM Routen WHERE RoutenID=:Route ORDER BY VerbindungsIndex", ["Route" => $this->id])->result;
 
         foreach ($this->data as $local_index => $stored) {
             $exists = false;
             $local_a = $stored["a"];
             $local_b = $stored["b"];
             $local_stand = $stored["stand_time"];
-
-            // if (empty($local_stand)) {
-            //     $local_stand = "NULL";
-            // }
 
             foreach ($checkexistsresult as $remoteindex => $remotekeys) {
 
@@ -94,14 +91,14 @@ class Route {
     public function delete() {
         $sql = new SQL(true);
 
-        $sql->sql_request("DELETE FROM Routen WHERE RoutenID=$this->id");
+        $sql->request("DELETE FROM Routen WHERE RoutenID=:Route", ["Route" => $this->id]);
     }
 
     public function fetch() {
         $sql = new SQL();
         $this->data = array();
 
-        $result = $sql->sql_request("SELECT BahnhofA, BahnhofB, VerbindungsIndex, Standzeit FROM Routen WHERE RoutenID=$this->id")->get_result();
+        $result = $sql->request("SELECT BahnhofA, BahnhofB, VerbindungsIndex, Standzeit FROM Routen WHERE RoutenID=:Route", ["Route" => $this->id])->get_result();
 
         foreach ($result as $row) {
             $this->data[$row["VerbindungsIndex"]] = ["a" => $row["BahnhofA"], "b" => $row["BahnhofB"], "stand_time" => $row["Standzeit"]];
@@ -164,7 +161,12 @@ class Route {
         $station_a = Station::ensure_short($station_a);
         $station_b = Station::ensure_short($station_b);
 
-        $sql->sql_request("INSERT INTO Routen VALUES ($id, '$station_a', '$station_b', 1, NULL)");
+        $vals = [
+            "Route" => $id,
+            "A" => $station_a,
+            "B" => $station_b];
+
+        $sql->request("INSERT INTO Routen VALUES (:Route, ':A', ':B', 1, NULL)", $vals);
 
         return $id;
     }
@@ -172,7 +174,7 @@ class Route {
     public static function next_free() {
         $sql = new SQL();
 
-        return $sql->sql_request("SELECT MAX(RoutenID) as A FROM Routen")->get_from_column("A") + 1;
+        return $sql->request("SELECT MAX(RoutenID) as A FROM Routen")->get_from_column("A") + 1;
     }
 
     public static function refresh() {

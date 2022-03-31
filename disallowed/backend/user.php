@@ -25,9 +25,9 @@ class User {
     public function get_privileges() {
         $sql = new SQL();
 
-        $result = $sql->sql_request("SELECT Ber.Bezeichnung FROM Benutzer as Ben "
+        $result = $sql->request("SELECT Ber.Bezeichnung FROM Benutzer as Ben "
             . "INNER JOIN Berechtigungen as Ber ON Ben.BerechtigungsID = Ber.BerechtigungsID "
-            . "WHERE EMail='$this->email'");
+            . "WHERE EMail=':Email'", ["Email" => $this->email]);
 
         $result = $result->get_from_column("Bezeichnung");
 
@@ -38,7 +38,7 @@ class User {
     public function fetch() {
         $sql = new SQL();
 
-        $result = $sql->sql_request("SELECT * FROM Benutzer WHERE EMail='$this->email'");
+        $result = $sql->request("SELECT * FROM Benutzer WHERE EMail=':Email'", ["Email" => $this->email]);
 
         $this->userid = $result->get_from_column("BenutzerID");
         $this->forename = $result->get_from_column("Vorname");
@@ -55,40 +55,53 @@ class User {
     public function store_data() {
         $sql = new SQL(true);
 
-        $sql->sql_request("UPDATE Benutzer SET Name='$this->surname', "
-            . "Vorname='$this->forename', Telefon='$this->phone', "
-            . "Ort='$this->residence', PLZ='$this->postal', "
-            . "Strasse='$this->street', Hausnummer='$this->house', "
-            . "Erstelldatum='$this->creation_date' "
-            . "WHERE EMail='$this->email'");
+        $vals = ["Surname" => $this->surname,
+                 "Forename" => $this->forename,
+                 "Phone" => $this->phone,
+                 "Residence" => $this->residence,
+                 "Postal" => $this->postal,
+                 "Street" => $this->street,
+                 "House" => $this->house,
+                 "CreationDate" => $this->creation_date,
+                 "Email" => $this->email];
+
+        $sql->request("UPDATE Benutzer SET Name=':Surname', "
+            . "Vorname=':Forename', Telefon=':Phone', "
+            . "Ort=':Residence', PLZ=':Postal', "
+            . "Strasse=':Street', Hausnummer=':House', "
+            . "Erstelldatum=':CreationDate' "
+            . "WHERE EMail=':Email'", $vals);
     }
 
     public function set_password(string $clearpassword) {
         $sql = new SQL(true);
         $hash = password_hash($clearpassword, PASSWORD_DEFAULT);
 
-        $sql->sql_request("UPDATE Benutzer SET PasswordHash='$hash' WHERE EMail='$this->email'");
+        $sql->request("UPDATE Benutzer SET PasswordHash=':Hash' WHERE EMail=':Email'", ["Hash" => $hash, "Email" => $this->email]);
     }
 
     public static function email_exists(string $email) {
         $sql = new SQL();
-        return $sql->sql_request("SELECT * FROM Benutzer WHERE EMail='$email'")->get_num_rows() == 1;
+        return $sql->request("SELECT * FROM Benutzer WHERE EMail=':Email'", ["Email" => $email])->get_num_rows() == 1;
     }
 
     public static function create_account(string $email, string $clearpassword) {
         $sql = new SQL(true);
-        if ($sql->sql_request("SELECT * FROM Benutzer WHERE EMail='$email'")->get_num_rows() == 1) {
+        if ($sql->request(
+            "SELECT * FROM Benutzer WHERE EMail=':Email'", ["Email" => $email])->get_num_rows() == 1) {
             return false;
         }
 
         $hash = password_hash($clearpassword, PASSWORD_DEFAULT);
-        $sql->sql_request("INSERT INTO Benutzer (BerechtigungsID, EMail, PasswordHash, Erstelldatum) VALUES (1, '$email', '$hash', '".date("Y-m-d H:i:s")."')");
+        $sql->request(
+            "INSERT INTO Benutzer (BerechtigungsID, EMail, PasswordHash, Erstelldatum) VALUES (1, ':Email', ':Hash', '".date("Y-m-d H:i:s")."')", 
+            ["Email" => $email, "Hash" => $hash]);
         return true;
     }
 
     public static function verify_password(string $email, string $clearpassword) {
         $sql = new SQL();
-        $result = $sql->sql_request("SELECT PasswordHash FROM Benutzer WHERE EMail='$email'");
+        $result = $sql->request("SELECT PasswordHash FROM Benutzer WHERE EMail=':Email'", ["Email" => $email]);
 
         if ($result->get_num_rows() !== 1) {
             return false;
@@ -100,6 +113,6 @@ class User {
 
     public static function delete_account(string $email) {
         $sql = new SQL(true);
-        $sql->sql_request("DELETE FROM Benutzer WHERE EMail='$email'");
+        $sql->request("DELETE FROM Benutzer WHERE EMail=':Email'", ["Email" => $email]);
     }
 }

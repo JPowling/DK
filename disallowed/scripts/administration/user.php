@@ -9,7 +9,12 @@ $xml->addChild("forename", "$ownuser->forename");
 if (isset($_GET["id"])) {
     $sql = new SQL(true);
 
-    $result = $sql->sql_request("SELECT EMail FROM Benutzer WHERE BenutzerID='" . $_GET["id"] . "'"); // SQL INJECTION!!!
+    $vals = [
+        "ID" => $_GET["id"]
+    ];
+
+    // $result = $sql->sql_request("SELECT EMail FROM Benutzer WHERE BenutzerID='" . $_GET["id"] . "'"); // SQL INJECTION!!!
+    $result = $sql->request("SELECT EMail FROM Benutzer WHERE BenutzerID=':ID'", $vals); // NOT ANYMORE!!!
 
     if ($result->get_num_rows() == 0) {
         header("Location: /administration/users");
@@ -35,7 +40,11 @@ if (isset($_GET["id"])) {
                 break;
         }
         if (!empty($roleid)) {
-            $sql->sql_request("UPDATE Benutzer SET BerechtigungsID='$roleid' WHERE BenutzerID='" . $_GET["id"] . "'"); // SQL INJECTION!!!
+            $vals = [
+                "ID" => $_GET["id"],
+                "Role" => $roleid
+            ];
+            $sql->request("UPDATE Benutzer SET BerechtigungsID=':Role' WHERE BenutzerID=':ID'");
         }
     }
 

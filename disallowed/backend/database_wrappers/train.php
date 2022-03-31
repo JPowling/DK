@@ -14,23 +14,23 @@ class Train {
     public function save() {
         $sql = new SQL(true);
 
-        $sql->sql_request("UPDATE Fahrzeuge SET Sitzplatze=$this->seats WHERE Fahrzeugnummer=$this->number");
+        $sql->request("UPDATE Fahrzeuge SET Sitzplatze=:Seats WHERE Fahrzeugnummer=:Num", ["Seats" => $this->seats, "Num" => $this->number]);
     }
 
     public function delete() {
         $sql = new SQL(true);
 
-        $sql->sql_request("DELETE FROM Fahrzeuge WHERE Fahrzeugnummer=$this->number");
+        $sql->request("DELETE FROM Fahrzeuge WHERE Fahrzeugnummer=:Num", ["Seats" => $this->seats, "Num" => $this->number]);
     }
 
     public static function get_trains() {
         $sql = new SQL();
 
-        $result = $sql->sql_request("SELECT * FROM Fahrzeuge")->result;
+        $result = $sql->request("SELECT * FROM Fahrzeuge")->result;
 
         $trains = array();
 
-        foreach ($result as $index => $row) {
+        foreach ($result as $row) {
             array_push($trains, new Train($row["Fahrzeugnummer"], $row["Sitzplatze"]));
         }
 
@@ -54,7 +54,7 @@ class Train {
     public static function create(int $seats) {
         $sql = new SQL(true);
 
-        $result = $sql->sql_request("SELECT Fahrzeugnummer FROM Fahrzeuge ORDER BY Fahrzeugnummer")->result;
+        $result = $sql->request("SELECT Fahrzeugnummer FROM Fahrzeuge ORDER BY Fahrzeugnummer")->result;
         $numbers = array_merge_recursive(...$result)["Fahrzeugnummer"];
         
         $lowestpossible = 0;
@@ -65,14 +65,15 @@ class Train {
             }
         }
 
-        $sql->sql_request("INSERT INTO Fahrzeuge VALUES ($lowestpossible, $seats)");
+        // No way to sql inject
+        $sql->request("INSERT INTO Fahrzeuge VALUES ($lowestpossible, $seats)");
         return $lowestpossible;
     }
 
     public static function get_categories() {
         $sql = new SQL();
 
-        $result = $sql->sql_request("SELECT ZuggattungsID FROM Zuggattungen")->result;
+        $result = $sql->request("SELECT ZuggattungsID FROM Zuggattungen")->result;
 
         $return = array();
 

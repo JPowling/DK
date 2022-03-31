@@ -20,21 +20,27 @@ class Line {
     public function save() {
         $sql = new SQL(true);
 
-        $sql->sql_request("UPDATE Linien SET RoutenID=$this->routeid, Startzeit='$this->start_time'
-                            , Fahrzeugnummer=$this->train_id, ZuggattungsID='$this->category' 
-                            WHERE LinienID=$this->id");
+        $vals = [
+            "Route" => $this->routeid, 
+            "Start" => $this->start_time, 
+            "Train" => $this->train_id, 
+            "Category" => $this->category, 
+            "Line" => $this->id];
+
+        $sql->request("UPDATE Linien SET RoutenID=:Route, Startzeit=':Start', Fahrzeugnummer=:Train, ZuggattungsID=':Category' 
+                            WHERE LinienID=:Line", $vals);
     }
 
     public function delete() {
         $sql = new SQL(true);
 
-        $sql->sql_request("DELETE FROM Linien WHERE LinienID=$this->id");
+        $sql->request("DELETE FROM Linien WHERE LinienID=:Line", ["Line" => $this->id]);
     }
 
     public static function get_lines() {
         $sql = new SQL();
 
-        $result = $sql->sql_request("SELECT * FROM Linien")->result;
+        $result = $sql->request("SELECT * FROM Linien")->result;
 
         $lines = array();
 
@@ -62,13 +68,20 @@ class Line {
     public static function create(int $id, int $routeid, string $start_time, int $train_id, string $category) {
         $sql = new SQL(true);
 
-        $sql->sql_request("INSERT INTO Linien VALUES ($id, $routeid, '$start_time', $train_id, '$category')");
+        $vals = [
+            "Route" => $routeid, 
+            "Start" => $start_time, 
+            "Train" => $train_id, 
+            "Category" => $category, 
+            "Line" => $id];
+
+        $sql->request("INSERT INTO Linien VALUES (:Line, :Route, ':Start', :Train, ':Category')", $vals);
     }
 
     public static function create_inc() {
         $sql = new SQL();
 
-        $result = $sql->sql_request("SELECT LinienID FROM Linien ORDER BY LinienID")->result;
+        $result = $sql->request("SELECT LinienID FROM Linien ORDER BY LinienID")->result;
         $numbers = array_merge_recursive(...$result)["LinienID"];
         
         $lowestpossible = 100;

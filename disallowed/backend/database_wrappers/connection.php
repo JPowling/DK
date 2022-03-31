@@ -20,19 +20,21 @@ class Connection {
     public function save() {
         $sql = new SQL(true);
 
-        $sql->sql_request("UPDATE Verbindungen SET Dauer='$this->duration' WHERE BahnhofA='$this->a' AND BahnhofB='$this->b'");
+        $vals = ["Duration" => $this->duration, "A" => $this->a, "B" => $this->b];
+        $sql->request("UPDATE Verbindungen SET Dauer=':Duration' WHERE BahnhofA=':A' AND BahnhofB=':B'", $vals);
     }
 
     public function delete() {
         $sql = new SQL(true);
 
-        $sql->sql_request("DELETE FROM Verbindungen WHERE WHERE BahnhofA='$this->a' AND BahnhofB='$this->b'");
+        $vals = ["A" => $this->a, "B" => $this->b];
+        $sql->request("DELETE FROM Verbindungen WHERE WHERE BahnhofA=':A' AND BahnhofB=':B'", $vals);
     }
 
     public static function get_connections() {
         $sql = new SQL();
 
-        $result = $sql->sql_request("SELECT * FROM Verbindungen")->result;
+        $result = $sql->request("SELECT * FROM Verbindungen")->result;
 
         $connections = array();
 
@@ -72,6 +74,7 @@ class Connection {
     public static function create(string $station_a, string $station_b, int $duration) {
         $sql = new SQL(true);
 
-        $sql->sql_request("INSERT INTO Verbindungen VALUES ('$station_a', '$station_b', $duration)");
+        $vals = ["Duration" => $duration, "A" => $station_a, "B" => $station_b];
+        $sql->request("INSERT INTO Verbindungen VALUES (':A', ':B', :Duration)", $vals);
     }
 }

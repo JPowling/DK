@@ -6,7 +6,7 @@ $sql = new SQL(false);
 $sql_query = "SELECT Name, Gleise FROM Bahnhofe ORDER BY Name";
 
 
-$result = $sql->sql_request($sql_query);
+$result = $sql->request($sql_query);
 
 if ($result->get_num_rows() > 1) {
     $array = $result->result;

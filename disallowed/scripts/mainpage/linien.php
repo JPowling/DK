@@ -25,7 +25,7 @@ $sql_query = "SELECT L.LinienID, L.Startzeit, L.Fahrzeugnummer, Z.ZuggattungsID,
     . "ORDER BY L.Startzeit, L.LinienID";
 
 
-$result = $sql->sql_request($sql_query);
+$result = $sql->request($sql_query);
 
 if ($result->get_num_rows() > 1) {
     $array = $result->result;

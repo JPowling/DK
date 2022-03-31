@@ -53,13 +53,20 @@ function load($xml) {
                 $delete = isset($_POST["delete-$count"]);
 
                 $sql = new SQL(true);
+                
+                $vals = [
+                    "Short" => $station->short,
+                    "Con" => $connected,
+                    "Duration" => $duration,
+                    "DurationRev" => $duration_rev
+                ];
 
                 if ($delete) {
-                    $sql->sql_request("DELETE FROM Verbindungen WHERE BahnhofA='$station->short' AND BahnhofB='$connected'");
-                    $sql->sql_request("DELETE FROM Verbindungen WHERE BahnhofB='$station->short' AND BahnhofA='$connected'");
+                    $sql->request("DELETE FROM Verbindungen WHERE BahnhofA=':Short' AND BahnhofB=':Con'", $vals);
+                    $sql->request("DELETE FROM Verbindungen WHERE BahnhofB=':Short' AND BahnhofA=':Con'", $vals);
                 } else {
-                    $sql->sql_request("UPDATE Verbindungen SET Dauer=$duration WHERE BahnhofA='$station->short' AND BahnhofB='$connected'");
-                    $sql->sql_request("UPDATE Verbindungen SET Dauer=$duration_rev WHERE BahnhofB='$station->short' AND BahnhofA='$connected'");
+                    $sql->request("UPDATE Verbindungen SET Dauer=:Duration WHERE BahnhofA=':Short' AND BahnhofB=':Con'", $vals);
+                    $sql->request("UPDATE Verbindungen SET Dauer=:DurationRev WHERE BahnhofB=':Short' AND BahnhofA=':Con'", $vals);
                 }
 
                 $count++;
@@ -77,8 +84,13 @@ function load($xml) {
                     $send = true;
                 }
 
-                $sql->sql_request("INSERT INTO Verbindungen VALUES ('$station->short', '$new_connectionstation->short', 1)");
-                $sql->sql_request("INSERT INTO Verbindungen VALUES ('$new_connectionstation->short', '$station->short', 1)");
+                $vals = [
+                    "Short" => $station->short,
+                    "Other" => $new_connectionstation->short
+                ];
+
+                $sql->request("INSERT INTO Verbindungen VALUES (':Short', ':Other', 1)", $vals);
+                $sql->request("INSERT INTO Verbindungen VALUES (':Other', ':Short', 1)", $vals);
 
                 if ($send) {
                     header("Location: /moderation/overview?view=b&id=" . $_POST["new-connection"]);
