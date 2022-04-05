@@ -185,6 +185,20 @@ $sql = new SQL();
 
 $result = $sql->sql_request($sql_string)->result;
 
+$startStation = array(
+	"LinienID" => 0,
+	"Name" => "Start",
+	"Stoporder" => "0",
+	"StopTime" => "05:00:00",
+	"StopType" => "DEPARTING",
+	"NextStop" => "",
+	"NextStopTime" => "",
+);
+
+array_push($result, $startStation);
+
+print_r($result);
+
 $json_string = json_encode($result);
 
 // print_r($json_string);
@@ -196,13 +210,13 @@ $uuid = uniqid();
 $file_path = "disallowed/external/datatransfer/";
 $file_name = "php-" . $uuid . ".json";
 
-echo "from php: $file_name;";
+// echo "from php: $file_name;";
 
 file_put_contents($file_path . $file_name, $json_string);
 
-echo shell_exec("java -jar disallowed/external/out/artifacts/searchAlgo_jar/searchAlgo.jar $file_path $file_name $uuid");
+shell_exec("java -jar disallowed/external/out/artifacts/searchAlgo_jar/searchAlgo.jar $file_path $file_name $uuid");
 
 sleep(1);
 
-echo file_get_contents($file_path . "kotlin-" . $uuid . ".json");
+// echo file_get_contents($file_path . "kotlin-" . $uuid . ".json");
 

@@ -3,7 +3,7 @@ package train
 import java.time.LocalTime
 import java.time.temporal.ChronoUnit
 
-class Path(
+data class Path(
     val a: TrainStop,
     val b: TrainStop,
 ) {
