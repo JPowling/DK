@@ -14,11 +14,14 @@ class Search(private val path: String, private val fileName: String, private val
     fun search() {
         println(graph)
         val file = File("${path}kotlin-${uuid}.json")
-        file.createNewFile()
-        file.writeText(graph.toString())
-        println("created file")
+//        file.createNewFile()
+//        file.writeText(graph.toString())
+//        println("created file")
 
 
-        Dijkstra<TrainStop, Int>(graph, graph.startNode, graph.endNode)
+        val dijkstra = Dijkstra(graph, graph.getVertex(graph.startNode), graph.getVertex(graph.endNode))
+        dijkstra.run()
+        println("the shortest path is: ${dijkstra.interpret()}")
+
     }
 }

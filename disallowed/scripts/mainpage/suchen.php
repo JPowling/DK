@@ -186,16 +186,26 @@ $sql = new SQL();
 $result = $sql->sql_request($sql_string)->result;
 
 $startStation = array(
-	"LinienID" => 0,
-	"Name" => "Start",
+	"LinienID" => -1,
+	"Name" => "Bruchsal",
 	"Stoporder" => "0",
 	"StopTime" => "05:00:00",
+	"StopType" => "ARRIVING",
+	"NextStop" => "",
+	"NextStopTime" => "",
+);
+
+$endStation = array(
+	"LinienID" => -2,
+	"Name" => "Gondelsheim",
+	"Stoporder" => "0",
+	"StopTime" => "10:00:00",
 	"StopType" => "DEPARTING",
 	"NextStop" => "",
 	"NextStopTime" => "",
 );
 
-array_push($result, $startStation);
+array_push($result, $startStation, $endStation);
 
 print_r($result);
 

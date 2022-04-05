@@ -17,10 +17,10 @@ class Dijkstra<E> (val graph: Graph<E>, val startNode: Vertex<E>, val endNode: V
     /**
      * stores for each @E the previous @E, following the shortest path
      */
-    var prev = mutableMapOf<E, E>()
+    var prev = mutableMapOf<Vertex<E>, Vertex<E>>()
 
     /**
-     * stores every vertex, which is not visited
+     * Stores every vertex, which is not visited.
      */
     var unvisited = mutableSetOf<Vertex<E>>()
 
@@ -29,19 +29,37 @@ class Dijkstra<E> (val graph: Graph<E>, val startNode: Vertex<E>, val endNode: V
         for (it in graph.vertices) {
             dist[it] = Int.MAX_VALUE
             unvisited += it
+            prev[it] = it
         }
         dist[startNode] = 0
     }
 
-
+    /**
+     * The actual Dijkstra Algorithm, strictly followed by the Wikipedia Pseudocode.
+     */
     fun run() {
         while (unvisited.isNotEmpty()) {
             val u = dist.filter { it.key in unvisited }.minByOrNull { (_, v) -> v }!!.key
-            unvisited.minus(u)
+            unvisited = unvisited.minus(u) as MutableSet<Vertex<E>>
 
             graph.edges(u).filter { it.destination in unvisited }.forEach {
-                var alt = dist[u]
+                val alt = dist[u]!!.plus(it.weight)
+                if (alt < dist[it.destination]!!) {
+                    dist.replace(it.destination, alt)
+                    prev.replace(it.destination, u)
+                }
             }
         }
     }
+
+    fun interpret(){
+        var retList = mutableListOf<Vertex<E>>()
+        var node = endNode
+        while (node != startNode) {
+            retList += prev[node]!!
+            node = prev[node]!!
+        }
+        return retList.reverse()
+    }
+
 }
