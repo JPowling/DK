@@ -24,15 +24,7 @@ CASE
 	ELSE 
 		DATE_ADD(TN.Startzeit, INTERVAL (SUM(TN.Standzeit) + SUM(TN.Dauer)) MINUTE)
 END AS StopTime,
-'DEPARTING' AS StopType,
-
-BB.Name AS NextStop,
-CASE
-	WHEN R.VerbindungsIndex = 1
-		THEN DATE_ADD(L.Startzeit, INTERVAL VA.Dauer MINUTE)
-	ELSE 
-		DATE_ADD(TN.Startzeit, INTERVAL (SUM(TN.Standzeit) + SUM(TN.Dauer) + VA.Dauer) MINUTE)
-END AS NextStopTime
+'DEPARTING' AS StopType
 
 FROM Linien AS L
 
@@ -84,9 +76,7 @@ UNION
 (SELECT L.LinienID, B.Name, R.VerbindungsIndex * 2 - 2 AS Stoporder,
 
 DATE_ADD(L.Startzeit, INTERVAL (SUM(TN.Standzeit) - TN2.Standzeit + SUM(TN.Dauer)) MINUTE) AS StopTime,
-'ARRIVING' AS StopType,
-NULL AS NextStop,
-NULL AS NextStopTime
+'ARRIVING' AS StopType
 
 
 FROM Linien AS L
@@ -134,9 +124,7 @@ UNION
 (
 SELECT L.LinienID, B.Name, (R.VerbindungsIndex + 1) * 2 - 2 AS Stoporder,
 DATE_ADD(L.Startzeit, INTERVAL (SUM(TN.Standzeit) + SUM(TN.Dauer) + VA.Dauer) MINUTE) AS Ankunftszeit,
-'ARRIVING' AS StopType,
-NULL AS NextStop,
-NULL AS NextStopTime
+'ARRIVING' AS StopType
 
 FROM Linien AS L
 
@@ -187,9 +175,9 @@ $result = $sql->sql_request($sql_string)->result;
 
 $startStation = array(
 	"LinienID" => -1,
-	"Name" => "Bruchsal",
+	"Name" => "Heilbronn Hbf",
 	"Stoporder" => "0",
-	"StopTime" => "05:00:00",
+	"StopTime" => "07:00:00",
 	"StopType" => "ARRIVING",
 	"NextStop" => "",
 	"NextStopTime" => "",
@@ -197,9 +185,9 @@ $startStation = array(
 
 $endStation = array(
 	"LinienID" => -2,
-	"Name" => "Gondelsheim",
+	"Name" => "Stuttgart Hbf",
 	"Stoporder" => "0",
-	"StopTime" => "10:00:00",
+	"StopTime" => "22:00:00",
 	"StopType" => "DEPARTING",
 	"NextStop" => "",
 	"NextStopTime" => "",
@@ -207,7 +195,7 @@ $endStation = array(
 
 array_push($result, $startStation, $endStation);
 
-print_r($result);
+// print_r($result);
 
 $json_string = json_encode($result);
 
@@ -217,16 +205,16 @@ $json_string = json_encode($result);
 
 
 $uuid = uniqid();
-$file_path = "disallowed/external/datatransfer/";
+$file_path_php = "disallowed/external/datatransfer/";
 $file_name = "php-" . $uuid . ".json";
 
 // echo "from php: $file_name;";
 
-file_put_contents($file_path . $file_name, $json_string);
+file_put_contents($file_path_php . $file_name, $json_string);
 
-shell_exec("java -jar disallowed/external/out/artifacts/searchAlgo_jar/searchAlgo.jar $file_path $file_name $uuid");
+echo shell_exec("java -jar disallowed/external/out/artifacts/searchAlgo_jar/searchAlgo.jar $file_path_php $file_name $uuid");
 
-sleep(1);
+sleep(2);
 
-// echo file_get_contents($file_path . "kotlin-" . $uuid . ".json");
+echo file_get_contents($file_path_php . "kotlin-" . $uuid . ".json");
 

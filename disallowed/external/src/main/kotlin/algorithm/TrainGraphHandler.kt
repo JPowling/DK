@@ -1,19 +1,19 @@
 package algorithm
 
+import graph.Vertex
 import org.json.JSONArray
 import org.json.JSONObject
 import train.*
 import java.io.File
-import java.io.FileNotFoundException
 import java.time.LocalTime
 
-class TrainGraphBuilder(val graph: TrainGraph, val path: String, val fileName: String) {
+class TrainGraphHandler(private val graph: TrainGraph, path: String, fileName: String) {
 
     private var json: JSONArray
     private val trainStations: MutableSet<TrainStation> = mutableSetOf()
 
     init {
-        json = loadToJSONArray()
+        json = toJSONArray(path + fileName)
         initTrainStationSet()
     }
 
@@ -78,17 +78,24 @@ class TrainGraphBuilder(val graph: TrainGraph, val path: String, val fileName: S
         }
     }
 
-    private fun loadToJSONArray(): JSONArray {
-        if (!File(path + fileName).exists()) {
-            println("das gibt's doch jetzt nicht...")
-            throw FileNotFoundException()
-        }
-        return JSONArray(File(path + fileName).readText(Charsets.UTF_8))
-    }
+    private fun toJSONArray(path: String) = JSONArray(File(path).readText(Charsets.UTF_8))
 
     private fun initTrainStationSet() {
         json.forEach {
             if (it is JSONObject) trainStations += TrainStation(it.get("Name") as String)
+        }
+    }
+
+    companion object {
+        fun getCompact(route: List<Vertex<TrainStop>>): List<Vertex<TrainStop>> {
+            val retList = mutableListOf<Vertex<TrainStop>>()
+            route.forEachIndexed { i, it ->
+                if (i + 1 < route.size && it.data.lineID != route[i + 1].data.lineID) {
+                    retList += it
+                    retList += route[i + 1]
+                }
+            }
+            return retList
         }
     }
 }
