@@ -8,7 +8,7 @@ package graph
  * @endNode is the end node
  * @startNode and @endNode must be present in @graph
  */
-class Dijkstra<E> (val graph: Graph<E>, val startNode: Vertex<E>, val endNode: Vertex<E>){
+class Dijkstra<E>(val graph: Graph<E>, val startNode: Vertex<E>, val endNode: Vertex<E>) {
     /**
      * stores the current distance to @E, following the shortest path
      */
@@ -44,7 +44,7 @@ class Dijkstra<E> (val graph: Graph<E>, val startNode: Vertex<E>, val endNode: V
 
             graph.edges(u).filter { it.destination in unvisited }.forEach {
                 val alt = dist[u]!!.plus(it.weight)
-                if(alt < 0) {
+                if (alt < 0) {
                     println("$u: $alt, ${dist[u]!!}, ${it.weight}")
                     return
                 }
@@ -56,19 +56,20 @@ class Dijkstra<E> (val graph: Graph<E>, val startNode: Vertex<E>, val endNode: V
         }
     }
 
-    fun interpret(): List<Vertex<E>>{
-        var retList = mutableListOf<Vertex<E>>()
+    fun interpret(): List<Vertex<E>> {
+        val retList = mutableListOf<Vertex<E>>()
         var node = endNode
         var counter = 0
         retList += endNode
         while (counter < 1000 && node != startNode) {
             retList += prev[node]!!
             node = prev[node]!!
-            counter ++
+            counter++
         }
-        retList += startNode
-        retList.reverse()
-        return retList
+        if (counter < 999) {
+            return mutableListOf()
+        }
+        return retList.reversed()
     }
 
 }
