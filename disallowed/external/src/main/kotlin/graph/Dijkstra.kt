@@ -44,6 +44,10 @@ class Dijkstra<E> (val graph: Graph<E>, val startNode: Vertex<E>, val endNode: V
 
             graph.edges(u).filter { it.destination in unvisited }.forEach {
                 val alt = dist[u]!!.plus(it.weight)
+                if(alt < 0) {
+                    println("$u: $alt, ${dist[u]!!}, ${it.weight}")
+                    return
+                }
                 if (alt < dist[it.destination]!!) {
                     dist.replace(it.destination, alt)
                     prev.replace(it.destination, u)
@@ -52,14 +56,19 @@ class Dijkstra<E> (val graph: Graph<E>, val startNode: Vertex<E>, val endNode: V
         }
     }
 
-    fun interpret(){
+    fun interpret(): List<Vertex<E>>{
         var retList = mutableListOf<Vertex<E>>()
         var node = endNode
-        while (node != startNode) {
+        var counter = 0
+        retList += endNode
+        while (counter < 1000 && node != startNode) {
             retList += prev[node]!!
             node = prev[node]!!
+            counter ++
         }
-        return retList.reverse()
+        retList += startNode
+        retList.reverse()
+        return retList
     }
 
 }
