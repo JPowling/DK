@@ -21,14 +21,14 @@ class Connection {
         $sql = new SQL(true);
 
         $vals = ["Duration" => $this->duration, "A" => $this->a, "B" => $this->b];
-        $sql->request("UPDATE Verbindungen SET Dauer=':Duration' WHERE BahnhofA=':A' AND BahnhofB=':B'", $vals);
+        $sql->request("UPDATE Verbindungen SET Dauer=:Duration WHERE BahnhofA=:A AND BahnhofB=:B", $vals);
     }
 
     public function delete() {
         $sql = new SQL(true);
 
         $vals = ["A" => $this->a, "B" => $this->b];
-        $sql->request("DELETE FROM Verbindungen WHERE WHERE BahnhofA=':A' AND BahnhofB=':B'", $vals);
+        $sql->request("DELETE FROM Verbindungen WHERE WHERE BahnhofA=:A AND BahnhofB=:B", $vals);
     }
 
     public static function get_connections() {
@@ -75,6 +75,6 @@ class Connection {
         $sql = new SQL(true);
 
         $vals = ["Duration" => $duration, "A" => $station_a, "B" => $station_b];
-        $sql->request("INSERT INTO Verbindungen VALUES (':A', ':B', :Duration)", $vals);
+        $sql->request("INSERT INTO Verbindungen VALUES (:A, :B, :Duration)", $vals);
     }
 }

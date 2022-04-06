@@ -27,7 +27,7 @@ class Line {
             "Category" => $this->category, 
             "Line" => $this->id];
 
-        $sql->request("UPDATE Linien SET RoutenID=:Route, Startzeit=':Start', Fahrzeugnummer=:Train, ZuggattungsID=':Category' 
+        $sql->request("UPDATE Linien SET RoutenID=:Route, Startzeit=:Start, Fahrzeugnummer=:Train, ZuggattungsID=:Category 
                             WHERE LinienID=:Line", $vals);
     }
 
@@ -75,7 +75,7 @@ class Line {
             "Category" => $category, 
             "Line" => $id];
 
-        $sql->request("INSERT INTO Linien VALUES (:Line, :Route, ':Start', :Train, ':Category')", $vals);
+        $sql->request("INSERT INTO Linien VALUES (:Line, :Route, :Start, :Train, :Category)", $vals);
     }
 
     public static function create_inc() {

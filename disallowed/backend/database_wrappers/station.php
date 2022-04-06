@@ -24,26 +24,26 @@ class Station {
             "Short" => $this->short
         ];
 
-        $sql->request("UPDATE Bahnhofe SET Name=':Name', Gleise=:Platforms WHERE Kennzeichnung=':Short'", $vals);
+        $sql->request("UPDATE Bahnhofe SET Name=:Name, Gleise=:Platforms WHERE Kennzeichnung=:Short", $vals);
     }
 
     public function delete() {
         $sql = new SQL(true);
 
-        $sql->request("DELETE FROM Bahnhofe WHERE Kennzeichnung=':Short'", ["Short" => $this->short]);
+        $sql->request("DELETE FROM Bahnhofe WHERE Kennzeichnung=:Short", ["Short" => $this->short]);
     }
 
     public function get_connections() {
         $sql = new SQL();
 
-        $result = $sql->request("SELECT BahnhofB, Dauer FROM Verbindungen WHERE BahnhofA=':Short'", ["Short" => $this->short])->result;
+        $result = $sql->request("SELECT BahnhofB, Dauer FROM Verbindungen WHERE BahnhofA=:Short", ["Short" => $this->short])->result;
 
         $return = array();
         foreach ($result as $index => $row) {
             $other = $row["BahnhofB"];
             $duration = $row["Dauer"];
-            $duration_rev = $sql->request("SELECT Dauer FROM Verbindungen WHERE BahnhofA=':Other' 
-                AND BahnhofB=':Short'", ["Other" => $other, "Short" => $this->short])->get_from_column("Dauer");
+            $duration_rev = $sql->request("SELECT Dauer FROM Verbindungen WHERE BahnhofA=:Other'
+                AND BahnhofB=:Short", ["Other" => $other, "Short" => $this->short])->get_from_column("Dauer");
 
             array_push($return, new Connection($this->short, $other, $duration, $duration_rev));
         }
@@ -113,7 +113,7 @@ class Station {
             "Platforms" => $platforms
         ];
 
-        $sql->request("INSERT INTO Bahnhofe VALUES (':Short', ':Name', :Platforms)", $vals);
+        $sql->request("INSERT INTO Bahnhofe VALUES (:Short, :Name, :Platforms)", $vals);
         Station::refresh();
     }
 

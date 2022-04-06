@@ -166,7 +166,7 @@ class Route {
             "A" => $station_a,
             "B" => $station_b];
 
-        $sql->request("INSERT INTO Routen VALUES (:Route, ':A', ':B', 1, NULL)", $vals);
+        $sql->request("INSERT INTO Routen VALUES (:Route, :A, :B, 1, NULL)", $vals);
 
         return $id;
     }

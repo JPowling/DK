@@ -14,7 +14,7 @@ if (isset($_GET["id"])) {
     ];
 
     // $result = $sql->sql_request("SELECT EMail FROM Benutzer WHERE BenutzerID='" . $_GET["id"] . "'"); // SQL INJECTION!!!
-    $result = $sql->request("SELECT EMail FROM Benutzer WHERE BenutzerID=':ID'", $vals); // NOT ANYMORE!!!
+    $result = $sql->request("SELECT EMail FROM Benutzer WHERE BenutzerID=:ID", $vals); // NOT ANYMORE!!!
 
     if ($result->get_num_rows() == 0) {
         header("Location: /administration/users");
@@ -44,7 +44,7 @@ if (isset($_GET["id"])) {
                 "ID" => $_GET["id"],
                 "Role" => $roleid
             ];
-            $sql->request("UPDATE Benutzer SET BerechtigungsID=':Role' WHERE BenutzerID=':ID'");
+            $sql->request("UPDATE Benutzer SET BerechtigungsID=:Role WHERE BenutzerID=:ID");
         }
     }
 

@@ -62,11 +62,11 @@ function load($xml) {
                 ];
 
                 if ($delete) {
-                    $sql->request("DELETE FROM Verbindungen WHERE BahnhofA=':Short' AND BahnhofB=':Con'", $vals);
-                    $sql->request("DELETE FROM Verbindungen WHERE BahnhofB=':Short' AND BahnhofA=':Con'", $vals);
+                    $sql->request("DELETE FROM Verbindungen WHERE BahnhofA=:Short AND BahnhofB=:Con", $vals);
+                    $sql->request("DELETE FROM Verbindungen WHERE BahnhofB=:Short AND BahnhofA=:Con", $vals);
                 } else {
-                    $sql->request("UPDATE Verbindungen SET Dauer=:Duration WHERE BahnhofA=':Short' AND BahnhofB=':Con'", $vals);
-                    $sql->request("UPDATE Verbindungen SET Dauer=:DurationRev WHERE BahnhofB=':Short' AND BahnhofA=':Con'", $vals);
+                    $sql->request("UPDATE Verbindungen SET Dauer=:Duration WHERE BahnhofA=:Short AND BahnhofB=:Con", $vals);
+                    $sql->request("UPDATE Verbindungen SET Dauer=:DurationRev WHERE BahnhofB=:Short AND BahnhofA=:Con", $vals);
                 }
 
                 $count++;
@@ -89,8 +89,8 @@ function load($xml) {
                     "Other" => $new_connectionstation->short
                 ];
 
-                $sql->request("INSERT INTO Verbindungen VALUES (':Short', ':Other', 1)", $vals);
-                $sql->request("INSERT INTO Verbindungen VALUES (':Other', ':Short', 1)", $vals);
+                $sql->request("INSERT INTO Verbindungen VALUES (:Short, :Other, 1)", $vals);
+                $sql->request("INSERT INTO Verbindungen VALUES (:Other, :Short, 1)", $vals);
 
                 if ($send) {
                     header("Location: /moderation/overview?view=b&id=" . $_POST["new-connection"]);
