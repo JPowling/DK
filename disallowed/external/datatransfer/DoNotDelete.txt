@@ -1,0 +1,2 @@
+Do not delete this folder.
+Data for the searchalgorithm is transferred in here.

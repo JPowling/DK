@@ -1,9 +1,6 @@
 <?php
 // Jens
 
-require_once 'disallowed/backend/jsonxmlparser.php';
-
-
 $sql = new SQL(false);
 
 $sql_query = "SELECT Name, Gleise FROM Bahnhofe ORDER BY Name";
@@ -12,15 +9,15 @@ $sql_query = "SELECT Name, Gleise FROM Bahnhofe ORDER BY Name";
 $result = $sql->request($sql_query);
 
 if ($result->get_num_rows() > 1) {
-    $array = $result->result;
+	$array = $result->result;
 
-    if (key_exists("Name", $array[0])) {
-        foreach ($array as $key => $row) {
-            $bahnhofe_node = $xml->addChild("bahnhofe");
-            $bahnhofe_node->addChild("Name", $row["Name"]);
-            $bahnhofe_node->addChild("Gleise", $row["Gleise"]);
-        }
-    }
+	if (key_exists("Name", $array[0])) {
+		foreach ($array as $key => $row) {
+			$bahnhofe_node = $xml->addChild("bahnhofe");
+			$bahnhofe_node->addChild("Name", $row["Name"]);
+			$bahnhofe_node->addChild("Gleise", $row["Gleise"]);
+		}
+	}
 }
 
 $suche_node = $xml->addChild('suche');
@@ -240,34 +237,37 @@ if (isset($_GET['sucheBahnhofA']) && isset($_GET['sucheBahnhofB']) && isset($_GE
 
 	shell_exec("java -jar disallowed/external/out/artifacts/searchAlgo_jar/searchAlgo.jar $file_path_php $file_name $uuid");
 
-	sleep(1);
 	$routs = file_get_contents($file_path_php . "kotlin-" . $uuid . ".json");
+
+
 	$json_routs = json_decode($routs, true);
-	print_r($json_routs);
-	$routes_node = $xml->addChild("routes", " ");
+	$routes_node = $xml->addChild("routes");
+
+
+	$sql_string_trainType =
+		"SELECT Z.ZuggattungsID, Z.Bezeichnung FROM Linien AS L
+	 	 INNER JOIN Zuggattungen AS Z ON Z.ZuggattungsID = L.ZuggattungsID
+	 	 WHERE LinienID = :Linie";
 
 	$route_node = $routes_node->addChild("route");
-	$start_node = $route_node->addChild("start");
-	$end_node = $route_node->addChild("end");
+
+	if ($json_routs) {
+		foreach ($json_routs as $key => $node) {
+			if ($node['data']['lineID'] < 0) continue;
+
+			$node_node = $route_node->addChild("node");
+			$node_node->addChild("station", $node['data']['trainStation']['name']);
+
+			$time_arr = $node['data']['arrivalTime'];
+			$node_node->addChild("time", date("H:i", mktime($time_arr['hour'], $time_arr['minute'])));
+
+			$line_info = $sql->request($sql_string_trainType, array('Linie' => $node['data']['lineID']))->result[0];
+			$node_node->addChild("linie", ($line_info['ZuggattungsID'] . $node['data']['lineID']));
+
+			$node_node->addChild("stoptype", $node['data']['stopType']);
+		}
+	}
+
+	unlink($file_path_php . "php-" . $uuid . ".json");
+	unlink($file_path_php . "kotlin-" . $uuid . ".json");
 }
-
-
-
-
-
-
-
-
-
-
-// JSONXMLParser::json_to_xml($json_routs, $routes_node);
-
-
-
-
-
-// 			   $linie_nod = $xml->xpath("//xml/linien[LinienID=" . $row["LinienID"] . "]")[0]->addChild("haltestelle");
-//             $linie_nod->addChild("Nummer", $row["Haltestelle"]);
-//             $linie_nod->addChild("Bahnhof", $row["Name"]);
-//             $linie_nod->addChild("Ankunftszeit", $row["Ankunftszeit"]);
-//             $linie_nod->addChild("Abfahrtszeit", $row["Abfahrtszeit"]);
