@@ -24,7 +24,7 @@ function load($xml) {
             if (isset($_POST["seats"]) && is_numeric($_POST["seats"])) {
                 $train->seats = $_POST["seats"];
                 $train->save();
-                header("Location: /moderation/overview?view=f");
+                header("Location: /moderation/overview?view=f&id=".$_GET["id"]);
                 exit;
             }
 

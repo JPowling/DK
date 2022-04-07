@@ -40,40 +40,16 @@ function load($xml) {
                 $station->name = $_POST["fullname"];
                 $station->platforms = $_POST["platforms"];
                 $station->save();
+            }
 
-                header("Location: /moderation/overview?view=b&id=" . $_GET["id"]);
+            if (isset($_GET["delete"])) {
+                $station->delete();
+                header("Location: /moderation/overview?view=b");
                 exit;
             }
 
-            $count = 1;
-            while (isset($_POST["connection-$count"], $_POST["duration-$count"], $_POST["duration_rev-$count"])) {
-                $connected = $_POST["connection-$count"];
-                $duration = $_POST["duration-$count"];
-                $duration_rev = $_POST["duration_rev-$count"];
-                $delete = isset($_POST["delete-$count"]);
-
-                $sql = new SQL(true);
-                
-                $vals = [
-                    "Short" => $station->short,
-                    "Con" => $connected,
-                    "Duration" => $duration,
-                    "DurationRev" => $duration_rev
-                ];
-
-                if ($delete) {
-                    $sql->request("DELETE FROM Verbindungen WHERE BahnhofA=:Short AND BahnhofB=:Con", $vals);
-                    $sql->request("DELETE FROM Verbindungen WHERE BahnhofB=:Short AND BahnhofA=:Con", $vals);
-                } else {
-                    $sql->request("UPDATE Verbindungen SET Dauer=:Duration WHERE BahnhofA=:Short AND BahnhofB=:Con", $vals);
-                    $sql->request("UPDATE Verbindungen SET Dauer=:DurationRev WHERE BahnhofB=:Short AND BahnhofA=:Con", $vals);
-                }
-
-                $count++;
-            }
-
             if (isset($_POST["new-connection"]) && !empty($_POST["new-connection"])) {
-                $new_connectionstation = Station::by_id($_POST["new-connection"]);
+                $new_connectionstation = Station::by_id(Station::ensure_short($_POST["new-connection"]));
                 $sql = new SQL(true);
 
                 $send = false;
@@ -98,10 +74,41 @@ function load($xml) {
                 }
             }
 
-            if (isset($_GET["delete"])) {
-                $station->delete();
-                header("Location: /moderation/overview?view=b");
-                exit;
+            $count = 1;
+            while (isset($_POST["connection-$count"], $_POST["duration-$count"], $_POST["duration_rev-$count"])) {
+                $connected = $_POST["connection-$count"];
+                $duration = $_POST["duration-$count"];
+                $duration_rev = $_POST["duration_rev-$count"];
+                $delete = isset($_POST["delete-$count"]);
+
+                $sql = new SQL(true);
+
+                if ($delete) {
+                    $vals = [
+                        "Short" => $station->short,
+                        "Con" => $connected
+                    ];
+
+                    $sql->request("DELETE FROM Verbindungen WHERE BahnhofA=:Short AND BahnhofB=:Con", $vals);
+                    $sql->request("DELETE FROM Verbindungen WHERE BahnhofB=:Short AND BahnhofA=:Con", $vals);
+                } else {
+                    $valsA = [
+                        "Short" => $station->short,
+                        "Con" => $connected,
+                        "Duration" => $duration
+                    ];
+
+                    $valsB = [
+                        "Short" => $station->short,
+                        "Con" => $connected,
+                        "DurationRev" => $duration_rev
+                    ];
+
+                    $sql->request("UPDATE Verbindungen SET Dauer=:Duration WHERE BahnhofA=:Short AND BahnhofB=:Con", $valsA);
+                    $sql->request("UPDATE Verbindungen SET Dauer=:DurationRev WHERE BahnhofB=:Short AND BahnhofA=:Con", $valsB);
+                }
+
+                $count++;
             }
 
             $xml->addChild("id", $_GET["id"]);
