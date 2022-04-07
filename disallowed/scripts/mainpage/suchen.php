@@ -1,6 +1,8 @@
 <?php
 // Jens
 
+require_once 'disallowed/backend/jsonxmlparser.php';
+
 $suche_node = $xml->addChild('suche');
 
 if (isset($_GET['sucheBahnhofA'])){
@@ -8,6 +10,12 @@ if (isset($_GET['sucheBahnhofA'])){
 }
 if (isset($_GET['sucheBahnhofB'])){
     $suche_node->addChild('sucheBahnhofB', $_GET['sucheBahnhofB']);
+}
+if (isset($_GET['timeBahnhofA'])){
+    $suche_node->addChild('timeBahnhofA', $_GET['timeBahnhofA']);
+}
+if (isset($_GET['timeBahnhofB'])){
+    $suche_node->addChild('timeBahnhofB', $_GET['timeBahnhofB']);
 }
 
 
@@ -172,12 +180,16 @@ ORDER BY LinienID, StopTime, Stoporder
 $sql = new SQL();
 
 $result = $sql->sql_request($sql_string)->result;
+$sA = $xml->xpath("//xml/suche/sucheBahnhofA")[0];
+$tA = $xml->xpath("//xml/suche/timeBahnhofA")[0];
+$sB = $xml->xpath("//xml/suche/sucheBahnhofB")[0];
+$tB = $xml->xpath("//xml/suche/timeBahnhofB")[0];
 
 $startStation = array(
 	"LinienID" => -1,
-	"Name" => "Heilbronn Hbf",
+	"Name" => "$sA",
 	"Stoporder" => "0",
-	"StopTime" => "07:00:00",
+	"StopTime" => "$tA" . ":00",
 	"StopType" => "ARRIVING",
 	"NextStop" => "",
 	"NextStopTime" => "",
@@ -185,9 +197,9 @@ $startStation = array(
 
 $endStation = array(
 	"LinienID" => -2,
-	"Name" => "Stuttgart Hbf",
+	"Name" => "$sB",
 	"Stoporder" => "0",
-	"StopTime" => "22:00:00",
+	"StopTime" => "$tB" . ":00",
 	"StopType" => "DEPARTING",
 	"NextStop" => "",
 	"NextStopTime" => "",
@@ -195,26 +207,35 @@ $endStation = array(
 
 array_push($result, $startStation, $endStation);
 
-// print_r($result);
 
 $json_string = json_encode($result);
-
-// print_r($json_string);
-// echo strlen($json_string);
-// echo shell_exec("java -jar disallowed/external/out/artifacts/searchAlgo_jar/searchAlgo.jar $json_string");
-
 
 $uuid = uniqid();
 $file_path_php = "disallowed/external/datatransfer/";
 $file_name = "php-" . $uuid . ".json";
-
-// echo "from php: $file_name;";
-
 file_put_contents($file_path_php . $file_name, $json_string);
 
-echo shell_exec("java -jar disallowed/external/out/artifacts/searchAlgo_jar/searchAlgo.jar $file_path_php $file_name $uuid");
+shell_exec("java -jar disallowed/external/out/artifacts/searchAlgo_jar/searchAlgo.jar $file_path_php $file_name $uuid");
 
-sleep(2);
+sleep(1);
+$routs = file_get_contents($file_path_php . "kotlin-" . $uuid . ".json");
+$json_routs = json_decode($routs, true);
+print_r($json_routs);
+$routes_node = $xml->addChild("routes", " ");
 
-echo file_get_contents($file_path_php . "kotlin-" . $uuid . ".json");
+$route_node = $routes_node->addChild("route");
+$start_node = $route_node->addChild("start");
+$end_node = $route_node->addChild("end");
+
+// JSONXMLParser::json_to_xml($json_routs, $routes_node);
+
+
+
+
+
+// 			   $linie_nod = $xml->xpath("//xml/linien[LinienID=" . $row["LinienID"] . "]")[0]->addChild("haltestelle");
+//             $linie_nod->addChild("Nummer", $row["Haltestelle"]);
+//             $linie_nod->addChild("Bahnhof", $row["Name"]);
+//             $linie_nod->addChild("Ankunftszeit", $row["Ankunftszeit"]);
+//             $linie_nod->addChild("Abfahrtszeit", $row["Abfahrtszeit"]);
 

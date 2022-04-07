@@ -55,3 +55,4 @@ $doc =  new DOMDocument();
 $doc->formatOutput = true;
 $doc->loadXML($xml->asXML());
 echo $doc->saveXML();
+// print_r($xml);

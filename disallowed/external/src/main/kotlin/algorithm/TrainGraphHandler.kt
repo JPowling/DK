@@ -39,7 +39,6 @@ class TrainGraphHandler(private val graph: TrainGraph, path: String, fileName: S
     private fun buildPathsBetweenLines() {
         json.forEachIndexed { i, it ->
             if (it is JSONObject && it.get("StopType") == "DEPARTING") {
-//                println("${json.length()}, $i")
                 if (json.length() > i + 1 && json[i + 1] is JSONObject) {
                     graph.addPath(Path(
                         TrainStop(

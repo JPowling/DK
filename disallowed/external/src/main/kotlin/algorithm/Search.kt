@@ -4,12 +4,15 @@ import com.google.gson.Gson
 import graph.Dijkstra
 import train.*
 import java.io.File
+import javax.xml.bind.JAXB
 
 class Search(private val path: String, fileName: String, private val uuid: String) {
     private val graph = TrainGraph()
 
     init {
+        println("testing1")
         TrainGraphHandler(graph, path, fileName).build()
+        println("testing2")
     }
 
     fun search() {
