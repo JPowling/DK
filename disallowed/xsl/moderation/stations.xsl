@@ -44,7 +44,6 @@
                         </p>
 
                         <form action="/moderation/overview?view=b&amp;id={xml/id}" method="post">
-                            <!-- TODO -->
                             <p>Voller Name:</p>
                             <input type="text" name="fullname" value="{xml/selection/fullname}" />
                             <p>Gleise:</p>
@@ -95,11 +94,16 @@
                                 <tr>
                                     <th>
                                         <input type="text" name="new-connection" list="stations" />
+                                        <datalist id="stations">
+                                            <xsl:for-each select="xml/station">
+                                                <option value="{./name}" />
+                                            </xsl:for-each>
+                                        </datalist>
                                     </th>
                                 </tr>
                             </table>
 
-                            <button type="submit" class="button input">Speichern</button>
+                            <button type="submit" class="button input" name="save">Speichern</button>
 
                             <br />
                             <br />

@@ -42,7 +42,7 @@ class Station {
         foreach ($result as $index => $row) {
             $other = $row["BahnhofB"];
             $duration = $row["Dauer"];
-            $duration_rev = $sql->request("SELECT Dauer FROM Verbindungen WHERE BahnhofA=:Other'
+            $duration_rev = $sql->request("SELECT Dauer FROM Verbindungen WHERE BahnhofA=:Other
                 AND BahnhofB=:Short", ["Other" => $other, "Short" => $this->short])->get_from_column("Dauer");
 
             array_push($return, new Connection($this->short, $other, $duration, $duration_rev));
