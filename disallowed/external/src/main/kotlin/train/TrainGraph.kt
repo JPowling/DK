@@ -1,25 +1,32 @@
 package train
 
 import graph.AdjacencyListGraph
-import graph.Vertex
 
 class TrainGraph : AdjacencyListGraph<TrainStop>() {
+    val startNode by lazy { trainStops().first { it.lineID == -1 } }
+    val endNode by lazy { trainStops().first { it.lineID == -2 } }
 
-    fun addTrainStop(trainStop: TrainStop): TrainStop {
-        return createVertex(trainStop).data
+
+    fun addTrainStop(trainStop: TrainStop) = createVertex(trainStop).data
+
+    fun addPath(path: Path): Path {
+        addEdge(getVertex(path.a), getVertex(path.b), path.duration)
+        return path
     }
 
-    fun addConnection(connection: Connection) {
-        getVertex(connection.a)?.let { getVertex(connection.b)?.let { it1 -> addEdge(it, it1, connection.duration) } }
+    fun weight(path: Path) = weight(getVertex(path.a), getVertex(path.b))
+
+    fun getVertex(trainStop: TrainStop) = vertices.first { it.data == trainStop }
+
+    fun getEdge(path: Path) = edges(getVertex(path.a)).first { it.source.data == path.a }
+
+    fun trainStops(): MutableSet<TrainStop> {
+        val trainStops = mutableSetOf<TrainStop>()
+        vertices.forEach {
+            trainStops += it.data
+        }
+        return trainStops
     }
 
-    fun weight(connection: Connection): Int? =
-        getVertex(connection.a)?.let { getVertex(connection.b)?.let { it1 -> weight(it, it1) } }
-
-    fun getVertex(trainStop: TrainStop): Vertex<TrainStop>? =
-        vertesies().firstOrNull() { it.data == trainStop }
-
-    fun AdjacencyListGraph<TrainStop>.getEdge(connection: Connection) =
-        getVertex(connection.a)?.let { edges(it) }?.firstOrNull() { it.source.data == connection.a }
 
 }

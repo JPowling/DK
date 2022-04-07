@@ -1,23 +1,32 @@
 package algorithm
 
-import train.Connection
-import train.TrainGraph
-import train.TrainStation
-import train.TrainStop
-import java.time.LocalTime
+import com.google.gson.Gson
+import graph.Dijkstra
+import train.*
+import java.io.File
+import javax.xml.bind.JAXB
 
-class Search() {
-    val graph = TrainGraph()
+class Search(private val path: String, fileName: String, private val uuid: String) {
+    private val graph = TrainGraph()
+
     init {
-        val trainstop1 = TrainStop(TrainStation("a", "amsel"), LocalTime.of(10,0,0), 100)
-        val trainstop2 = TrainStop(TrainStation("b", "busch"), LocalTime.of(10,10,0), 100)
-        graph.addTrainStop(trainstop1)
-        graph.addTrainStop((trainstop2))
-
-        graph.addConnection(Connection(trainstop1, trainstop2, 10))
+        println("testing1")
+        TrainGraphHandler(graph, path, fileName).build()
+        println("testing2")
     }
 
-    fun search(){
-        println(graph)
+    fun search() {
+        val file = File("${path}kotlin-${uuid}.json")
+
+        val dijkstra = Dijkstra(graph,
+            graph.getVertex(graph.startNode),
+            graph.getVertex(graph.endNode))
+
+        dijkstra.run()
+        val route = dijkstra.interpret()
+
+        file.createNewFile()
+//        println(buildString { route.forEach { append(it.data.toString() + "; </br>" ) } })
+        file.writeText(Gson().toJson(TrainGraphHandler.getCompact(route)))
     }
 }

@@ -7,6 +7,8 @@ class Route {
 
     public array $data;
 
+    public static array $cached = array();
+
     public function __construct(int $id, bool $fetch) {
         $this->id = $id;
 
@@ -24,18 +26,14 @@ class Route {
         $commands = array();
         array_push($commands, "SET FOREIGN_KEY_CHECKS = 0;");
 
-        $checkexistsresult = $sql->sql_request("SELECT BahnhofA, BahnhofB, VerbindungsIndex FROM Routen WHERE RoutenID=$this->id ORDER BY VerbindungsIndex")->result;
+        $checkexistsresult = $sql->request("SELECT BahnhofA, BahnhofB, VerbindungsIndex,
+         Standzeit FROM Routen WHERE RoutenID=:Route ORDER BY VerbindungsIndex", ["Route" => $this->id])->result;
 
         foreach ($this->data as $local_index => $stored) {
             $exists = false;
-            $changed = true;
             $local_a = $stored["a"];
             $local_b = $stored["b"];
             $local_stand = $stored["stand_time"];
-
-            if (!isset($local_stand)) {
-                $local_stand = "1";
-            }
 
             foreach ($checkexistsresult as $remoteindex => $remotekeys) {
 
@@ -44,24 +42,17 @@ class Route {
 
                     $exists = true;
 
-                    if ($local_index == $remotekeys["VerbindungsIndex"]) {
-                        $changed = false;
-                    }
-
                     // When unsetting the result, we can check later whether the remote has a key thats not in local and therefore needs to be deleted
                     unset($checkexistsresult[$remoteindex]);
                 }
-                
             }
 
 
             // It might be the case, that a UNIQUE constraint fails, so 'SET UNIQUE_CHECKS = 0;' is a workaround
-            if ($changed) {
-                if ($exists) {
-                    array_push($commands, "UPDATE Routen SET VerbindungsIndex=$local_index, Standzeit=$local_stand WHERE BahnhofA='$local_a' AND BahnhofB='$local_b';");
-                } else {
-                    array_push($commands, "INSERT INTO Routen VALUES ($this->id, '$local_a', '$local_b', $local_index, $local_stand);");
-                }
+            if ($exists) {
+                array_push($commands, "UPDATE Routen SET VerbindungsIndex=$local_index, Standzeit=$local_stand WHERE BahnhofA='$local_a' AND BahnhofB='$local_b' AND RoutenID=$this->id;");
+            } else {
+                array_push($commands, "INSERT INTO Routen VALUES ($this->id, '$local_a', '$local_b', $local_index, $local_stand);");
             }
         }
 
@@ -100,14 +91,14 @@ class Route {
     public function delete() {
         $sql = new SQL(true);
 
-        $sql->sql_request("DELETE FROM Routen WHERE RoutenID=$this->id");
+        $sql->request("DELETE FROM Routen WHERE RoutenID=:Route", ["Route" => $this->id]);
     }
 
     public function fetch() {
         $sql = new SQL();
         $this->data = array();
 
-        $result = $sql->sql_request("SELECT BahnhofA, BahnhofB, VerbindungsIndex, Standzeit FROM Routen WHERE RoutenID=$this->id")->get_result();
+        $result = $sql->request("SELECT BahnhofA, BahnhofB, VerbindungsIndex, Standzeit FROM Routen WHERE RoutenID=:Route", ["Route" => $this->id])->get_result();
 
         foreach ($result as $row) {
             $this->data[$row["VerbindungsIndex"]] = ["a" => $row["BahnhofA"], "b" => $row["BahnhofB"], "stand_time" => $row["Standzeit"]];
@@ -116,17 +107,36 @@ class Route {
         ksort($this->data);
     }
 
-    public static function get_routes() {
-        $sql = new SQL();
+    public function get_start_finish() {
+        $r = array();
+        $a = $this->data[1]["a"];
+        $b = $this->data[array_key_last($this->data)]["b"];
 
-        $result = $sql->sql_request("SELECT DISTINCT RoutenID FROM Routen")->result;
+        $a = Station::ensure_long($a);
+        $b = Station::ensure_long($b);
+
+        array_push($r, $a, $b);
+        return $r;
+    }
+
+    public static function get_routes() {
+        $result = Route::$cached;
 
         $routes = array();
 
-        foreach ($result as $index => $row) {
-            array_push($routes, new Route($row["RoutenID"], true));
-        }
+        foreach ($result as $row) {
+            $id = $row["RoutenID"];
 
+            if (!isset($routes[$id])) {
+                $routes[$id] = new Route($id, false);
+            }
+
+            $routes[$id]->data[$row["VerbindungsIndex"]] = ["a" => $row["BahnhofA"], "b" => $row["BahnhofB"], "stand_time" => $row["Standzeit"]];
+        }
+        
+        foreach ($routes as $route) {
+            ksort($route->data);
+        }
         return $routes;
     }
 
@@ -151,7 +161,12 @@ class Route {
         $station_a = Station::ensure_short($station_a);
         $station_b = Station::ensure_short($station_b);
 
-        $sql->sql_request("INSERT INTO Routen VALUES ($id, '$station_a', '$station_b', 1, NULL)");
+        $vals = [
+            "Route" => $id,
+            "A" => $station_a,
+            "B" => $station_b];
+
+        $sql->request("INSERT INTO Routen VALUES (:Route, :A, :B, 1, NULL)", $vals);
 
         return $id;
     }
@@ -159,6 +174,11 @@ class Route {
     public static function next_free() {
         $sql = new SQL();
 
-        return $sql->sql_request("SELECT MAX(RoutenID) as A FROM Routen")->get_from_column("A")+1;
+        return $sql->request("SELECT MAX(RoutenID) as A FROM Routen")->get_from_column("A") + 1;
+    }
+
+    public static function refresh() {
+        $sql = new SQL();
+        Route::$cached = $sql->request("SELECT * FROM Routen")->result;
     }
 }

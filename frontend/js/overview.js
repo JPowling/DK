@@ -1,3 +1,5 @@
+// paul
+
 function trainsFocusOut() {
   var trainID = document.getElementById("trains_select").value;
 
@@ -8,18 +10,23 @@ function trainsFocusOut() {
   location.href = "/moderation/overview?view=f&id=" + trainID;
 }
 
-function trainsFocusIn() {
-  document.getElementById("trains_select").value = "";
-}
+function search(name) {
+  var input, filter, ul, li, a, i, txtValue;
+  input = document.getElementById(name.id);
+  filter = input.value.toUpperCase();
+  ul = document.getElementById(name.id + "_ul");
+  li = ul.getElementsByTagName('li');
 
-function stationsFocusOut() {
-  var stationID = document.getElementById("stations_select").value;
-
-  if (!is_valid_datalist_value("stations", stationID)) {
-    return;
+  // Loop through all list items, and hide those who don't match the search query
+  for (i = 0; i < li.length; i++) {
+    a = li[i].getElementsByTagName("a")[0];
+    txtValue = a.textContent || a.innerText;
+    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+      li[i].style.display = "";
+    } else {
+      li[i].style.display = "none";
+    }
   }
-
-  location.href = "/moderation/overview?view=b&id=" + stationID;
 }
 
 function stationsFocusIn() {
@@ -39,6 +46,21 @@ function routesFocusOut() {
 function routesFocusIn() {
   document.getElementById("routes_select").value = "";
 }
+
+function linesFocusOut() {
+  var routeID = document.getElementById("lines_select").value;
+
+  if (!is_valid_datalist_value("lines", routeID)) {
+    return;
+  }
+
+  location.href = "/moderation/overview?view=l&id=" + routeID;
+}
+
+function linesFocusIn() {
+  document.getElementById("lines_select").value = "";
+}
+
 
 function is_valid_datalist_value(idDataList, inputValue) {
   var option = document.querySelector("#" + idDataList + " option[value='" + inputValue + "']");
@@ -94,20 +116,20 @@ function drop(ev) {
       toStops.innerHTML = "";
       toTime.innerHTML = "";
       toDelete.innerHTML = "";
-    } else if (toStops.innerHTML === "") {
-      toStops.innerHTML = "<input type=\"checkbox\" name=\"stands-" + toID + "\" checked=\"on\" />";
+    } else if (toDelete.innerHTML === "") {
+      toStops.innerHTML = "<input type=\"checkbox\" name=\"stands-3\" id=\"stands-" + toID + "\" onchange=\"handleStopChange(this)\" checked=\"\">";
       toTime.innerHTML = "<input type=\"number\" name=\"duration-" + toID + "\" value=\"0\">";
-      toDelete.innerHTML = "<p class=\"delete pointer\" onclick=\"deleteRoutePart(this)\" id=\"delete-" + $toID + "\">Delete</p>";
+      toDelete.innerHTML = "<p class=\"delete pointer\" onclick=\"deleteRoutePart(this)\" id=\"delete-" + toID + "\">Delete</p>";
     }
 
     if (fromID == 1 || fromID == last) {
       fromStops.innerHTML = "";
       fromTime.innerHTML = "";
       fromDelete.innerHTML = "";
-    } else if (fromStops.innerHTML === "") {
-      fromStops.innerHTML = "<input type=\"checkbox\" name=\"stands-" + fromID + "\" checked=\"on\" />";
+    } else if (toDelete.innerHTML === "") {
+      fromStops.innerHTML = "<input type=\"checkbox\" name=\"stands-3\" id=\"stands-" + fromID + "\" onchange=\"handleStopChange(this)\" checked=\"\">";
       fromTime.innerHTML = "<input type=\"number\" name=\"duration-" + fromID + "\" value=\"0\">";
-      fromDelete.innerHTML = "<p class=\"delete pointer\" onclick=\"deleteRoutePart(this)\" id=\"delete-" + $fromID + "\">Delete</p>";
+      fromDelete.innerHTML = "<p class=\"delete pointer\" onclick=\"deleteRoutePart(this)\" id=\"delete-" + fromID + "\">Delete</p>";
     }
   }
 }
@@ -132,10 +154,10 @@ function deleteRoutePart(e) {
 }
 
 var template = "<th><p class=\"lightgray grabber\" id=\"{NUMBER}\" ondrop=\"drop(event)\" ondragover=\"allowDrop(event)\" draggable=\"true\""
-+ "ondragstart=\"drag(event)\">Drag</p></th><th><a class=\"navigator-button\" href=\"/moderation/overview?view=b&amp;id={NAME}\""
-+ ">{NAME}</a><input type=\"hidden\" name=\"short-{NUMBER}\" value=\"{NAME}\"/></th><th id=\"stops\"><input type=\"checkbox\""
-+ "name=\"stands-{NUMBER}\"  id=\"stands-{NUMBER}\" onchange=\"handleStopChange(this)\" checked=\"\"></th><th i"
-+ "d=\"time\"><input type=\"number\" name=\"duration-{NUMBER}\" value=\"1\"></th><th id=\"delete\"><p class=\"delete pointer\" onclick=\"deleteRoutePart(this)\" id=\"delete-{NUMBER}\">Delete</p></th>"
+  + "ondragstart=\"drag(event)\">Drag</p></th><th><a class=\"navigator-button\" href=\"/moderation/overview?view=b&amp;id={NAME}\""
+  + ">{NAME}</a><input type=\"hidden\" name=\"short-{NUMBER}\" value=\"{NAME}\"/></th><th id=\"stops\"><input type=\"checkbox\""
+  + "name=\"stands-{NUMBER}\"  id=\"stands-{NUMBER}\" onchange=\"handleStopChange(this)\" checked=\"\"></th><th i"
+  + "d=\"time\"><input type=\"number\" name=\"duration-{NUMBER}\" value=\"1\"></th><th id=\"delete\"><p class=\"delete pointer\" onclick=\"deleteRoutePart(this)\" id=\"delete-{NUMBER}\">Delete</p></th>"
 
 function addConnection() {
   let input = document.getElementById("newConnection");
@@ -152,17 +174,17 @@ function addConnection() {
 
   table[last].innerHTML = html;
 
-  table[last+1].innerHTML = table[last+1].innerHTML
-                .replaceAll("\"" + (last) + "\"", "\"" + (last+1) + "\"")
-                .replaceAll("-" + (last), "-" + (last+1));
+  table[last + 1].innerHTML = table[last + 1].innerHTML
+    .replaceAll("\"" + (last) + "\"", "\"" + (last + 1) + "\"")
+    .replaceAll("-" + (last), "-" + (last + 1));
 
 }
 
 function handleStopChange(e) {
   let id = e.id.replaceAll("stands-", "");
 
-  console.log(e.id);
-  
+  console.log(id);
+
   let t = document.getElementById("list");
   let table = t.rows;
 
@@ -170,5 +192,12 @@ function handleStopChange(e) {
     table[id].querySelector("#time").innerHTML = "";
   } else {
     table[id].querySelector("#time").innerHTML = "<input type=\"number\" name=\"duration-" + id + "\" value=\"0\">";
+  }
+}
+
+function enter(e) {
+  if (e.key == 'Enter') { 
+    addConnection(); 
+    e.preventDefault();
   }
 }
