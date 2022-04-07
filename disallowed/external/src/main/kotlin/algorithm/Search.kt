@@ -1,38 +1,32 @@
 package algorithm
 
+import com.google.gson.Gson
+import graph.Dijkstra
 import train.*
-import java.time.LocalTime
+import java.io.File
+import javax.xml.bind.JAXB
 
-class Search() {
+class Search(private val path: String, fileName: String, private val uuid: String) {
     private val graph = TrainGraph()
 
     init {
-        val trainstop1 = TrainStop(TrainStation("a", "amsel"), LocalTime.of(10, 0), 100, TrainStopType.DEPARTING)
-        val trainstop2 = TrainStop(TrainStation("b", "busch"), LocalTime.of(11, 10), 100, TrainStopType.ARRIVING)
-        graph.addTrainStop(trainstop1)
-        graph.addTrainStop((trainstop2))
-
-        graph.addPath(Path(trainstop1, trainstop2))
-        println(Path(trainstop1, trainstop2).duration)
-        println(
-            graph.getEdge(
-                Path(
-                    graph.getVertex(
-                        TrainStop(
-                            TrainStation("a", "amsel"), LocalTime.of(10, 0), 100, TrainStopType.DEPARTING
-                        )
-                    ).data,
-                    graph.getVertex(
-                        TrainStop(
-                            TrainStation("b", "busch"), LocalTime.of(11, 10), 100, TrainStopType.ARRIVING
-                        )
-                    ).data
-                )
-            ).source.data == trainstop1
-        )
+        println("testing1")
+        TrainGraphHandler(graph, path, fileName).build()
+        println("testing2")
     }
 
     fun search() {
-        println(graph)
+        val file = File("${path}kotlin-${uuid}.json")
+
+        val dijkstra = Dijkstra(graph,
+            graph.getVertex(graph.startNode),
+            graph.getVertex(graph.endNode))
+
+        dijkstra.run()
+        val route = dijkstra.interpret()
+
+        file.createNewFile()
+//        println(buildString { route.forEach { append(it.data.toString() + "; </br>" ) } })
+        file.writeText(Gson().toJson(TrainGraphHandler.getCompact(route)))
     }
 }
