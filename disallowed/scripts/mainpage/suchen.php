@@ -3,19 +3,36 @@
 
 require_once 'disallowed/backend/jsonxmlparser.php';
 
+
+$sql = new SQL(false);
+
+$sql_query = "SELECT Name, Gleise FROM Bahnhofe ORDER BY Name";
+
+
+$result = $sql->request($sql_query);
+
+if ($result->get_num_rows() > 1) {
+    $array = $result->result;
+
+    if (key_exists("Name", $array[0])) {
+        foreach ($array as $key => $row) {
+            $bahnhofe_node = $xml->addChild("bahnhofe");
+            $bahnhofe_node->addChild("Name", $row["Name"]);
+            $bahnhofe_node->addChild("Gleise", $row["Gleise"]);
+        }
+    }
+}
+
 $suche_node = $xml->addChild('suche');
 
-if (isset($_GET['sucheBahnhofA'])){
-    $suche_node->addChild('sucheBahnhofA', $_GET['sucheBahnhofA']);
+if (isset($_GET['sucheBahnhofA'])) {
+	$suche_node->addChild('sucheBahnhofA', $_GET['sucheBahnhofA']);
 }
-if (isset($_GET['sucheBahnhofB'])){
-    $suche_node->addChild('sucheBahnhofB', $_GET['sucheBahnhofB']);
+if (isset($_GET['sucheBahnhofB'])) {
+	$suche_node->addChild('sucheBahnhofB', $_GET['sucheBahnhofB']);
 }
-if (isset($_GET['timeBahnhofA'])){
-    $suche_node->addChild('timeBahnhofA', $_GET['timeBahnhofA']);
-}
-if (isset($_GET['timeBahnhofB'])){
-    $suche_node->addChild('timeBahnhofB', $_GET['timeBahnhofB']);
+if (isset($_GET['timeBahnhofA'])) {
+	$suche_node->addChild('timeBahnhofA', $_GET['timeBahnhofA']);
 }
 
 
@@ -180,52 +197,68 @@ ORDER BY LinienID, StopTime, Stoporder
 $sql = new SQL();
 
 $result = $sql->sql_request($sql_string)->result;
-$sA = $xml->xpath("//xml/suche/sucheBahnhofA")[0];
-$tA = $xml->xpath("//xml/suche/timeBahnhofA")[0];
-$sB = $xml->xpath("//xml/suche/sucheBahnhofB")[0];
-$tB = $xml->xpath("//xml/suche/timeBahnhofB")[0];
-
-$startStation = array(
-	"LinienID" => -1,
-	"Name" => "$sA",
-	"Stoporder" => "0",
-	"StopTime" => "$tA" . ":00",
-	"StopType" => "ARRIVING",
-	"NextStop" => "",
-	"NextStopTime" => "",
-);
-
-$endStation = array(
-	"LinienID" => -2,
-	"Name" => "$sB",
-	"Stoporder" => "0",
-	"StopTime" => "$tB" . ":00",
-	"StopType" => "DEPARTING",
-	"NextStop" => "",
-	"NextStopTime" => "",
-);
-
-array_push($result, $startStation, $endStation);
 
 
-$json_string = json_encode($result);
 
-$uuid = uniqid();
-$file_path_php = "disallowed/external/datatransfer/";
-$file_name = "php-" . $uuid . ".json";
-file_put_contents($file_path_php . $file_name, $json_string);
 
-shell_exec("java -jar disallowed/external/out/artifacts/searchAlgo_jar/searchAlgo.jar $file_path_php $file_name $uuid");
+if (isset($_GET['sucheBahnhofA']) && isset($_GET['sucheBahnhofB']) && isset($_GET['timeBahnhofA'])) {
 
-sleep(1);
-$routs = file_get_contents($file_path_php . "kotlin-" . $uuid . ".json");
-$json_routs = json_decode($routs, true);
-print_r($json_routs);
-$routes_node = $xml->addChild("routes", " ");
+	$sA = $xml->xpath("//xml/suche/sucheBahnhofA")[0];
+	$tA = $xml->xpath("//xml/suche/timeBahnhofA")[0];
+	$sB = $xml->xpath("//xml/suche/sucheBahnhofB")[0];
+	$tB = "23:59";
 
-$route_node = $routes_node->addChild("route");
-$start_node = $route_node->addChild("start");
-$end_node = $route_node->addChild("end");
+	$startStation = array(
+		"LinienID" => -1,
+		"Name" => "$sA",
+		"Stoporder" => "0",
+		"StopTime" => "$tA" . ":00",
+		"StopType" => "ARRIVING",
+		"NextStop" => "",
+		"NextStopTime" => "",
+	);
+
+	$endStation = array(
+		"LinienID" => -2,
+		"Name" => "$sB",
+		"Stoporder" => "0",
+		"StopTime" => "$tB" . ":00",
+		"StopType" => "DEPARTING",
+		"NextStop" => "",
+		"NextStopTime" => "",
+	);
+
+	array_push($result, $startStation, $endStation);
+
+
+	$json_string = json_encode($result);
+
+	$uuid = uniqid();
+	$file_path_php = "disallowed/external/datatransfer/";
+	$file_name = "php-" . $uuid . ".json";
+	file_put_contents($file_path_php . $file_name, $json_string);
+
+	shell_exec("java -jar disallowed/external/out/artifacts/searchAlgo_jar/searchAlgo.jar $file_path_php $file_name $uuid");
+
+	sleep(1);
+	$routs = file_get_contents($file_path_php . "kotlin-" . $uuid . ".json");
+	$json_routs = json_decode($routs, true);
+	print_r($json_routs);
+	$routes_node = $xml->addChild("routes", " ");
+
+	$route_node = $routes_node->addChild("route");
+	$start_node = $route_node->addChild("start");
+	$end_node = $route_node->addChild("end");
+}
+
+
+
+
+
+
+
+
+
 
 // JSONXMLParser::json_to_xml($json_routs, $routes_node);
 
@@ -238,4 +271,3 @@ $end_node = $route_node->addChild("end");
 //             $linie_nod->addChild("Bahnhof", $row["Name"]);
 //             $linie_nod->addChild("Ankunftszeit", $row["Ankunftszeit"]);
 //             $linie_nod->addChild("Abfahrtszeit", $row["Abfahrtszeit"]);
-

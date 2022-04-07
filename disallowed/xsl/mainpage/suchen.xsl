@@ -14,21 +14,23 @@
     <xsl:template match="/" mode="suchen-content">
         <div class="content-body">
             <form method="get" action="?site=suchen">
+                <datalist id="stations">
+                    <xsl:for-each select="xml/bahnhofe">
+                        <option value="{./Name}" />
+                    </xsl:for-each>
+                </datalist>
                 <table>
                     <tr>
                         <td>
-                            <input type="text" name="sucheBahnhofA" class="input" value="{//xml/suche/sucheBahnhofA}" placeholder="Bahnhof A" required="" />
+                            <input type="text" name="sucheBahnhofA" list="stations" class="input" value="{//xml/suche/sucheBahnhofA}" placeholder="Bahnhof A" required="" />
                         </td>
                         <td>
-                            <input type="text" name="timeBahnhofA" class="input" value="{//xml/suche/timeBahnhofA}" placeholder="HH:MM" required="" />
+                            <input type="text" name="timeBahnhofA" list="stations" class="input" value="{//xml/suche/timeBahnhofA}" placeholder="HH:MM" required="" />
                         </td>
                     </tr>
                     <tr>
                         <td>
                             <input type="text" name="sucheBahnhofB" class="input" value="{//xml/suche/sucheBahnhofB}" placeholder="Bahnhof B" required="" />
-                        </td>
-                        <td>
-                            <input type="text" name="timeBahnhofB" class="input" value="{//xml/suche/timeBahnhofB}" placeholder="HH:MM" required="" />
                         </td>
                     </tr>
                     <tr>
