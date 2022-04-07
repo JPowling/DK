@@ -5,6 +5,7 @@
 
 
     <xsl:template match="/" mode="linien-header">
+        <link rel="stylesheet" type="text/css" href="frontend/css/mainpage.css" />
         <div class="content-header">
             <div class="header">
                 Linien
@@ -19,6 +20,7 @@
 
 
     <xsl:template match="/" mode="linien">
+        <link rel="stylesheet" type="text/css" href="frontend/css/mainpage.css" />
         <div class="content-body">
             <div class="table-header border">
                 <p class="extra-small" />
