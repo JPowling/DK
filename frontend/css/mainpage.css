@@ -206,7 +206,7 @@ p {
 }
 
 a {
-    text-decoration: dotted;
+    text-decoration: none;
     color: black;
     vertical-align: middle;
 }
