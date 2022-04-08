@@ -235,7 +235,7 @@ if (isset($_POST['sucheBahnhofA']) && isset($_POST['sucheBahnhofB']) && isset($_
 	$file_name = "php-" . $uuid . ".json";
 	file_put_contents($file_path_php . $file_name, $json_string);
 
-	shell_exec("java -jar disallowed/external/out/artifacts/searchAlgo_jar/searchAlgo.jar $file_path_php $file_name $uuid");
+	echo shell_exec("java -jar disallowed/external/out/artifacts/searchAlgo_jar/searchAlgo.jar $file_path_php $file_name $uuid");
 
 	$routs = file_get_contents($file_path_php . "kotlin-" . $uuid . ".json");
 
@@ -258,8 +258,7 @@ if (isset($_POST['sucheBahnhofA']) && isset($_POST['sucheBahnhofB']) && isset($_
 			$node_node = $route_node->addChild("node");
 			$node_node->addChild("station", $node['data']['trainStation']['name']);
 
-			$time_arr = $node['data']['arrivalTime'];
-			$node_node->addChild("time", date("H:i", mktime($time_arr['hour'], $time_arr['minute'])));
+			$node_node->addChild("time", $node['data']['time']);
 
 			$line_info = $sql->request($sql_string_trainType, array('Linie' => $node['data']['lineID']))->result[0];
 			$node_node->addChild("linie", ($line_info['ZuggattungsID'] . $node['data']['lineID']));
