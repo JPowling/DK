@@ -43,8 +43,8 @@
                     <xsl:when test="//linie[id=$LinienID]">
                         <div class="table-row border">
                             <div>
-                                <a class="" href="/?site=linien">
-                                    <div class="table-row-link hoverable border-opaque">
+                                <a class="table-row-link" href="/?site=linien">
+                                    <div class="hoverable border-opaque">
                                         <div class="table-row-link">
                                             <p class="extra-small"></p>
                                             <p class="collumn-small fat">
