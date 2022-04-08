@@ -44,7 +44,7 @@
                         <div class="table-row border">
                             <div>
                                 <a class="" href="/?site=linien">
-                                    <div class="table-row hoverable border-opaque">
+                                    <div class="table-row-link hoverable border-opaque">
                                         <div class="table-row-link">
                                             <p class="extra-small"></p>
                                             <p class="collumn-small fat">
