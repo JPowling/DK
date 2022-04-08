@@ -22,14 +22,14 @@ if ($result->get_num_rows() > 1) {
 
 $suche_node = $xml->addChild('suche');
 
-if (isset($_GET['sucheBahnhofA'])) {
-	$suche_node->addChild('sucheBahnhofA', $_GET['sucheBahnhofA']);
+if (isset($_POST['sucheBahnhofA'])) {
+	$suche_node->addChild('sucheBahnhofA', $_POST['sucheBahnhofA']);
 }
-if (isset($_GET['sucheBahnhofB'])) {
-	$suche_node->addChild('sucheBahnhofB', $_GET['sucheBahnhofB']);
+if (isset($_POST['sucheBahnhofB'])) {
+	$suche_node->addChild('sucheBahnhofB', $_POST['sucheBahnhofB']);
 }
-if (isset($_GET['timeBahnhofA'])) {
-	$suche_node->addChild('timeBahnhofA', $_GET['timeBahnhofA']);
+if (isset($_POST['timeBahnhofA'])) {
+	$suche_node->addChild('timeBahnhofA', $_POST['timeBahnhofA']);
 }
 
 
@@ -198,7 +198,7 @@ $result = $sql->sql_request($sql_string)->result;
 
 
 
-if (isset($_GET['sucheBahnhofA']) && isset($_GET['sucheBahnhofB']) && isset($_GET['timeBahnhofA'])) {
+if (isset($_POST['sucheBahnhofA']) && isset($_POST['sucheBahnhofB']) && isset($_POST['timeBahnhofA'])) {
 
 	$sA = $xml->xpath("//xml/suche/sucheBahnhofA")[0];
 	$tA = $xml->xpath("//xml/suche/timeBahnhofA")[0];

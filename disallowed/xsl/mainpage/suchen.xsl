@@ -14,7 +14,7 @@
 
     <xsl:template match="/" mode="suchen-content">
         <div class="content-body">
-            <form class="margin-bottom" method="get" action="?site=suchen">
+            <form class="margin-bottom" method="post" action="?site=suchen">
                 <datalist id="stations">
                     <xsl:for-each select="xml/bahnhofe">
                         <option value="{./Name}" />
