@@ -45,7 +45,6 @@ class Dijkstra<E>(val graph: Graph<E>, val startNode: Vertex<E>, val endNode: Ve
             graph.edges(u).filter { it.destination in unvisited }.forEach {
                 val alt = dist[u]!!.plus(it.weight)
                 if (alt < 0) {
-//                    println("$u: $alt, ${dist[u]!!}, ${it.weight}")
                     return
                 }
                 if (alt < dist[it.destination]!!) {
@@ -56,6 +55,9 @@ class Dijkstra<E>(val graph: Graph<E>, val startNode: Vertex<E>, val endNode: Ve
         }
     }
 
+    /**
+     * This method finds the shortest path based on
+     */
     fun interpret(): List<Vertex<E>> {
         val retList = mutableListOf<Vertex<E>>()
         var node = endNode
