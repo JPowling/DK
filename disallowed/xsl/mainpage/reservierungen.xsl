@@ -74,7 +74,7 @@
 
                             <xsl:for-each select="/xml/reservierungen/detailes/detailed">
                                 <div class="table-row hoverable border">
-                                    <a class="table-row-link" href="/?site=bahnhofe">
+                                    <a class="table-row-link" href="/?site=linien&amp;id={lineID}">
                                         <p class="extra-small"></p>
                                         <p class="collumn-small">
                                             <xsl:value-of select="line" />
