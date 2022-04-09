@@ -14,7 +14,7 @@
 
     <xsl:template match="/" mode="suchen-content">
         <div class="content-body">
-            <form class="margin-bottom" method="post" action="?site=suchen">
+            <form class="margin-bottom" method="get" action="?site=suchen">
                 <datalist id="stations">
                     <xsl:for-each select="xml/bahnhofe">
                         <option value="{./Name}" />
@@ -26,7 +26,7 @@
                         <input class="input collumn-medium" type="text" name="sucheBahnhofA" list="stations" value="{//xml/suche/sucheBahnhofA}" placeholder="Bahnhof A" required="" />
                         <input class="input collumn-medium" type="text" name="sucheBahnhofB" list="stations" value="{//xml/suche/sucheBahnhofB}" placeholder="Bahnhof B" required="" />
                         <p class="m-small text-right">Abfahrtszeit:⠀</p>
-                        <input class="input collumn-medium" type="text" name="timeBahnhofA" value="00:00" placeholder="HH:MM" required="" />
+                        <input class="input collumn-medium" type="time" name="timeBahnhofA" value="00:00" placeholder="HH:MM" required="" />
                         <p class="extra-small"></p>
                     </div>
                     <div class="table-row-link">
@@ -39,7 +39,7 @@
             </form>
             <div class="border-top-bottom margin-bottom-small">
                 <div class="header">
-                    die schnellsten Verbindungen
+                    schnellste Verbindung
                 </div>
             </div>
             <div>
@@ -49,7 +49,21 @@
                 <xsl:if test="xml/routes/route/node">
                     <xsl:for-each select="xml/routes/route">
                         <div class="table-row border">
-                            <a>reservieren</a>
+
+                            <form action="/" method="get">
+                                <input type="hidden" name="sucheBahnhofA" value="{/xml/suche/sucheBahnhofA}" />
+                                <input type="hidden" name="sucheBahnhofB" value="{/xml/suche/sucheBahnhofB}" />
+                                <input type="hidden" name="timeBahnhofA" value="{/xml/suche/timeBahnhofA}" />
+                                <input type="hidden" name="reservieren" value="true" />
+                                <input type="hidden" name="site" value="suchen" />
+                                <div>
+                                    <button type="submit">
+                                            reservieren
+                                    </button>
+                                    <input type="date" name="datum" required=""/>
+                                </div>
+                            </form>
+
                             <xsl:for-each select="node">
                                 <div class="table-row-link border">
                                     <div class="extra-extra-small"></div>
