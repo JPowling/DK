@@ -1,7 +1,7 @@
 <?php
 // Jens
 
-if(!is_loggedin()) {
+if (!is_loggedin()) {
     header("Location: /notloggedin");
     exit;
 }
@@ -22,7 +22,7 @@ $result = $sql->request($sql_str, $sql_var)->result;
 
 $res_node = $xml->addChild('reservierungen');
 
-foreach($result as $row) {
+foreach ($result as $row) {
     $day_node = $res_node->addChild('day');
     $day_node->addChild('date', $row['Fahrtdatum']);
     $day_node->addChild('sum', $row['anzahl']);
@@ -30,9 +30,9 @@ foreach($result as $row) {
 
 
 
-$sql_str_details = 
+$sql_str_details =
 "
-SELECT R.*, BA.Name, BB.Name,
+SELECT LinienID, R.Bestelldatum, R.Fahrtdatum,  BA.Name AS BahnhofA, BB.Name AS BahnhofB,
 	(SELECT 	 CASE 
 						WHEN (SELECT VerbindungsIndex FROM Routen WHERE BahnhofA = R.Startbahnhof AND RoutenID = Ro.RoutenID) = 1
 							THEN Li.Startzeit
@@ -72,5 +72,36 @@ FROM Reservierungen AS R
 INNER JOIN Bahnhofe AS BA ON BA.Kennzeichnung = R.Startbahnhof
 INNER JOIN Bahnhofe AS BB ON BB.Kennzeichnung = R.Zielbahnhof
 
-WHERE R.BenutzerID = :benutzer AND R.Fahrtdatum = :datum
+WHERE R.BenutzerID = :user AND R.Fahrtdatum = :date
 ";
+
+if (isset($_GET['day'])) {
+    $sql_var_details = array(
+        'user' => $user_id,
+        'date' => $_GET['day']
+    );
+
+
+    $result = $sql->request($sql_str_details, $sql_var_details)->result;
+
+    $sql_string_trainType =
+		"SELECT Z.ZuggattungsID, Z.Bezeichnung FROM Linien AS L
+	 	 INNER JOIN Zuggattungen AS Z ON Z.ZuggattungsID = L.ZuggattungsID
+	 	 WHERE LinienID = :Linie";
+
+    $detailes_node = $res_node->addChild('detailes');
+
+    foreach ($result as $row) {
+        $detailed_node = $detailes_node->addChild('detailed');
+        $line_info = $sql->request($sql_string_trainType, array('Linie' => $row['LinienID']))->result[0];
+        $detailed_node->addChild("line", ($line_info['ZuggattungsID'] . $row['LinienID']));
+
+        $detailed_node->addChild('orderdate', $row['Bestelldatum']);
+        $detailed_node->addChild('traveldate', $row['Fahrtdatum']);
+        $detailed_node->addChild('stationA', $row['BahnhofA']);
+        $detailed_node->addChild('stationB', $row['BahnhofB']);
+        $detailed_node->addChild('timeA', $row['Abfahrtszeit']);
+        $detailed_node->addChild('timeB', $row['Ankunftszeit']);
+    }
+
+}
