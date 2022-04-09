@@ -266,6 +266,7 @@ if (isset($_GET['day'])) {
         $detailed_node = $detailes_node->addChild('detailed');
         $line_info = $sql->request($sql_string_trainType, array('Linie' => $row['LinienID']))->result[0];
         $detailed_node->addChild("line", ($line_info['ZuggattungsID'] . $row['LinienID']));
+        $detailed_node->addChild("lineID", $row['LinienID']);
 
         $detailed_node->addChild('orderdate', $row['Bestelldatum']);
         $detailed_node->addChild('traveldate', $row['Fahrtdatum']);
