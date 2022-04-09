@@ -12,8 +12,10 @@ $user_id = $sql->request("SELECT BenutzerID FROM Benutzer WHERE EMail = :email",
 $sql_str = "
 SELECT Fahrtdatum, COUNT(*) AS 'anzahl'
 FROM Reservierungen AS R
-WHERE R.BenutzerID = :user
-GROUP BY R.Fahrtdatum";
+WHERE R.BenutzerID = :user AND R.Fahrtdatum >= CURDATE()
+GROUP BY R.Fahrtdatum
+ORDER BY R.Fahrtdatum
+";
 
 $sql_var = array('user' => $user_id);
 
@@ -32,47 +34,216 @@ foreach ($result as $row) {
 
 $sql_str_details =
 "
-SELECT LinienID, R.Bestelldatum, R.Fahrtdatum,  BA.Name AS BahnhofA, BB.Name AS BahnhofB,
-	(SELECT 	 CASE 
-						WHEN (SELECT VerbindungsIndex FROM Routen WHERE BahnhofA = R.Startbahnhof AND RoutenID = Ro.RoutenID) = 1
-							THEN Li.Startzeit
-						ELSE 
-							DATE_ADD(Li.Startzeit, INTERVAL SUM(Ve.Dauer) + SUM(Ro.Standzeit) MINUTE)
-							
-					END 
-				AS 'ArrivalTime'
-		FROM Linien AS Li
-		INNER JOIN Routen AS Ro ON Ro.RoutenID = Li.RoutenID
-		INNER JOIN Verbindungen AS Ve ON Ve.BahnhofA = Ro.BahnhofA AND Ve.BahnhofB = Ro.BahnhofB
-		WHERE Li.LinienID = R.LinienID AND Ro.VerbindungsIndex <= (SELECT VerbindungsIndex FROM Routen WHERE BahnhofA = R.Startbahnhof AND RoutenID = Ro.RoutenID)
-	) AS 'Abfahrtszeit',
-
-	(SELECT  DATE_ADD(Lin.Startzeit, INTERVAL (
-					SUM(V.Dauer) 
-					+ SUM(R1.Standzeit) 
-					- (	SELECT Dauer 
-							FROM Routen AS Ro
-							INNER JOIN Verbindungen AS Ve ON Ve.BahnhofA = Ro.BahnhofA AND Ve.BahnhofB = Ro.BahnhofB
-							WHERE Ro.RoutenID = R1.RoutenID AND Ro.BahnhofA = R.Zielbahnhof
-						)
-					) MINUTE
-				) AS 'ArrivalTime'
-		
-		FROM Linien AS Lin
-		INNER JOIN Routen AS R1 ON R1.RoutenID = Lin.RoutenID
-		INNER JOIN Verbindungen AS V ON V.BahnhofA = R1.BahnhofA AND V.BahnhofB = R1.BahnhofB
-		
-		WHERE Lin.LinienID = R.LinienID AND R1.VerbindungsIndex <= (SELECT VerbindungsIndex FROM Routen WHERE BahnhofA = R.Zielbahnhof AND RoutenID = R1.RoutenID)
-	) AS 'Ankunftszeit'
-
-
+SELECT L.LinienID, R.Bestelldatum, R.Fahrtdatum, BA.Name AS BahnhofA, BB.Name AS BahnhofB, SelLinienA.Abfahrtszeit AS AbfahrtszeitA, SelLinienB.Ankunftszeit AS AnkunftszeitB
 
 FROM Reservierungen AS R
 
 INNER JOIN Bahnhofe AS BA ON BA.Kennzeichnung = R.Startbahnhof
 INNER JOIN Bahnhofe AS BB ON BB.Kennzeichnung = R.Zielbahnhof
+INNER JOIN Linien AS L ON L.LinienID = R.LinienID
+
+
+
+INNER JOIN ((SELECT Lin.LinienID, B.Kennzeichnung, R.VerbindungsIndex AS Haltestelle,
+
+DATE_ADD(Lin.Startzeit, INTERVAL (SUM(TN.Standzeit) - TN2.Standzeit + SUM(TN.Dauer)) MINUTE) AS Ankunftszeit,
+
+CASE
+	WHEN R.VerbindungsIndex = 1
+		THEN Lin.Startzeit
+	ELSE 
+		DATE_ADD(TN.Startzeit, INTERVAL (SUM(TN.Standzeit) + SUM(TN.Dauer)) MINUTE)
+END AS Abfahrtszeit
+
+FROM Linien AS Lin
+
+INNER JOIN Routen AS R ON R.RoutenID = Lin.RoutenID
+INNER JOIN Verbindungen AS VA ON VA.BahnhofA = R.BahnhofA AND VA.BahnhofB = R.BahnhofB
+INNER JOIN Bahnhofe AS B ON B.Kennzeichnung = R.BahnhofA
+
+LEFT JOIN (
+				SELECT R.VerbindungsIndex AS I, L.Startzeit AS Startzeit, L.LinienID, 
+					CASE 
+						WHEN R.Standzeit IS NULL 
+							THEN 0
+						ELSE
+							R.Standzeit
+					END AS Standzeit, 
+					VA.Dauer 
+				FROM Linien AS L
+				INNER JOIN Routen AS R ON R.RoutenID = L.RoutenID
+				INNER JOIN Verbindungen AS VA ON VA.BahnhofA = R.BahnhofA AND VA.BahnhofB = R.BahnhofB
+				ORDER BY I ASC 
+				) AS TN ON TN.I  < R.VerbindungsIndex AND TN.LinienID = Lin.LinienID
+				
+LEFT JOIN (
+				SELECT R.VerbindungsIndex AS I, L.Startzeit AS Startzeit, L.LinienID,
+					CASE 
+						WHEN R.Standzeit IS NULL 
+							THEN 0
+						ELSE
+							R.Standzeit
+					END AS Standzeit, 
+					VA.Dauer 
+				FROM Linien AS L
+				INNER JOIN Routen AS R ON R.RoutenID = L.RoutenID
+				INNER JOIN Verbindungen AS VA ON VA.BahnhofA = R.BahnhofA AND VA.BahnhofB = R.BahnhofB
+				WHERE (R.VerbindungsIndex = (SELECT MAX(VerbindungsIndex) FROM Routen AS R2 WHERE R2.RoutenID = R.RoutenID)) XOR R.Standzeit IS NOT NULL
+				) AS TN2 ON (TN2.I  = R.VerbindungsIndex - 1) AND TN2.LinienID = Lin.LinienID
+				
+				
+WHERE ((R.VerbindungsIndex = (SELECT MAX(VerbindungsIndex) FROM Routen AS R2 WHERE R2.RoutenID = R.RoutenID) + 1) XOR TN2.Standzeit IS NOT NULL XOR R.VerbindungsIndex = 1)
+GROUP BY Lin.LinienID, R.VerbindungsIndex
+ORDER BY R.VerbindungsIndex
+)
+UNION
+(
+SELECT Lin.LinienID, B.Kennzeichnung, R.VerbindungsIndex + 1 AS Haltestelle,
+DATE_ADD(Lin.Startzeit, INTERVAL (SUM(TN.Standzeit) + SUM(TN.Dauer) + VA.Dauer) MINUTE) AS Ankunftszeit,
+NULL AS Abfahrtszeit
+
+FROM Linien AS Lin
+
+INNER JOIN Routen AS R ON R.RoutenID = Lin.RoutenID
+INNER JOIN Verbindungen AS VA ON VA.BahnhofA = R.BahnhofA AND VA.BahnhofB = R.BahnhofB
+INNER JOIN Bahnhofe AS B ON B.Kennzeichnung = R.BahnhofB
+
+LEFT JOIN (
+				SELECT R.VerbindungsIndex AS I, L.Startzeit AS Startzeit, L.LinienID, 
+					CASE 
+						WHEN R.Standzeit IS NULL 
+							THEN 0
+						ELSE
+							R.Standzeit
+					END AS Standzeit, 
+					VA.Dauer 
+				FROM Linien AS L
+				INNER JOIN Routen AS R ON R.RoutenID = L.RoutenID
+				INNER JOIN Verbindungen AS VA ON VA.BahnhofA = R.BahnhofA AND VA.BahnhofB = R.BahnhofB
+				) AS TN ON TN.I  < R.VerbindungsIndex AND TN.LinienID = Lin.LinienID
+LEFT JOIN (
+				SELECT R.VerbindungsIndex AS I, L.Startzeit AS Startzeit, L.LinienID, 
+					CASE 
+						WHEN R.Standzeit IS NULL 
+							THEN 0
+						ELSE
+							R.Standzeit
+					END AS Standzeit, 
+					VA.Dauer 
+				FROM Linien AS L
+				INNER JOIN Routen AS R ON R.RoutenID = L.RoutenID
+				INNER JOIN Verbindungen AS VA ON VA.BahnhofA = R.BahnhofA AND VA.BahnhofB = R.BahnhofB
+				) AS TN2 ON (TN2.I  = R.VerbindungsIndex - 1) AND TN2.LinienID = Lin.LinienID
+				
+				
+WHERE R.VerbindungsIndex = (SELECT MAX(VerbindungsIndex) FROM Routen AS R2 WHERE R2.RoutenID = R.RoutenID)
+GROUP BY Lin.LinienID, R.VerbindungsIndex
+ORDER BY R.VerbindungsIndex
+)) AS SelLinienA ON SelLinienA.LinienID = L.LinienID AND SelLinienA.Kennzeichnung = BA.Kennzeichnung AND SelLinienA.Abfahrtszeit IS NOT NULL
+
+
+
+
+INNER JOIN ((SELECT Lin.LinienID, B.Kennzeichnung, R.VerbindungsIndex AS Haltestelle,
+
+DATE_ADD(Lin.Startzeit, INTERVAL (SUM(TN.Standzeit) - TN2.Standzeit + SUM(TN.Dauer)) MINUTE) AS Ankunftszeit,
+
+CASE
+	WHEN R.VerbindungsIndex = 1
+		THEN Lin.Startzeit
+	ELSE 
+		DATE_ADD(TN.Startzeit, INTERVAL (SUM(TN.Standzeit) + SUM(TN.Dauer)) MINUTE)
+END AS Abfahrtszeit
+
+FROM Linien AS Lin
+
+INNER JOIN Routen AS R ON R.RoutenID = Lin.RoutenID
+INNER JOIN Verbindungen AS VA ON VA.BahnhofA = R.BahnhofA AND VA.BahnhofB = R.BahnhofB
+INNER JOIN Bahnhofe AS B ON B.Kennzeichnung = R.BahnhofA
+
+LEFT JOIN (
+				SELECT R.VerbindungsIndex AS I, L.Startzeit AS Startzeit, L.LinienID, 
+					CASE 
+						WHEN R.Standzeit IS NULL 
+							THEN 0
+						ELSE
+							R.Standzeit
+					END AS Standzeit, 
+					VA.Dauer 
+				FROM Linien AS L
+				INNER JOIN Routen AS R ON R.RoutenID = L.RoutenID
+				INNER JOIN Verbindungen AS VA ON VA.BahnhofA = R.BahnhofA AND VA.BahnhofB = R.BahnhofB
+				ORDER BY I ASC 
+				) AS TN ON TN.I  < R.VerbindungsIndex AND TN.LinienID = Lin.LinienID
+				
+LEFT JOIN (
+				SELECT R.VerbindungsIndex AS I, L.Startzeit AS Startzeit, L.LinienID,
+					CASE 
+						WHEN R.Standzeit IS NULL 
+							THEN 0
+						ELSE
+							R.Standzeit
+					END AS Standzeit, 
+					VA.Dauer 
+				FROM Linien AS L
+				INNER JOIN Routen AS R ON R.RoutenID = L.RoutenID
+				INNER JOIN Verbindungen AS VA ON VA.BahnhofA = R.BahnhofA AND VA.BahnhofB = R.BahnhofB
+				WHERE (R.VerbindungsIndex = (SELECT MAX(VerbindungsIndex) FROM Routen AS R2 WHERE R2.RoutenID = R.RoutenID)) XOR R.Standzeit IS NOT NULL
+				) AS TN2 ON (TN2.I  = R.VerbindungsIndex - 1) AND TN2.LinienID = Lin.LinienID
+				
+				
+WHERE ((R.VerbindungsIndex = (SELECT MAX(VerbindungsIndex) FROM Routen AS R2 WHERE R2.RoutenID = R.RoutenID) + 1) XOR TN2.Standzeit IS NOT NULL XOR R.VerbindungsIndex = 1)
+GROUP BY Lin.LinienID, R.VerbindungsIndex
+ORDER BY R.VerbindungsIndex
+)
+UNION
+(
+SELECT Lin.LinienID, B.Kennzeichnung, R.VerbindungsIndex + 1 AS Haltestelle,
+DATE_ADD(Lin.Startzeit, INTERVAL (SUM(TN.Standzeit) + SUM(TN.Dauer) + VA.Dauer) MINUTE) AS Ankunftszeit,
+NULL AS Abfahrtszeit
+
+FROM Linien AS Lin
+
+INNER JOIN Routen AS R ON R.RoutenID = Lin.RoutenID
+INNER JOIN Verbindungen AS VA ON VA.BahnhofA = R.BahnhofA AND VA.BahnhofB = R.BahnhofB
+INNER JOIN Bahnhofe AS B ON B.Kennzeichnung = R.BahnhofB
+
+LEFT JOIN (
+				SELECT R.VerbindungsIndex AS I, L.Startzeit AS Startzeit, L.LinienID, 
+					CASE 
+						WHEN R.Standzeit IS NULL 
+							THEN 0
+						ELSE
+							R.Standzeit
+					END AS Standzeit, 
+					VA.Dauer 
+				FROM Linien AS L
+				INNER JOIN Routen AS R ON R.RoutenID = L.RoutenID
+				INNER JOIN Verbindungen AS VA ON VA.BahnhofA = R.BahnhofA AND VA.BahnhofB = R.BahnhofB
+				) AS TN ON TN.I  < R.VerbindungsIndex AND TN.LinienID = Lin.LinienID
+LEFT JOIN (
+				SELECT R.VerbindungsIndex AS I, L.Startzeit AS Startzeit, L.LinienID, 
+					CASE 
+						WHEN R.Standzeit IS NULL 
+							THEN 0
+						ELSE
+							R.Standzeit
+					END AS Standzeit, 
+					VA.Dauer 
+				FROM Linien AS L
+				INNER JOIN Routen AS R ON R.RoutenID = L.RoutenID
+				INNER JOIN Verbindungen AS VA ON VA.BahnhofA = R.BahnhofA AND VA.BahnhofB = R.BahnhofB
+				) AS TN2 ON (TN2.I  = R.VerbindungsIndex - 1) AND TN2.LinienID = Lin.LinienID
+				
+				
+WHERE R.VerbindungsIndex = (SELECT MAX(VerbindungsIndex) FROM Routen AS R2 WHERE R2.RoutenID = R.RoutenID)
+GROUP BY Lin.LinienID, R.VerbindungsIndex
+ORDER BY R.VerbindungsIndex
+)) AS SelLinienB ON SelLinienB.LinienID = L.LinienID AND SelLinienB.Kennzeichnung = BB.Kennzeichnung AND SelLinienB.Ankunftszeit IS NOT NULL
+
 
 WHERE R.BenutzerID = :user AND R.Fahrtdatum = :date
+ORDER BY AbfahrtszeitA
 ";
 
 if (isset($_GET['day'])) {
@@ -100,8 +271,8 @@ if (isset($_GET['day'])) {
         $detailed_node->addChild('traveldate', $row['Fahrtdatum']);
         $detailed_node->addChild('stationA', $row['BahnhofA']);
         $detailed_node->addChild('stationB', $row['BahnhofB']);
-        $detailed_node->addChild('timeA', $row['Abfahrtszeit']);
-        $detailed_node->addChild('timeB', $row['Ankunftszeit']);
+        $detailed_node->addChild('timeA', $row['AbfahrtszeitA']);
+        $detailed_node->addChild('timeB', $row['AnkunftszeitB']);
     }
 
 }

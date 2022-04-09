@@ -56,11 +56,17 @@
                                 <input type="hidden" name="timeBahnhofA" value="{/xml/suche/timeBahnhofA}" />
                                 <input type="hidden" name="reservieren" value="true" />
                                 <input type="hidden" name="site" value="suchen" />
-                                <div>
-                                    <button type="submit">
-                                            reservieren
+                                <div class="reservieren-form">
+                                    <button class="reservieren-button" type="submit">
+                                        <div class="menu-button">
+                                            <img class="menu-button-icon" src="frontend/res/icon-reservierungen.png" />
+                                            <div class="menu-button-text">
+                                                reservieren
+                                            </div>
+                                        </div>
                                     </button>
-                                    <input type="date" name="datum" required=""/>
+                                    <input class="reservieren-input" type="date" name="datum" required=""/>
+                                    <p class="collumn-medium">⠀⠀</p>
                                 </div>
                             </form>
 

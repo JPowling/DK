@@ -32,7 +32,7 @@
                 <xsl:variable name="day" select="./date"></xsl:variable>
                 <xsl:choose>
                     <xsl:when test="//detailed[traveldate=$day]">
-                        <div class="table-row border">
+                        <div class="table-row border-highlight highlight">
                             <a class="" href="/?site=reservierungen">
                                 <div class="table-row hoverable border-opaque">
                                     <div class="table-row-link">

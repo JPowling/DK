@@ -313,7 +313,7 @@ if (isset($_GET['reservieren'])) {
 	$sql = new SQL(true);
 
 	if ($sql->transaction($sql_str_arr, $sql_var_arr)) {
-		header("Location: /?site=reservierungen");
+		header("Location: /?site=reservierungen&day=$date");
 		exit;
 	} else {
 		header("Location: /somethingwrong");
