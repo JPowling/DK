@@ -5,7 +5,6 @@ $sql = new SQL(false);
 
 $sql_query = "SELECT Name, Gleise FROM Bahnhofe ORDER BY Name";
 
-
 $result = $sql->request($sql_query);
 
 if ($result->get_num_rows() > 1) {
@@ -22,17 +21,15 @@ if ($result->get_num_rows() > 1) {
 
 $suche_node = $xml->addChild('suche');
 
-if (isset($_POST['sucheBahnhofA'])) {
-	$suche_node->addChild('sucheBahnhofA', $_POST['sucheBahnhofA']);
+if (isset($_GET['sucheBahnhofA'])) {
+	$suche_node->addChild('sucheBahnhofA', $_GET['sucheBahnhofA']);
 }
-if (isset($_POST['sucheBahnhofB'])) {
-	$suche_node->addChild('sucheBahnhofB', $_POST['sucheBahnhofB']);
+if (isset($_GET['sucheBahnhofB'])) {
+	$suche_node->addChild('sucheBahnhofB', $_GET['sucheBahnhofB']);
 }
-if (isset($_POST['timeBahnhofA'])) {
-	$suche_node->addChild('timeBahnhofA', $_POST['timeBahnhofA']);
+if (isset($_GET['timeBahnhofA'])) {
+	$suche_node->addChild('timeBahnhofA', $_GET['timeBahnhofA']);
 }
-
-
 
 
 $sql_string = "
@@ -190,15 +187,11 @@ ORDER BY R.VerbindungsIndex
 ORDER BY LinienID, StopTime, Stoporder
 ";
 
-
 $sql = new SQL();
 
 $result = $sql->sql_request($sql_string)->result;
 
-
-
-
-if (isset($_POST['sucheBahnhofA']) && isset($_POST['sucheBahnhofB']) && isset($_POST['timeBahnhofA'])) {
+if (isset($_GET['sucheBahnhofA']) && isset($_GET['sucheBahnhofB']) && isset($_GET['timeBahnhofA'])) {
 
 	$sA = $xml->xpath("//xml/suche/sucheBahnhofA")[0];
 	$tA = $xml->xpath("//xml/suche/timeBahnhofA")[0];
@@ -235,7 +228,7 @@ if (isset($_POST['sucheBahnhofA']) && isset($_POST['sucheBahnhofB']) && isset($_
 	$file_name = "php-" . $uuid . ".json";
 	file_put_contents($file_path_php . $file_name, $json_string);
 
-	echo shell_exec("java -jar disallowed/external/out/artifacts/searchAlgo_jar/searchAlgo.jar $file_path_php $file_name $uuid");
+	shell_exec("java -jar disallowed/external/out/artifacts/searchAlgo_jar/searchAlgo.jar $file_path_php $file_name $uuid");
 
 	$routs = file_get_contents($file_path_php . "kotlin-" . $uuid . ".json");
 
@@ -266,7 +259,64 @@ if (isset($_POST['sucheBahnhofA']) && isset($_POST['sucheBahnhofB']) && isset($_
 			$node_node->addChild("stoptype", $node['data']['stopType']);
 		}
 	}
-
 	unlink($file_path_php . "php-" . $uuid . ".json");
 	unlink($file_path_php . "kotlin-" . $uuid . ".json");
+}
+
+if (isset($_GET['reservieren'])) {
+	if (!is_loggedin()) {
+		header("Location: /notloggedin");
+		exit;
+	}
+
+	$arriving_arr = array();
+	$departing_arr = array();
+
+	foreach ($xml->xpath("//xml/routes/route/node") as $key => $value) {
+		if ($value->stoptype == "ARRIVING") {
+			array_push($arriving_arr, $value);
+		}
+		if ($value->stoptype == "DEPARTING") {
+			array_push($departing_arr, $value);
+		}
+	}
+
+	$sql_str_arr = array();
+	$sql_var_arr = array();
+
+	$user_id = $sql->request("SELECT BenutzerID FROM Benutzer WHERE EMail = :email", array('email' => $_SESSION['email']))->result[0]['BenutzerID'];
+	$date = $_GET['datum'];
+
+	for ($i = 0; $i < sizeof($arriving_arr); $i++) {
+		$line_id = preg_replace('/[^0-9]/', '', $arriving_arr[$i]->linie);
+		$stationA_ID = $sql->request("SELECT Kennzeichnung FROM Bahnhofe WHERE Name = :name", array('name' => $departing_arr[$i]->station))->result[0]['Kennzeichnung'];
+		$stationB_ID = $sql->request("SELECT Kennzeichnung FROM Bahnhofe WHERE Name = :name", array('name' => $arriving_arr[$i]->station))->result[0]['Kennzeichnung'];
+
+		array_push(
+			$sql_var_arr,
+			array(
+				'benutzerID' => $user_id,
+				'linienID' => $line_id,
+				'fahrtdatum' => $date,
+				'startbahnhof' => $stationA_ID,
+				'zielbahnhof' => $stationB_ID,
+				'bestelldatum' => date('Y-m-d', time())
+			)
+		);
+		array_push(
+			$sql_str_arr,
+			"INSERT INTO Reservierungen 
+				VALUES (:benutzerID, :linienID, :fahrtdatum, :startbahnhof, :zielbahnhof, :bestelldatum);"
+		);
+	}
+
+	$sql = new SQL(true);
+
+	if ($sql->transaction($sql_str_arr, $sql_var_arr)) {
+		header("Location: /?site=reservierungen&day=$date");
+		exit;
+	} else {
+		header("Location: /somethingwrong");
+		exit;
+	}
 }

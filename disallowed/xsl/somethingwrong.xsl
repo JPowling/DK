@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Jens -->
+<xsl:stylesheet version="1.0"
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+
+    <xsl:template match="/" mode="mode">
+
+        <div class="outer-box">
+            <div class="centered-innerbox">
+                <div class="box-header">
+                    <h2>Hoppala, da ist ein Fehler aufgetreten...</h2>
+                </div>
+                <div class="box-body">
+                    <div class="box-content">
+                        <p>Bitte versuchen sie es erneut.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+    </xsl:template>
+
+</xsl:stylesheet>

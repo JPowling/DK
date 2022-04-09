@@ -103,6 +103,13 @@
     margin: 5px;
 }
 
+.border-highlight {
+    border: 2px solid var(--main-color-darker);
+    border-radius: 10px;
+    padding: 2px;
+    margin: 5px;
+}
+
 .border-opaque {
     border-radius: 10px;
 }
@@ -189,6 +196,33 @@
     padding-bottom: 0.25cm;
     border-bottom: 1px solid gray;
     border-top: 1px solid gray;
+}
+
+.highlight {
+    background-color: rgba(211, 211, 211, 0.329);
+}
+
+.reservieren-form {
+    margin: 15px;
+    display: flex;
+}
+
+.reservieren-button {
+    margin-right: 1cm;
+    flex: 5;
+}
+
+input.reservieren-input {
+    margin-left: 1cm;
+    margin-right: 1cm;
+    flex: 5;
+}
+
+.font {
+    align-items: center;
+    font-family: 'Source Sans Pro', Arial, sans-serif;
+    font-weight: 300;
+    font-size: large;
 }
 
 h2 {

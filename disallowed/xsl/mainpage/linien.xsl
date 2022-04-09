@@ -41,7 +41,7 @@
                 <xsl:variable name="LinienID" select="./LinienID"></xsl:variable>
                 <xsl:choose>
                     <xsl:when test="//linie[id=$LinienID]">
-                        <div class="table-row border">
+                        <div class="table-row border-highlight highlight">
                             <div>
                                 <a class="" href="/?site=linien">
                                     <div class="table-row hoverable border-opaque">

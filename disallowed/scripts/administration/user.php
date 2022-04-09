@@ -44,7 +44,7 @@ if (isset($_GET["id"])) {
                 "ID" => $_GET["id"],
                 "Role" => $roleid
             ];
-            $sql->request("UPDATE Benutzer SET BerechtigungsID=:Role WHERE BenutzerID=:ID");
+            $sql->request("UPDATE Benutzer SET BerechtigungsID=:Role WHERE BenutzerID=:ID", $vals);
         }
     }
 
