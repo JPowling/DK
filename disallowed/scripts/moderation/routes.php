@@ -88,9 +88,17 @@ function load($xml) {
                 $station_b = array_key_first($list[$i + 1]);
 
                 $con = Connection::by_id($station_a, $station_b);
+                print_r($con);
 
                 if (!isset($con)) {
                     echo "$station_a -> $station_b doesn't exist! \n";
+
+                    //TODO
+                    $sql = new SQL();
+                    $result = $sql->request("SELECT BahnhofA, BahnhofB, Dauer FROM Verbindungen")->result;
+                    print_r($result);
+
+
                 }
                 $i++;
             }
