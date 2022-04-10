@@ -155,3 +155,7 @@ input {
 .new {
     margin-top: 10px;
 }
+
+.wider {
+    width: 6cm;
+}
