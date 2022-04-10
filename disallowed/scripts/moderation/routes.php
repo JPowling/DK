@@ -80,23 +80,16 @@ function load($xml) {
                 $i++;
             }
 
-            print_r($list);
-
             $i = 0;
             while ($i < sizeof($list) - 1) {
                 $station_a = array_key_first($list[$i]);
                 $station_b = array_key_first($list[$i + 1]);
 
                 $con = Connection::by_id($station_a, $station_b);
-                print_r($con);
 
                 if (!isset($con)) {
-                    echo "$station_a -> $station_b doesn't exist! \n";
-
-                    //TODO
                     $sql = new SQL();
                     $result = $sql->request("SELECT BahnhofA, BahnhofB, Dauer FROM Verbindungen")->result;
-                    // print_r(array(array($station_a, $station_b), $result));
 
                     $json_string = json_encode(array(array($station_a, $station_b), $result));
 
@@ -106,7 +99,6 @@ function load($xml) {
 
                     file_put_contents($file_path_php . $file_name, $json_string);
 
-
                     shell_exec("java -jar disallowed/external/out/artifacts/pathFinderAlgo_jar/pathFinderAlgo.jar $file_path_php $file_name $uuid");
 
                     $connections = file_get_contents($file_path_php . "kotlin-" . $uuid . ".json");
@@ -114,19 +106,25 @@ function load($xml) {
                     unlink($file_path_php . "php-" . $uuid . ".json");
                     unlink($file_path_php . "kotlin-" . $uuid . ".json");
 
-                    $mising_connections = json_decode($connections, true);
+                    $missing_connections = json_decode($connections, true);
 
-                    print_r($mising_connections);
+                    $refined = array_slice($missing_connections, 1, sizeof($missing_connections) - 2);
+
+                    foreach ($refined as $newCon) {
+                        array_splice($list, ++$i, 0, [$i => [$newCon["data"] => "NULL"]]);
+                    }
                 }
                 $i++;
             }
 
             $work = true;
-            $i = 0;
-            while ($i < sizeof($list) - 1) {
+            $i = 1;
+            print_r($_POST);
+
+            while ($i < sizeof($list)) {
                 $con_name = Station::ensure_short(array_key_first($list[$i]));
                 $con = Connection::by_id($con_before, $con_name);
-
+                
                 if ($con == null) {
                     echo ("The connection $con_before and $con_name doesn't exist! Please fix.");
                     $work = false;
@@ -134,6 +132,9 @@ function load($xml) {
                 }
 
                 if (isset($_POST["duration-$i"])) {
+                    if (empty($_POST["duration-$i"])) {
+                        $_POST["duration-$i"] = 0;
+                    }
                     array_push($route_new->data, ["a" => $con_before, "b" => $con_name, "stand_time" => $_POST["duration-$i"]]);
                 } else {
                     array_push($route_new->data, ["a" => $con_before, "b" => $con_name, "stand_time" => "NULL"]);
@@ -142,13 +143,14 @@ function load($xml) {
                 $con_before = $con_name;
                 $i++;
             }
+            unset($route_new->data[0]);
 
+            print_r($route_new);
             if ($work) {
-                unset($route_new->data[0]);
                 $route = $route_new;
                 $route->save();
-                header("Location: /moderation/overview?view=r&id=$route->id");
-                exit;
+                // header("Location: /moderation/overview?view=r&id=$route->id");
+                // exit;
             }
         }
 
@@ -171,9 +173,10 @@ function load($xml) {
                 $xmldata->addChild("duration", $con->duration);
 
                 if (isset($data["stand_time"])) {
+                    print_r($data["stand_time"]);
                     $xmldata->addChild("stand_time", $data["stand_time"]);
                 } else {
-                    $xmldata->addChild("stand_time", "null");
+                    $xmldata->addChild("stand_time", "NULL");
                 }
             }
         }

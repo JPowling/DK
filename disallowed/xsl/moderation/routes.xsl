@@ -96,7 +96,7 @@
                                             <xsl:choose>
                                                 <xsl:when test="not(position() = last() or position() = 1)">
                                                     <input type="checkbox" name="stands-{position()}" id="stands-{position()}" onchange="handleStopChange(this)">
-                                                        <xsl:if test="./stand_time != 'null'">
+                                                        <xsl:if test="./stand_time != 'NULL'">
                                                             <xsl:attribute name="checked" />
                                                         </xsl:if>
                                                     </input>
@@ -104,8 +104,8 @@
                                             </xsl:choose>
                                         </th>
                                         <th id="time">
-                                            <xsl:if test="not(./stand_time = 'null' or position() = last() or position() = 1)">
-                                                <input type="number" name="duration-{position()}" value="{./stand_time}" />
+                                            <xsl:if test="not(./stand_time = 'NULL' or position() = last() or position() = 1)">
+                                                <input type="number" name="duration-{position() - 1}" value="{./stand_time}" />
                                             </xsl:if>
                                         </th>
                                         <th id="delete">
