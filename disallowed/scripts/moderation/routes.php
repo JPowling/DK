@@ -119,7 +119,6 @@ function load($xml) {
 
             $work = true;
             $i = 1;
-            print_r($_POST);
 
             while ($i < sizeof($list)) {
                 $con_name = Station::ensure_short(array_key_first($list[$i]));
@@ -145,12 +144,11 @@ function load($xml) {
             }
             unset($route_new->data[0]);
 
-            print_r($route_new);
             if ($work) {
                 $route = $route_new;
                 $route->save();
-                // header("Location: /moderation/overview?view=r&id=$route->id");
-                // exit;
+                header("Location: /moderation/overview?view=r&id=$route->id");
+                exit;
             }
         }
 
