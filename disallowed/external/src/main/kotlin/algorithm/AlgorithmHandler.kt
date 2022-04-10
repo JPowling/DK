@@ -3,10 +3,10 @@ package algorithm
 import org.json.JSONArray
 import java.io.File
 
-abstract class AlgorithmHandler (val path: String) {
-    protected var json: JSONArray = getJsonArray()
+abstract class AlgorithmHandler (val path: String, val filename: String) {
+    var json = getJsonArray()
 
     abstract fun build()
 
-    protected fun getJsonArray() = JSONArray(File(path).readText(Charsets.UTF_8))
+    private fun getJsonArray() = JSONArray(File(path  + filename).readText(Charsets.UTF_8))
 }

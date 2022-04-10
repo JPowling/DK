@@ -5,13 +5,12 @@ import org.json.JSONObject
 import train.*
 import java.time.LocalTime
 
-class TrainGraphHandler(private val graph: TrainGraph, path: String): AlgorithmHandler(path) {
+class TrainGraphHandler(private val graph: TrainGraph, path: String, filename: String): AlgorithmHandler(path, filename) {
 
 
     private val trainStations: MutableSet<TrainStation> = mutableSetOf()
 
     init {
-        json = getJsonArray()
         initTrainStationSet()
     }
 

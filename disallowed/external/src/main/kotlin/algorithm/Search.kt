@@ -9,7 +9,7 @@ class Search(private val path: String, fileName: String, private val uuid: Strin
     private val graph = TrainGraph()
 
     init {
-        TrainGraphHandler(graph, path).build()
+        TrainGraphHandler(graph, path, fileName).build()
     }
 
     fun search() {

@@ -96,9 +96,27 @@ function load($xml) {
                     //TODO
                     $sql = new SQL();
                     $result = $sql->request("SELECT BahnhofA, BahnhofB, Dauer FROM Verbindungen")->result;
-                    print_r($result);
+                    // print_r(array(array($station_a, $station_b), $result));
+
+                    $json_string = json_encode(array(array($station_a, $station_b), $result));
+
+                    $uuid = uniqid();
+                    $file_path_php = "disallowed/external/datatransfer/";
+                    $file_name = "php-" . $uuid . ".json";
+
+                    file_put_contents($file_path_php . $file_name, $json_string);
 
 
+                    shell_exec("java -jar disallowed/external/out/artifacts/pathFinderAlgo_jar/pathFinderAlgo.jar $file_path_php $file_name $uuid");
+
+                    $connections = file_get_contents($file_path_php . "kotlin-" . $uuid . ".json");
+
+                    unlink($file_path_php . "php-" . $uuid . ".json");
+                    unlink($file_path_php . "kotlin-" . $uuid . ".json");
+
+                    $mising_connections = json_decode($connections, true);
+
+                    print_r($mising_connections);
                 }
                 $i++;
             }
