@@ -191,7 +191,7 @@ function handleStopChange(e) {
   if (!e.checked) {
     table[id].querySelector("#time").innerHTML = "";
   } else {
-    table[id].querySelector("#time").innerHTML = "<input type=\"number\" name=\"duration-" + (id - 1) + "\" value=\"0\">";
+    table[id].querySelector("#time").innerHTML = "<input type=\"number\" name=\"duration-" + (id - 1) + "\" value=\"1\">";
   }
 }
 
