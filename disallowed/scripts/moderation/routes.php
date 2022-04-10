@@ -64,11 +64,41 @@ function load($xml) {
 
             $con_before = Station::ensure_short($_POST["short-1"]);
 
-            $work = true;
+            $list = array();
+            array_push($list, [$con_before => "NULL"]);
+
             $i = 2;
 
             while (isset($_POST["short-$i"])) {
                 $con_name = Station::ensure_short($_POST["short-$i"]);
+
+                if (isset($_POST["duration-$i"])) {
+                    array_push($list, [$con_name => $_POST["duration-$i"]]);
+                } else {
+                    array_push($list, [$con_name => "NULL"]);
+                }
+                $i++;
+            }
+
+            print_r($list);
+
+            $i = 0;
+            while ($i < sizeof($list) - 1) {
+                $station_a = array_key_first($list[$i]);
+                $station_b = array_key_first($list[$i + 1]);
+
+                $con = Connection::by_id($station_a, $station_b);
+
+                if (!isset($con)) {
+                    echo "$station_a -> $station_b doesn't exist! \n";
+                }
+                $i++;
+            }
+
+            $work = true;
+            $i = 0;
+            while ($i < sizeof($list) - 1) {
+                $con_name = Station::ensure_short(array_key_first($list[$i]));
                 $con = Connection::by_id($con_before, $con_name);
 
                 if ($con == null) {

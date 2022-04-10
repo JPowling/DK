@@ -126,7 +126,7 @@
 
                                 <tr>
                                     <th>
-                                        <input type="text" id="newConnection" list="stations_full" onkeydown="enter(event)" />
+                                        <input class="wider" type="text" id="newConnection" list="stations_full" onkeydown="enter(event)" />
                                         <p class="lightgray pointer" onClick="addConnection()">hinzufügen</p>
                                     </th>
                                 </tr>
