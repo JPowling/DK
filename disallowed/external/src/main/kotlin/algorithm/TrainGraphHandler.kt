@@ -1,23 +1,21 @@
 package algorithm
 
 import graph.Vertex
-import org.json.JSONArray
 import org.json.JSONObject
 import train.*
-import java.io.File
 import java.time.LocalTime
 
-class TrainGraphHandler(private val graph: TrainGraph, path: String, fileName: String) {
+class TrainGraphHandler(private val graph: TrainGraph, path: String): AlgorithmHandler(path) {
 
-    private var json: JSONArray
+
     private val trainStations: MutableSet<TrainStation> = mutableSetOf()
 
     init {
-        json = toJSONArray(path + fileName)
+        json = getJsonArray()
         initTrainStationSet()
     }
 
-    fun build() {
+    override fun build() {
         buildTrainStops()
         buildPathsBetweenLines()
         buildChangePaths()
@@ -76,8 +74,6 @@ class TrainGraphHandler(private val graph: TrainGraph, path: String, fileName: S
             }
         }
     }
-
-    private fun toJSONArray(path: String) = JSONArray(File(path).readText(Charsets.UTF_8))
 
     private fun initTrainStationSet() {
         json.forEach {
