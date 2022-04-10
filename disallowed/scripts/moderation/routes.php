@@ -171,7 +171,6 @@ function load($xml) {
                 $xmldata->addChild("duration", $con->duration);
 
                 if (isset($data["stand_time"])) {
-                    print_r($data["stand_time"]);
                     $xmldata->addChild("stand_time", $data["stand_time"]);
                 } else {
                     $xmldata->addChild("stand_time", "NULL");
