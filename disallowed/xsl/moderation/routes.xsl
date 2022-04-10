@@ -34,9 +34,9 @@
                 <br />
 
                 <form action="/moderation/overview?view=r" method="post">
-                    <input type="text" name="newfrom" placeholder="von" list="stations_full" />
+                    <input class="wider" type="text" name="newfrom" placeholder="von" list="stations_full" />
                     <br />
-                    <input type="text" name="newto" placeholder="zu" list="stations_full" />
+                    <input class="wider" type="text" name="newto" placeholder="zu" list="stations_full" />
                     <br />
                     <button type="submit">Route erstellen</button>
                     <datalist id="stations">

@@ -84,14 +84,15 @@ class Line {
         $result = $sql->request("SELECT LinienID FROM Linien ORDER BY LinienID")->result;
         $numbers = array_merge_recursive(...$result)["LinienID"];
 
-        $numbers = array($numbers);
-        
         $lowestpossible = 100;
         for ($i = $lowestpossible; $i <= PHP_INT_MAX; $i++) {
             if (!in_array($i, $numbers)){
                 $lowestpossible = $i;
                 break;
             }
+        }
+        if (sizeof($result) == 1 && $result[0]["LinienID"] == 100) {
+            $lowestpossible = 101;
         }
 
         Line::create($lowestpossible, 1, "00:00:00", 1, "ICE");
