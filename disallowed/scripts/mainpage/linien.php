@@ -1,7 +1,6 @@
 <?php
 // Jens
 
-
 $sql = new SQL(false);
 
 $sql_string = "SELECT LinienID, Startzeit, ZuggattungsID FROM Linien";

@@ -1,5 +1,4 @@
 <?php
-
 // Jens
 
 $xml->addChild("title", "Beutsche Dahn");

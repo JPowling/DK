@@ -1,7 +1,6 @@
 <?php
 # Paul
 
-
 function load($xml) {
     if (isset($_GET["create"])) {
         $id = Line::create_inc();
