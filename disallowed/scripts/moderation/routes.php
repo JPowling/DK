@@ -123,21 +123,18 @@ function load($xml) {
             while ($i < sizeof($list)) {
                 $con_name = Station::ensure_short(array_key_first($list[$i]));
                 $con = Connection::by_id($con_before, $con_name);
-                
+
                 if ($con == null) {
                     echo ("The connection $con_before and $con_name doesn't exist! Please fix.");
                     $work = false;
                     break;
                 }
 
-                if (isset($_POST["duration-$i"])) {
-                    if (empty($_POST["duration-$i"])) {
-                        $_POST["duration-$i"] = 0;
-                    }
-                    array_push($route_new->data, ["a" => $con_before, "b" => $con_name, "stand_time" => $_POST["duration-$i"]]);
-                } else {
-                    array_push($route_new->data, ["a" => $con_before, "b" => $con_name, "stand_time" => "NULL"]);
+                $duration = $list[$i][array_key_first($list[$i])];
+                if (empty($duration)) {
+                    $duration = "NULL";
                 }
+                array_push($route_new->data, ["a" => $con_before, "b" => $con_name, "stand_time" => $duration]);
 
                 $con_before = $con_name;
                 $i++;

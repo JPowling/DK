@@ -72,7 +72,9 @@
                                         <p class="bold">Bahnhof</p>
                                     </th>
                                     <th>
-                                        <p class="bold">Zug hält?</p>
+                                        <p class="bold stand">Zug hält?</p>
+                                        <button onClick="routeAllOn(event)">on</button>
+                                        <button onClick="routeAllOff(event)">off</button>
                                     </th>
                                     <th>
                                         <p class="bold">Standzeit (min)</p>
@@ -95,7 +97,7 @@
                                         <th id="stops">
                                             <xsl:choose>
                                                 <xsl:when test="not(position() = last() or position() = 1)">
-                                                    <input type="checkbox" name="stands-{position()}" id="stands-{position()}" onchange="handleStopChange(this)">
+                                                    <input type="checkbox" name="stands-{position()}" id="stands-{position()}" onchange="handleStopChange(this)" class="js-Standbox">
                                                         <xsl:if test="./stand_time != 'NULL'">
                                                             <xsl:attribute name="checked" />
                                                         </xsl:if>

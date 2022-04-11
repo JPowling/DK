@@ -196,8 +196,30 @@ function handleStopChange(e) {
 }
 
 function enter(e) {
-  if (e.key == 'Enter') { 
-    addConnection(); 
+  if (e.key == 'Enter') {
+    addConnection();
     e.preventDefault();
+  }
+}
+
+function routeAllOn(e) {
+  e.preventDefault();
+  let boxes = document.getElementsByClassName("js-Standbox");
+
+  for (let i = 0; i < boxes.length; i++) {
+    let box = boxes.item(i);
+    box.checked = true;
+    handleStopChange(box);
+  }
+}
+
+function routeAllOff(e) {
+  e.preventDefault();
+  let boxes = document.getElementsByClassName("js-Standbox");
+
+  for (let i = 0; i < boxes.length; i++) {
+    let box = boxes.item(i);
+    box.checked = false;
+    handleStopChange(box);
   }
 }
