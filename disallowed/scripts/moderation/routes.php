@@ -65,9 +65,7 @@ function load($xml) {
             $con_before = Station::ensure_short($_POST["short-1"]);
 
             $list = array();
-            array_push($list, [$con_before => "NULL"]);
-
-            $i = 2;
+            $i = 1;
 
             while (isset($_POST["short-$i"])) {
                 $con_name = Station::ensure_short($_POST["short-$i"]);

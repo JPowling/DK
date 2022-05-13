@@ -107,7 +107,7 @@
                                         </th>
                                         <th id="time">
                                             <xsl:if test="not(./stand_time = 'NULL' or position() = last() or position() = 1)">
-                                                <input type="number" name="duration-{position() - 1}" value="{./stand_time}" />
+                                                <input type="number" name="duration-{position()}" value="{./stand_time}" />
                                             </xsl:if>
                                         </th>
                                         <th id="delete">
