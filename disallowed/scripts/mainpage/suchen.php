@@ -227,8 +227,8 @@ if (isset($_GET['sucheBahnhofA']) && isset($_GET['sucheBahnhofB']) && isset($_GE
 	$file_path_php = "disallowed/external/datatransfer/";
 	$file_name = "php-" . $uuid . ".json";
 	file_put_contents($file_path_php . $file_name, $json_string);
-
-	shell_exec("java -jar disallowed/external/out/artifacts/searchAlgo_jar/searchAlgo.jar $file_path_php $file_name $uuid");
+	echo "executing script now";
+	echo shell_exec("java -jar disallowed/external/out/artifacts/searchAlgo_jar/searchAlgo.jar $file_path_php $file_name $uuid");
 
 	$routs = file_get_contents($file_path_php . "kotlin-" . $uuid . ".json");
 
@@ -259,8 +259,8 @@ if (isset($_GET['sucheBahnhofA']) && isset($_GET['sucheBahnhofB']) && isset($_GE
 			$node_node->addChild("stoptype", $node['data']['stopType']);
 		}
 	}
-	unlink($file_path_php . "php-" . $uuid . ".json");
-	unlink($file_path_php . "kotlin-" . $uuid . ".json");
+	#unlink($file_path_php . "php-" . $uuid . ".json");
+	#unlink($file_path_php . "kotlin-" . $uuid . ".json");
 }
 
 if (isset($_GET['reservieren'])) {
