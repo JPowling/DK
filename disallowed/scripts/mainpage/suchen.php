@@ -31,12 +31,18 @@ if (isset($_GET['timeBahnhofA'])) {
 	$suche_node->addChild('timeBahnhofA', $_GET['timeBahnhofA']);
 }
 
-
+# Die folgende SQL-Abfrage liefert alle Haltestellen aller Linien, aufgeteilt in je zwei Einträge.
+# ARRIVING und DEPARTING. Da in der Tabelle Verbindungen lediglich die Fahrzeit zwischen den beiden Bahnhöfen 
+# und Routen pro Station die Wartezeit steht, muss Fahrt- und Wartezeit pro Eintrag in der Tabelle über alle vorherigen Einräge summiert werden. 
+# Dafür werden zwei ähnliche Tabellen zwei Mal mittels eines LEFT JOINS auf die erste geführt, um so an Informationen aus zuvor berechneten Daten 
+# zu gelangen. Da es keine negativen VerbindungsIndizes gibt, müssen diese Spezialfälle mittels eines CASE-Blockes gesondert behandelt werden.
 $sql_string = "
 -- Departing:
+-- berechnet alle Uhrzeiten abfahrender Linien
 (
 SELECT L.LinienID, B.Name, R.VerbindungsIndex * 2 - 1 AS Stoporder,
 
+-- berechnet die StopTime von jedem Halt mittels aller vorherigen Stand- und Wartezeiten
 CASE
 	WHEN R.VerbindungsIndex = 1
 		THEN L.Startzeit
@@ -91,7 +97,9 @@ ORDER BY R.VerbindungsIndex
 UNION
 
 -- Arriving:
+-- berechnet alle Uhrzeiten ankommender Linien
 
+-- alle Einträge, bis auf den letzten
 (SELECT L.LinienID, B.Name, R.VerbindungsIndex * 2 - 2 AS Stoporder,
 
 DATE_ADD(L.Startzeit, INTERVAL (SUM(TN.Standzeit) - TN2.Standzeit + SUM(TN.Dauer)) MINUTE) AS StopTime,
@@ -141,6 +149,7 @@ ORDER BY R.VerbindungsIndex
 )
 UNION
 (
+-- der letzte Eintrag ankommeder Linien
 SELECT L.LinienID, B.Name, (R.VerbindungsIndex + 1) * 2 - 2 AS Stoporder,
 DATE_ADD(L.Startzeit, INTERVAL (SUM(TN.Standzeit) + SUM(TN.Dauer) + VA.Dauer) MINUTE) AS Ankunftszeit,
 'ARRIVING' AS StopType
