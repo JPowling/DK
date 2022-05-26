@@ -228,7 +228,7 @@ if (isset($_GET['sucheBahnhofA']) && isset($_GET['sucheBahnhofB']) && isset($_GE
 	$file_name = "php-" . $uuid . ".json";
 	file_put_contents($file_path_php . $file_name, $json_string);
 	
-	echo shell_exec("java -jar disallowed/external/out/artifacts/searchAlgo_jar/searchAlgo.jar $file_path_php $file_name $uuid");
+	shell_exec("java -jar disallowed/external/out/artifacts/searchAlgo_jar/searchAlgo.jar $file_path_php $file_name $uuid");
 
 	$routs = file_get_contents($file_path_php . "kotlin-" . $uuid . ".json");
 
