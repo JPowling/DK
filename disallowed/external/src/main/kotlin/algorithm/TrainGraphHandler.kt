@@ -18,8 +18,14 @@ class TrainGraphHandler(private val graph: TrainGraph, path: String, filename: S
         buildTrainStops()
         buildPathsBetweenLines()
         buildChangePaths()
+        var size = 0
+        graph.vertices.forEach {size += graph.edges(it).size}
+        println(size)
     }
 
+    /**
+     * This Method adds every TrainStop as a knot from the JSON-Array into the graph.
+     */
     private fun buildTrainStops() {
         json.forEach {
             if (it is JSONObject) {
@@ -33,6 +39,9 @@ class TrainGraphHandler(private val graph: TrainGraph, path: String, filename: S
         }
     }
 
+    /**
+     * This Method adds every edge to the graph, which is between to train stations.
+     */
     private fun buildPathsBetweenLines() {
         json.forEachIndexed { i, it ->
             if (it is JSONObject && it.get("StopType") == "DEPARTING") {
@@ -56,6 +65,9 @@ class TrainGraphHandler(private val graph: TrainGraph, path: String, filename: S
         }
     }
 
+    /**
+     * This Method adds every edge to the graph, which is between to train stops at one station.
+     */
     private fun buildChangePaths() {
         trainStations.forEach { trainStation ->
             val trainStops =
@@ -80,6 +92,7 @@ class TrainGraphHandler(private val graph: TrainGraph, path: String, filename: S
         }
     }
 
+    //A companion object is used similarly to the keyword static in java.
     companion object {
         fun getCompact(route: List<Vertex<TrainStop>>): List<Vertex<TrainStop>> {
             val retList = mutableListOf<Vertex<TrainStop>>()

@@ -56,19 +56,19 @@ class Dijkstra<E>(val graph: Graph<E>, val startNode: Vertex<E>, val endNode: Ve
     }
 
     /**
-     * This method finds the shortest path based on
+     * This method finds the shortest path based on the Map "prev", which was generated in run()
      */
     fun interpret(): List<Vertex<E>> {
         val retList = mutableListOf<Vertex<E>>()
         var node = endNode
         var counter = 0
         retList += endNode
-        while (counter < 1000 && node != startNode) {
+        while (counter < 5000 && node != startNode) {
             retList += prev[node]!!
             node = prev[node]!!
             counter++
         }
-        if (counter > 999) {
+        if (counter > 4999) {
             return mutableListOf()
         }
         return retList.reversed()
