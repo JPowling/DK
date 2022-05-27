@@ -8,7 +8,9 @@ $linie_node->addChild("id", $_GET['id']);
 $sql = new SQL();
 
 $sql_query ="
-(SELECT L.LinienID, B.Name, R.VerbindungsIndex AS Haltestelle,
+(
+-- Alle Einträge, bis auf den Letzten Eintrag
+SELECT L.LinienID, B.Name, R.VerbindungsIndex AS Haltestelle,
 
 DATE_ADD(L.Startzeit, INTERVAL (SUM(TN.Standzeit) - TN2.Standzeit + SUM(TN.Dauer)) MINUTE) AS Ankunftszeit,
 
@@ -65,6 +67,7 @@ ORDER BY R.VerbindungsIndex
 )
 UNION
 (
+-- Letzter Eintrag der Ergebnistabelle
 SELECT L.LinienID, B.Name, R.VerbindungsIndex + 1 AS Haltestelle,
 DATE_ADD(L.Startzeit, INTERVAL (SUM(TN.Standzeit) + SUM(TN.Dauer) + VA.Dauer) MINUTE) AS Ankunftszeit,
 NULL AS Abfahrtszeit

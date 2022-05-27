@@ -31,11 +31,12 @@ if (isset($_GET['timeBahnhofA'])) {
 	$suche_node->addChild('timeBahnhofA', $_GET['timeBahnhofA']);
 }
 
-# Die folgende SQL-Abfrage liefert alle Haltestellen aller Linien, aufgeteilt in je zwei Einträge.
+# Die folgende SQL-Abfrage liefert alle Haltestellen aller Linien, aufgeteilt in je zwei Einträge:
 # ARRIVING und DEPARTING. Da in der Tabelle Verbindungen lediglich die Fahrzeit zwischen den beiden Bahnhöfen 
-# und Routen pro Station die Wartezeit steht, muss Fahrt- und Wartezeit pro Eintrag in der Tabelle über alle vorherigen Einräge summiert werden. 
+# und in Routen pro Station eine Wartezeit steht, muss die Fahrt- und Wartezeit pro Eintrag in der Tabelle über alle vorherigen Einträge summiert werden. 
 # Dafür werden zwei ähnliche Tabellen zwei Mal mittels eines LEFT JOINS auf die erste geführt, um so an Informationen aus zuvor berechneten Daten 
 # zu gelangen. Da es keine negativen VerbindungsIndizes gibt, müssen diese Spezialfälle mittels eines CASE-Blockes gesondert behandelt werden.
+# Die SQL-Abfrage wurde aus der in mainpage/linie.php heraus abgeleitet.
 $sql_string = "
 -- Departing:
 -- berechnet alle Uhrzeiten abfahrender Linien
@@ -207,6 +208,8 @@ if (isset($_GET['sucheBahnhofA']) && isset($_GET['sucheBahnhofB']) && isset($_GE
 	$sB = $xml->xpath("//xml/suche/sucheBahnhofB")[0];
 	$tB = "23:59";
 
+	# Hinzufügen vom Start- und Endpunkt
+
 	$startStation = array(
 		"LinienID" => -1,
 		"Name" => "$sA",
@@ -237,6 +240,7 @@ if (isset($_GET['sucheBahnhofA']) && isset($_GET['sucheBahnhofB']) && isset($_GE
 	$file_name = "php-" . $uuid . ".json";
 	file_put_contents($file_path_php . $file_name, $json_string);
 	
+	# Ausführen des in Kotlin geschriebenen Algorithmus
 	shell_exec("java -jar disallowed/external/out/artifacts/searchAlgo_jar/searchAlgo.jar $file_path_php $file_name $uuid");
 
 	$routs = file_get_contents($file_path_php . "kotlin-" . $uuid . ".json");
